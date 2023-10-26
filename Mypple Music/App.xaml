@@ -1,0 +1,1211 @@
+﻿<prism:PrismApplication x:Class="Mypple_Music.App"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:local="clr-namespace:Mypple_Music"
+                        xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+                        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                        xmlns:prism="http://prismlibrary.com/">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark"
+                                             PrimaryColor="Teal"
+                                             SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
+
+            <!--文本输入框样式-->
+            <Style x:Key="TextBoxStyle"
+                   TargetType="TextBox">
+                <Setter Property="TextWrapping"
+                        Value="Wrap" />
+                <Setter Property="Width"
+                        Value="300" />
+                <Setter Property="AcceptsReturn"
+                        Value="True" />
+                <Setter Property="MinHeight"
+                        Value="35" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <Border x:Name="border"
+                                    BorderThickness="1"
+                                    BorderBrush="#55000000"
+                                    Background="#22000000"
+                                    SnapsToDevicePixels="True"
+                                    CornerRadius="5,5,3,3">
+                                <Border x:Name="borderIn"
+                                        CornerRadius="5,5,3,3">
+                                    <Grid Margin="5">
+                                        <TextBlock x:Name="mt"
+                                                   Text="未添加描述"
+                                                   Visibility="Collapsed"
+                                                   VerticalAlignment="Top"
+                                                   Foreground="#99000000"
+                                                   Margin="8 3 0 0" />
+
+                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                      Height="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualHeight}"
+                                                      Width="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualWidth}"
+                                                      Focusable="false"
+                                                      Margin="5,3,3,0"
+                                                      HorizontalScrollBarVisibility="Visible"
+                                                      VerticalScrollBarVisibility="Visible"
+                                                      Background="Transparent"
+                                                      VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled"
+                                         Value="false">
+                                    <Setter Property="Opacity"
+                                            TargetName="border"
+                                            Value="0.56" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused"
+                                         Value="true">
+                                    <Setter Property="BorderBrush"
+                                            TargetName="borderIn"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="borderIn"
+                                            Value="0,0,0,2" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="border"
+                                            Value="1,1,1,0" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Mode=Self}}"
+                                             Value="">
+                                    <Setter TargetName="mt"
+                                            Property="Visibility"
+                                            Value="Visible" />
+
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+            <!--搜索框样式-->
+            <Style x:Key="SearchTextBoxTemplate"
+                   TargetType="TextBox">
+                <Setter Property="MinHeight"
+                        Value="35" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <Border x:Name="border"
+                                    BorderThickness="0"
+                                    Background="#22000000"
+                                    SnapsToDevicePixels="True"
+                                    CornerRadius="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="mt"
+                                               Text="搜索"
+                                               Grid.Column="0"
+                                               Visibility="Collapsed"
+                                               VerticalAlignment="Center"
+                                               Foreground="#99000000"
+                                               Margin="15 0 0 0" />
+                                    <Button Grid.Column="1"
+                                            Content="&#xe600;"
+                                            FontFamily="Resource/#iconfont"
+                                            FontSize="16"
+                                            Width="40"
+                                            Height="30"
+                                            Margin="0,0,5,0"
+                                            HorizontalAlignment="Right"
+                                            x:Name="btn">
+                                        <Button.Resources>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Foreground"
+                                                        Value="White" />
+                                                <Setter Property="BorderThickness"
+                                                        Value="0" />
+
+                                                <Setter Property="Cursor"
+                                                        Value="Hand" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="border"
+                                                                    CornerRadius="5"
+                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    SnapsToDevicePixels="True">
+                                                                <TextBlock Text="{TemplateBinding Content}"
+                                                                           Foreground="{TemplateBinding Foreground}"
+                                                                           VerticalAlignment="Center"
+                                                                           HorizontalAlignment="Center" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver"
+                                                                         Value="True">
+                                                                    <Setter TargetName="border"
+                                                                            Property="Background"
+                                                                            Value="#33000000" />
+                                                                </Trigger>
+                                                                <Trigger Property="IsPressed"
+                                                                         Value="True">
+                                                                    <Setter TargetName="border"
+                                                                            Property="Background"
+                                                                            Value="#22000000" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                    <ScrollViewer x:Name="PART_ContentHost"
+                                                  Grid.Column="0"
+                                                  Focusable="false"
+                                                  HorizontalScrollBarVisibility="Hidden"
+                                                  VerticalScrollBarVisibility="Hidden"
+                                                  Margin="10 0 0 0"
+                                                  Background="Transparent"
+                                                  VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled"
+                                         Value="false">
+                                    <Setter Property="Opacity"
+                                            TargetName="border"
+                                            Value="0.56" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Mode=Self}}"
+                                             Value="">
+                                    <Setter TargetName="mt"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="btn"
+                                            Property="Background"
+                                            Value="#C9C6C6" />
+                                    <Setter TargetName="btn"
+                                            Property="Foreground"
+                                            Value="Gray" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--列表样式-->
+            <Style x:Key="MyListBoxItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="30" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+
+                            <Grid>
+                                <Rectangle x:Name="borderHeader"
+                                           Width="4"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Height="20"
+                                           HorizontalAlignment="Left"
+                                           Margin="5,0,0,0">
+                                </Rectangle>
+                                <Border x:Name="border"></Border>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Fill"
+                                            TargetName="borderHeader"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <!--展示列表样式-->
+            <Style x:Key="ListBoxItemForDisplayStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="30" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--ToggleButton按钮样式-->
+            <Style x:Key="ToggleButtonStyle"
+                   TargetType="ToggleButton">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border x:Name="borderIn"
+                                    Background="Transparent"
+                                    CornerRadius="2">
+                                <StackPanel VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock x:Name="btnContent"
+                                               HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource IconFont}"
+                                               Text="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},Path=Content}"
+                                               FontSize="22"
+                                               Foreground="#242424">
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+
+                                    <Setter TargetName="borderIn"
+                                            Property="Background"
+                                            Value="#22000000" />
+                                </Trigger>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter TargetName="btnContent"
+                                            Property="Text"
+                                            Value="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},Path=Tag}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--下拉框样式-->
+            <Style x:Key="ExpanderToggleButtonStyle"
+                   TargetType="{x:Type ToggleButton}">
+                <Setter Property="FocusVisualStyle"
+                        Value="{x:Null}" />
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Grid x:Name="grid">
+                                <Border x:Name="border"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        Margin="{TemplateBinding Padding}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      Margin="{TemplateBinding Padding}"
+                                                      RecognizesAccessKey="True"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </Border>
+                                <Border x:Name="borderHeader" />
+                                <Button Width="30"
+                                        Height="30"
+                                        FontFamily="Resource/#iconfont"
+                                        FontSize="16"
+                                        HorizontalAlignment="Right"
+                                        x:Name="btn"
+                                        Margin="0,0,30,0"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}">
+                                    <Button.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Foreground"
+                                                    Value="#918C8C" />
+                                            <Setter Property="BorderThickness"
+                                                    Value="0" />
+                                            <Setter Property="Cursor"
+                                                    Value="Hand" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border"
+                                                                Margin="2,3"
+                                                                CornerRadius="5"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                SnapsToDevicePixels="True">
+                                                            <!--<TextBlock Text="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                                       VerticalAlignment="Center"
+                                                                       HorizontalAlignment="Center"></TextBlock>-->
+                                                            <Grid>
+                                                                <TextBlock />
+                                                                <materialDesign:PackIcon Kind="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                                                         VerticalAlignment="Center"
+                                                                                         HorizontalAlignment="Center" />
+                                                            </Grid>
+
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver"
+                                                                     Value="True">
+                                                                <Setter TargetName="border"
+                                                                        Property="Background"
+                                                                        Value="#22000000" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed"
+                                                                     Value="True">
+                                                                <Setter TargetName="border"
+                                                                        Property="Background"
+                                                                        Value="#33000000" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                                <!--箭头-->
+                                <Path Grid.Column="0"
+                                      x:Name="arrow"
+                                      Data="M1,1.5L4.5,5 8,1.5"
+                                      HorizontalAlignment="Right"
+                                      SnapsToDevicePixels="False"
+                                      Stroke="#918C8C"
+                                      StrokeThickness="2"
+                                      VerticalAlignment="Center"
+                                      Margin="10,10" />
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter Property="Data"
+                                            TargetName="arrow"
+                                            Value="M1,4.5L4.5,1 8,4.5" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="borderHeader"
+                                            Value="4,0,0,0" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                    <Setter TargetName="borderHeader"
+                                            Property="CornerRadius"
+                                            Value="3" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.5" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ExpanderStyle"
+                   TargetType="{x:Type Expander}">
+
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Expander}">
+                            <DockPanel>
+                                <ToggleButton x:Name="HeaderSite"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                              Content="{TemplateBinding Header}"
+                                              DockPanel.Dock="Top"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              FontWeight="{TemplateBinding FontWeight}"
+                                              FontStyle="{TemplateBinding FontStyle}"
+                                              FontStretch="{TemplateBinding FontStretch}"
+                                              FontSize="{TemplateBinding FontSize}"
+                                              FontFamily="{TemplateBinding FontFamily}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Margin="1"
+                                              MinWidth="0"
+                                              MinHeight="0"
+                                              Padding="{TemplateBinding Padding}"
+                                              Style="{StaticResource ExpanderToggleButtonStyle}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                <ContentPresenter x:Name="ExpandSite"
+                                                  DockPanel.Dock="Left"
+                                                  Focusable="false"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  Visibility="Collapsed"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </DockPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsExpanded"
+                                         Value="true">
+                                    <Setter Property="Visibility"
+                                            TargetName="ExpandSite"
+                                            Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--下拉框内容样式-->
+            <Style x:Key="RadioMiniButtonStyle"
+                   TargetType="{x:Type RadioButton}">
+
+                <Setter Property="Foreground"
+                        Value="#4B8EC4" />
+                <!--<Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />-->
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="Background"
+                        Value="{DynamicResource PrimaryHueLightBrush}" />
+                <Setter Property="MinHeight"
+                        Value="30" />
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Grid x:Name="templateRoot"
+                                  Background="Transparent"
+                                  SnapsToDevicePixels="True">
+                                <Border x:Name="borderHeader"></Border>
+
+                                <Border x:Name="border2" />
+                                <ContentPresenter x:Name="contentPresenter"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                  Focusable="False"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+                            </Grid>
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsChecked"
+                                         Value="false">
+
+                                    <Setter TargetName="border2"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter TargetName="border2"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border2"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border2"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="borderHeader"
+                                            Value="4,0,0,0" />
+                                    <Setter Property="BorderBrush"
+                                            TargetName="borderHeader"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+
+                                    <Setter TargetName="borderHeader"
+                                            Property="CornerRadius"
+                                            Value="3" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border2"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border2"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border2"
+                                            Property="CornerRadius"
+                                            Value="5,5,5,5" />
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <!-- DataGrid 行样式 -->
+            <Style x:Key="DataGridRowStyle"
+                   TargetType="DataGridRow">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridRow}">
+                            <Grid Margin="5,0,0,0">
+                                <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="1"
+                                        BorderBrush="Transparent"
+                                        CornerRadius="3"
+                                        Margin="1">
+                                    <Border.OpacityMask>
+                                        <SolidColorBrush Color="Black"
+                                                         Opacity="0.3" />
+                                    </Border.OpacityMask>
+                                </Border>
+                                <Rectangle x:Name="borderHeader"
+                                           Width="4"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Height="30"
+                                           HorizontalAlignment="Left"
+                                           Margin="5,0,0,0">
+                                </Rectangle>
+
+                                <DataGridCellsPresenter Height="40" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <EventTrigger RoutedEvent="MouseDoubleClick">
+                                    <BeginStoryboard>
+                                        <Storyboard Timeline.DesiredFrameRate="24">
+                                            <ColorAnimation Storyboard.TargetProperty="(DataGridRow.Background).(SolidColorBrush.Color)"
+                                                            To="#33000000"
+                                                            Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Fill"
+                                            TargetName="borderHeader"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <!--  隔行换色  -->
+                    <Trigger Property="AlternationIndex"
+                             Value="0">
+                        <Setter Property="Background"
+                                Value="#11000000" />
+                    </Trigger>
+                    <Trigger Property="AlternationIndex"
+                             Value="1">
+                        <Setter Property="Background"
+                                Value="#44000000" />
+                    </Trigger>
+
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource PrimaryHueLightBrush}" />
+                    </Trigger>
+
+
+                </Style.Triggers>
+            </Style>
+            <!-- DataGrid 单元格样式 -->
+            <Style x:Key="DataGridCellStyle"
+                   TargetType="DataGridCell">
+                <Setter Property="VerticalAlignment"
+                        Value="Stretch" />
+                <Setter Property="FontSize"
+                        Value="13" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Grid>
+                                <!--保证空白区域也可点击选中-->
+                                <TextBlock FontFamily="微软雅黑" />
+                                <ContentPresenter Margin="8,0,0,0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected"
+                             Value="True">
+                        <!--<Setter Property="Background" Value="White"/>
+                <Setter Property="BorderThickness" Value="0"/>-->
+                        <Setter Property="Foreground"
+                                Value="#FF464646" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <!--DataGrid标题样式-->
+            <Style x:Key="DataGridColumnHeaderStyle"
+                   TargetType="DataGridColumnHeader"
+                   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                <Setter Property="BorderThickness"
+                        Value="0,1,1,1" />
+                <Setter Property="BorderBrush"
+                        Value="#33000000" />
+                <Setter Property="MinHeight"
+                        Value="40" />
+            </Style>
+
+            <!--RepeatButton样式-->
+            <Style x:Key="RepeatButtonTransparent"
+                   TargetType="{x:Type RepeatButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Rectangle Fill="{TemplateBinding Background}"
+                                       Height="{TemplateBinding Height}"
+                                       Width="{TemplateBinding Width}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--音乐进度条-->
+            <Style x:Key="MusicSliderStyle"
+                   TargetType="{x:Type Slider}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Slider}">
+                            <Border x:Name="border"
+                                    Background="{DynamicResource PrimaryHueLightBrush}">
+                                <Track x:Name="PART_Track"
+                                       Grid.Row="1">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Name="RepeatButton1"
+                                                      Height="3"
+                                                      Command="{x:Static Slider.DecreaseLarge}"
+                                                      
+                                                      Style="{StaticResource RepeatButtonTransparent}" />
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Name="RepeatButton2"
+                                                      Height="3"
+                                                      Command="{x:Static Slider.IncreaseLarge}"
+                                                      Background="White"
+                                                      Style="{StaticResource RepeatButtonTransparent}" />
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb"
+                                               Focusable="False"
+                                               Width="0"
+                                               Height="6"
+                                               Background="{DynamicResource PrimaryHueLightBrush}"
+                                               VerticalAlignment="Center">
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                                    <Grid HorizontalAlignment="Center"
+                                                          UseLayoutRounding="True"
+                                                          VerticalAlignment="Center">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="25"
+                                                                Width="{TemplateBinding Width}"
+                                                                Height="{TemplateBinding Height}" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                </Track>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="true">
+                                    <Setter Property="Width"
+                                            TargetName="Thumb"
+                                            Value="10" />
+                                    <Setter Property="Height"
+                                            TargetName="RepeatButton1"
+                                            Value="4" />
+                                    <Setter Property="Height"
+                                            TargetName="RepeatButton2"
+                                            Value="4" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+
+            <!--音量条样式-->
+            <Style x:Key="VolumeSliderStyle"
+                   TargetType="{x:Type Slider}">
+                <Style.Triggers>
+                    <Trigger Property="Orientation"
+                             Value="Vertical">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Slider}">
+                                    <Border x:Name="border">
+                                        <Track x:Name="PART_Track"
+                                               Grid.Column="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton x:Name="RepeatButton1"
+                                                              Command="{x:Static Slider.DecreaseLarge}"
+                                                              Width="5"
+                                                              Background="{DynamicResource PrimaryHueLightBrush}"
+                                                              Style="{StaticResource RepeatButtonTransparent}" />
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton  x:Name="RepeatButton2"
+                                                               Command="{x:Static Slider.IncreaseLarge}"
+                                                               Width="5"
+                                                               Background="LightGray"
+                                                               Style="{StaticResource RepeatButtonTransparent}" />
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb x:Name="Thumb"
+                                                       Focusable="False"
+                                                       Height="20"
+                                                       Width="20"
+                                                       OverridesDefaultStyle="True"
+                                                       Background="{DynamicResource PrimaryHueLightBrush}"
+                                                       VerticalAlignment="Top">
+                                                    <Thumb.Template>
+                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                            <Grid HorizontalAlignment="Center"
+                                                                  UseLayoutRounding="True"
+                                                                  VerticalAlignment="Center">
+                                                                <Border x:Name="borderOut"
+                                                                        Background="White"
+                                                                        CornerRadius="50"
+                                                                        Width="20"
+                                                                        Height="20"
+                                                                        BorderBrush="#E9E9E9"
+                                                                        BorderThickness="1">
+                                                                </Border>
+                                                                <Border x:Name="borderIn"
+                                                                        Background="{TemplateBinding Background}"
+                                                                        CornerRadius="50"
+                                                                        Width="10"
+                                                                        Height="10"
+                                                                        BorderBrush="#E9E9E9"
+                                                                        BorderThickness="1" />
+
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver"
+                                                                         Value="true">
+                                                                    <Setter Property="Opacity"
+                                                                            TargetName="borderIn"
+                                                                            Value="0.5" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Thumb.Template>
+                                                </Thumb>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--滚动歌词样式-->
+            <Style x:Key="LyricListBoxStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="50" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <StackPanel Background="Transparent"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,20,0,0">
+                                <TextBlock x:Name="Lyric"
+                                           Text="{Binding Content}">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="ForegroundBrush"
+                                                         Color="#BABABA" />
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                                <!--<TextBlock x:Name="Trans"
+                                           Text="{Binding Translation}"
+                                           FontSize="18">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="TransForegroundBrush"
+                                                         Color="#55000000" />
+                                    </TextBlock.Foreground>
+
+                                </TextBlock>-->
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver"
+                                                   Value="True" />
+                                        <Condition Property="IsSelected"
+                                                   Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="Lyric"
+                                            Property="Foreground"
+                                            Value="Gray" />
+                                    <!--<Setter TargetName="Trans"
+                                            Property="Foreground"
+                                            Value="#77000000" />-->
+                                </MultiTrigger>
+
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard Timeline.DesiredFrameRate="24">
+                                                <ColorAnimation Storyboard.TargetName="ForegroundBrush"
+                                                                Storyboard.TargetProperty="Color"
+                                                                To="White"
+                                                                Duration="0:0:0.3" />
+                                                <DoubleAnimation Storyboard.TargetName="Lyric"
+                                                                 Storyboard.TargetProperty="FontSize"
+                                                                 To="28"
+                                                                 Duration="0:0:0.3" />
+                                                <!--<ColorAnimation Storyboard.TargetName="TransForegroundBrush"
+                                                                Storyboard.TargetProperty="Color"
+                                                                To="White"
+                                                                Duration="0:0:0.3" />
+                                                <DoubleAnimation Storyboard.TargetName="Trans"
+                                                                 Storyboard.TargetProperty="FontSize"
+                                                                 To="20"
+                                                                 Duration="0:0:0.3" />-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard Timeline.DesiredFrameRate="24">
+                                                <ColorAnimation Storyboard.TargetName="ForegroundBrush"
+                                                                Storyboard.TargetProperty="Color"
+                                                                To="#BABABA"
+                                                                Duration="0:0:0.6" />
+                                                <DoubleAnimation Storyboard.TargetName="Lyric"
+                                                                 Storyboard.TargetProperty="FontSize"
+                                                                 To="25"
+                                                                 Duration="0:0:0.3" />
+                                                <!--<ColorAnimation Storyboard.TargetName="TransForegroundBrush"
+                                                                Storyboard.TargetProperty="Color"
+                                                                To="#55000000"
+                                                                Duration="0:0:0.6" />
+                                                <DoubleAnimation Storyboard.TargetName="Trans"
+                                                                 Storyboard.TargetProperty="FontSize"
+                                                                 To="18"
+                                                                 Duration="0:0:0.3" />-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--透明按钮样式-->
+            <Style x:Key="TransParentButton"
+                   TargetType="Button">
+                <Setter Property="Width"
+                        Value="40" />
+                <Setter Property="Height"
+                        Value="35" />
+                <Setter Property="FontWeight" 
+                        Value="Bold"/>
+                <Setter Property="FontSize"
+                        Value="18" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource PrimaryHueLightBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border x:Name="border"
+                                    CornerRadius="3">
+                                <ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="#33000000" />
+
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--圆形按钮-->
+            <Style x:Key="CornerRadiusButton"
+                   TargetType="Button">
+
+                <Setter Property="Width"
+                        Value="30" />
+                <Setter Property="Height"
+                        Value="30" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border x:Name="border"
+                                    CornerRadius="100"
+                                    Background="#33000000">
+                                <ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--圆形按钮WithFillColor-->
+            <Style x:Key="CornerRadiusButtonWithFillColor"
+                   TargetType="Button">
+
+                <Setter Property="Width"
+                        Value="30" />
+                <Setter Property="Height"
+                        Value="30" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border x:Name="border"
+                                    CornerRadius="100"
+                                    Background="{DynamicResource PrimaryHueLightBrush}">
+                                <ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="#33000000" />
+
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--专辑展示页面样式-->
+            <Style x:Key="ItemsControlStyle"
+                   TargetType="ItemsControl">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <WrapPanel>
+                            </WrapPanel>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=ExpandIn}">
+
+                                <StackPanel Width="220"
+                                            Height="260"
+                                            Margin="0,20,0,0">
+                                    <Grid>
+                                        <Image x:Name="albumImg"
+                                               Source="{Binding PicUrl}"
+                                               Width="200"
+                                               Height="200"
+                                               Margin="5,5,5,0">
+                                            <!--切掉图片多余的角-->
+                                            <Image.OpacityMask>
+                                                <VisualBrush>
+                                                    <VisualBrush.Visual>
+                                                        <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                                                Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                                CornerRadius="8"
+                                                                Background="White" />
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </Image.OpacityMask>
+                                        </Image>
+
+                                        <Rectangle x:Name="background"
+                                                   Fill="#88000000"
+                                                   Width="200"
+                                                   Height="200"
+                                                   RadiusX="8"
+                                                   Margin="5,5,5,0"
+                                                   RadiusY="8"
+                                                   Visibility="Hidden">
+                                        </Rectangle>
+                                        <Button x:Name="playButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xea82;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Visibility="Hidden"
+                                                Margin="20,10,10,10" />
+                                        <Button x:Name="infoButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xe719;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Right"
+                                                Margin="10,10,20,10"
+                                                Visibility="Hidden" />
+                                    </Grid>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="15"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0" />
+                                    <TextBlock Text="{Binding Artist}"
+                                               FontSize="12"
+                                               Foreground="#7E7E7E"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0" />
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="background"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="infoButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="playButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--图标文字按钮-->
+            <Style x:Key="IconWithContentButton"
+                   TargetType="Button">
+                <Setter Property="Margin"
+                        Value="0,0,10,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border BorderThickness="1"
+                                    CornerRadius="3"
+                                    Background="{DynamicResource PrimaryHueLightBrush}">
+                                <Border x:Name="border"
+                                        BorderThickness="1"
+                                        CornerRadius="3">
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   FontFamily="{StaticResource IconFont}"
+                                                   FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center" />
+                                        <ContentPresenter Content="{TemplateBinding Content}"
+                                                          Margin="3,0,0,0" />
+                                    </StackPanel>
+                                </Border>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="#33000000" />
+                                </Trigger>
+                                <Trigger Property="IsPressed"
+                                         Value="True">
+                                    <Setter Property="FontSize"
+                                            Value="12" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:PrismApplication>

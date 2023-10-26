@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="Mypple_Music.Views.AlbumView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:Mypple_Music.Views"
+             xmlns:model="clr-namespace:Mypple_Music.Models"
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border BorderBrush="#22000000"
+                Margin="0,0.5,0,0"
+                BorderThickness="0,0,0,1"></Border>
+
+        <TextBlock Text="专辑"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="14"
+                   FontWeight="Bold"></TextBlock>
+        <TextBox x:Name="SearchBox"
+                 md:HintAssist.Hint="过滤"
+                 Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
+                 Width="150"
+                 Height="30"
+                 HorizontalAlignment="Right"
+                 Margin="0,0,80,0" />
+        <Button HorizontalAlignment="Right"
+                Content="&#xe600;"
+                FontFamily="{StaticResource IconFont}"
+                FontWeight="Bold"
+                Margin="0,0,10,0"
+                Command="{Binding ChangeVisibilityCommand}">
+        </Button>
+
+        <ScrollViewer Grid.Row="1">
+
+            <ItemsControl ItemsSource="{Binding AlbumList}"
+                          HorizontalAlignment="Center"
+                          Style="{StaticResource ItemsControlStyle}">
+                <ItemsControl.InputBindings>
+
+                    <MouseBinding MouseAction="LeftClick"
+                                  Command="{Binding ConfirmAlbumCommand}" />
+
+                </ItemsControl.InputBindings>
+                <d:ItemsControl.Items>
+                    <model:Album Artist="稲葉曇"
+                                 Title="ポストシェルタ"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                    <model:Album Artist="ヨルシカ"
+                                 Title="ただ君に晴れ"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+                    <model:Album Artist="ヨルシカ"
+                                 Title="春泥棒"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+                    <model:Album Artist="ヨルシカ"
+                                 Title="花に亡霊"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                    <model:Album Artist="ヨルシカ"
+                                 Title="詩書きとコーヒー"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                    <model:Album Artist="ヨルシカ"
+                                 Title="雲と幽霊"
+                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                </d:ItemsControl.Items>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

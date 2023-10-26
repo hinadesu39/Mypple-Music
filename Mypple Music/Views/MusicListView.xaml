@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="Mypple_Music.Views.MusicListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Views"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
+             xmlns:model="clr-namespace:Mypple_Music.Models"
+             mc:Ignorable="d"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             FontFamily="微软雅黑"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
+        <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
+    </UserControl.Resources>
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Border BorderBrush="#22000000"
+                Margin="0,0.5,0,0"
+                BorderThickness="0,1,0,1"></Border>
+
+        <TextBlock Text="歌曲"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="14"
+                   FontWeight="Bold" />
+        <TextBox x:Name="SearchBox"
+                 md:HintAssist.Hint="过滤"
+                 Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
+                 Width="150"
+                 Height="30"
+                 HorizontalAlignment="Right"
+                 Margin="0,0,80,0" />
+        <Button HorizontalAlignment="Right"
+                Content="&#xe600;"
+                FontFamily="{StaticResource IconFont}"
+                FontWeight="Bold"
+                Margin="0,0,10,0"
+                Command="{Binding ChangeVisibilityCommand}">
+
+        </Button>
+        <DataGrid Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  AlternationCount="2"
+                  ItemsSource="{Binding MusicList}"
+                  IsReadOnly="True"
+                  SelectionUnit="FullRow"
+                  GridLinesVisibility="None"
+                  RowStyle="{StaticResource DataGridRowStyle}"
+                  MinRowHeight="45"
+                  CellStyle="{StaticResource DataGridCellStyle}"
+                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                              Command="{Binding SelectedMusicChangedCommand}"
+                              CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+            </DataGrid.InputBindings>
+            <d:DataGrid.Items>
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+            </d:DataGrid.Items>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header=""
+                                        Width="0.3*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="&#xea12;"
+                                       Margin="5,0,0,0"
+                                       FontFamily="{StaticResource IconFont}"
+                                       Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                       Visibility="{Binding Status,Converter={StaticResource StatusToVisibility}}" />
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="标题"
+                                    Width="2*"
+                                    Binding="{Binding Title}" />
+                <DataGridTextColumn Header="时长"
+                                    Width="1*"
+                                    Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
+                <DataGridTextColumn Header="艺人"
+                                    Width="1*"
+                                    Binding="{Binding Artist}" />
+                <DataGridTextColumn Header="专辑"
+                                    Width="1*"
+                                    Binding="{Binding Album}" />
+                <DataGridTextColumn Header="类型"
+                                    Width="1*"
+                                    Binding="{Binding Type}" />
+                <DataGridTextColumn Header="播放次数"
+                                    Binding="{Binding PlayTimes}"
+                                    Width="2*" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>

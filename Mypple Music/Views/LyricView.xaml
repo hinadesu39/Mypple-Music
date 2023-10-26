@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="Mypple_Music.Views.LyricView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             FontFamily="微软雅黑">
+    <Grid ClipToBounds="True">
+        <!--背景部分-->
+        <Image Source="{Binding Music.PicUrl}"
+               d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
+               Stretch="Fill"
+               RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <ScaleTransform />
+            </Image.RenderTransform>
+            <Image.Effect>
+                <BlurEffect Radius="800" />
+            </Image.Effect>
+            <!--<Image.Triggers>
+                <EventTrigger RoutedEvent="Image.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard Timeline.DesiredFrameRate="24">
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                             AutoReverse="True"
+                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                             From="1"
+                                             To="2"
+                                             Duration="0:0:30" />
+                            <DoubleAnimation RepeatBehavior="Forever"
+                                             AutoReverse="True"
+                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                             From="1"
+                                             To="2"
+                                             Duration="0:0:30" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>-->
+        </Image>
+        <Rectangle Fill="#77000000" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0"
+                  Margin="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg"
+                       Source="{Binding Music.PicUrl}"
+                       Height="200"
+                       Width="200"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top">
+                    <!--切掉图片多余的角-->
+                    <Image.OpacityMask>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                        CornerRadius="5"
+                                        Background="White" />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Image.OpacityMask>
+                </Image>
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Top"
+                            Margin="20,0,0,0">
+                    <TextBlock d:Text="愛するように"
+                               Text="{Binding Music.Title}"
+                               FontSize="18"
+                               Foreground="Snow"
+                               FontWeight="Bold" />
+                    <TextBlock d:Text="MIMI"
+                               Text="{Binding Music.Artist}"
+                               FontSize="16"
+                               Foreground="Snow" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1"
+                  Margin="50">
+                <extension:ScrollingListBox ItemContainerStyle="{StaticResource LyricListBoxStyle}"
+                                            ItemsSource="{Binding Lyrics}"
+                                            Background="Transparent"
+                                            FontSize="25"
+                                            FontWeight="Bold"
+                                            SelectedIndex="{Binding SelectedLyricIndex}"
+                                            ScrollViewer.CanContentScroll="False"
+                                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                            BorderThickness="0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <i:InvokeCommandAction Command="{Binding ClickSentenceCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </extension:ScrollingListBox>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
