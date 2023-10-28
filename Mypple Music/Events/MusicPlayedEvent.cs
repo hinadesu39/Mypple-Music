@@ -11,5 +11,5 @@ namespace Mypple_Music.Events
     public class MusicPlayedEvent:PubSubEvent<MusicPlayedModel>
     {
     }
-    public record MusicPlayedModel(int musicIndex, string filter);
+    public record MusicPlayedModel(Music music, string filter);
 }

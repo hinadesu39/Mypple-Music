@@ -9,5 +9,6 @@ namespace Mypple_Music.Service
 {
     public interface IMusicService:IBaseService<Music>
     {
+        public Task<Music[]> GetMusicsByAlbumIdAsync(Guid AlbumId);
     }
 }

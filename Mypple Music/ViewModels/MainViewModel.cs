@@ -229,7 +229,7 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> ChangeMusicCommand { get; set; }
         #endregion 命令
 
-         #region 构造函数
+        #region 构造函数
         public MainViewModel(
             IDialogHostService dialog,
             IRegionManager regionManager,
@@ -284,7 +284,6 @@ namespace Mypple_Music.ViewModels
                         return m.filter == "MainView";
                     }
                 );
-           
         }
 
         #endregion 构造函数
@@ -397,7 +396,7 @@ namespace Mypple_Music.ViewModels
             }
             eventAggregator
                 .GetEvent<MusicPlayedEvent>()
-                .Publish(new MusicPlayedModel(PlayIndex, "LyricView"));
+                .Publish(new MusicPlayedModel(Player.Music, "LyricView"));
         }
 
         private async void MediaLoadedAsync(MediaElement mediaElement)
@@ -517,7 +516,8 @@ namespace Mypple_Music.ViewModels
                 {
                     journal = Callback.Context.NavigationService.Journal;
                     isUpdating = true;
-                    IsLyricViewAlive = false; //如果是从歌词界面跳转，要先关闭歌词界面
+                    if (IsLyricViewAlive)
+                        IsLyricViewAlive = false; //如果是从歌词界面跳转，要先关闭歌词界面
                     isUpdating = false;
                 }
             );
@@ -570,6 +570,12 @@ namespace Mypple_Music.ViewModels
                     break;
                 case "Plus": //弹出添加播放列表对话框
                     AddPlayList();
+                    break;
+                case "TurnOffLyricview":
+                    if (!IsLyricViewAlive)
+                    {
+                        GoBack();
+                    }
                     break;
             }
         }

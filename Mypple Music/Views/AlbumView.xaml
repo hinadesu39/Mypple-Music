@@ -39,38 +39,58 @@
                 Command="{Binding ChangeVisibilityCommand}">
         </Button>
 
-        <ScrollViewer Grid.Row="1">
 
-            <ItemsControl ItemsSource="{Binding AlbumList}"
-                          HorizontalAlignment="Center"
-                          Style="{StaticResource ItemsControlStyle}">
-                <ItemsControl.InputBindings>
+        <ListBox ItemsSource="{Binding AlbumList}"
+                 HorizontalAlignment="Center"
+                 Grid.Row="1"
+                 Style="{StaticResource AlbumListStyle}"
+                 ItemContainerStyle="{StaticResource AlbumListItemStyle}"
+                 SelectedIndex="{Binding SelectedIndex}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
-                    <MouseBinding MouseAction="LeftClick"
-                                  Command="{Binding ConfirmAlbumCommand}" />
-
-                </ItemsControl.InputBindings>
-                <d:ItemsControl.Items>
-                    <model:Album Artist="稲葉曇"
-                                 Title="ポストシェルタ"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
-                    <model:Album Artist="ヨルシカ"
-                                 Title="ただ君に晴れ"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
-                    <model:Album Artist="ヨルシカ"
-                                 Title="春泥棒"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
-                    <model:Album Artist="ヨルシカ"
-                                 Title="花に亡霊"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
-                    <model:Album Artist="ヨルシカ"
-                                 Title="詩書きとコーヒー"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
-                    <model:Album Artist="ヨルシカ"
-                                 Title="雲と幽霊"
-                                 PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
-                </d:ItemsControl.Items>
-            </ItemsControl>
-        </ScrollViewer>
+            <d:ListBox.Items>
+                <model:Album Artist="稲葉曇"
+                             Title="ポストシェルタ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                <model:Album Artist="ヨルシカ"
+                             Title="ただ君に晴れ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="春泥棒"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="花に亡霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="詩書きとコーヒー"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="雲と幽霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="稲葉曇"
+                             Title="ポストシェルタ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                <model:Album Artist="ヨルシカ"
+                             Title="ただ君に晴れ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="春泥棒"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="花に亡霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="詩書きとコーヒー"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="雲と幽霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+            </d:ListBox.Items>
+        </ListBox>
     </Grid>
 </UserControl>

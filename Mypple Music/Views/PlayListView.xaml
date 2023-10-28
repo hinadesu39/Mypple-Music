@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
+        <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,10 +47,33 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Border Width="250"
+                    Height="250"
+                    CornerRadius="8"
+                    Background="LightGray"
+                    Margin="10">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20"
+                                      ShadowDepth="0"
+                                      Color="Black"
+                                      Opacity="0.4" />
+                </Border.Effect>
+                <Grid>
+                    <TextBlock FontFamily="{StaticResource IconFont}"
+                               FontSize="80"
+                               FontWeight="ExtraBold"
+                               Text="&#xe64b;"
+                               Foreground="#33000000"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+
+                </Grid>
+            </Border>
             <Image x:Name="albumImg"
-                   Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
-                   Width="200"
-                   Height="200"
+                   d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
+                   Source="{Binding Album.PicUrl}"
+                   Width="250"
+                   Height="250"
                    Margin="10"
                    >
                 <!--切掉图片多余的角-->
@@ -70,25 +94,25 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Margin="0,80,0,0">
+                <StackPanel Margin="0,10,0,0">
                     <TextBlock Grid.Row="0"
-                               Text="我的最爱"
-                               
-                               FontSize="22"
+                               d:Text="我的最爱"
+                               Text="{Binding Album.Title}"
+                               FontSize="25"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
                     <TextBlock x:Name="itemCount"
-                               Text="38项"
+                               d:Text="38项"
                                Foreground="Gray"
-                               Margin="0,3,0,0"
-                               FontSize="10"
-                               d:Text="{Binding PlayList.Count,StringFormat={}{0}项}" />
+                               Margin="5,3,0,0"
+                               FontSize="12"
+                               Text="{Binding Count,StringFormat={}{0}项}" />
                     <TextBlock x:Name="totalDuaration"
-                               Text="2小时45分钟"
+                               d:Text="2小时45分钟"
                                Foreground="Gray"
-                               Margin="0,3,0,0"
-                               FontSize="10"
-                               d:Text="{Binding PlayList.Duration,Converter={StaticResource MinutesToHoursMinutes}}" />
+                               Margin="5,3,0,0"
+                               FontSize="12"
+                               Text="{Binding Duration,Converter={StaticResource MinutesToHoursMinutes}}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1"
@@ -122,7 +146,7 @@
                               Command="{Binding SelectedMusicChangedCommand}"
                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
             </DataGrid.InputBindings>
-            <DataGrid.Items>
+            <d:DataGrid.Items>
                 <model:Music Album="111"
                              Artist="111"
                              Duration="111"
@@ -151,7 +175,7 @@
                              PlayTimes="11"
                              Title="222"
                              PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
-            </DataGrid.Items>
+            </d:DataGrid.Items>
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -186,7 +210,7 @@
                                     Width="2*"
                                     Binding="{Binding Album}" />
                 <DataGridTextColumn Header="时长"
-                                    Binding="{Binding Duration}"
+                                    Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}"
                                     Width="1*" />
 
             </DataGrid.Columns>

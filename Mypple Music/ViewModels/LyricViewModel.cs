@@ -82,8 +82,8 @@ namespace Mypple_Music.ViewModels
             //事件订阅
             eventAggregator.GetEvent<MusicPlayedEvent>().Subscribe(arg =>
             {
-                musicIndex = arg.musicIndex;
-                Music = PlayList[musicIndex];
+               
+                Music = arg.music;
                 Lyrics = this.lyricService.LyricSplitter(Music.Lyric);
             },
             m =>

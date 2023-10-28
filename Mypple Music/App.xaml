@@ -203,7 +203,7 @@
                 </Setter>
             </Style>
 
-            <!--列表样式-->
+            <!--导航列表样式-->
             <Style x:Key="MyListBoxItemStyle"
                    TargetType="ListBoxItem">
                 <Setter Property="MinHeight"
@@ -263,7 +263,7 @@
             </Style>
 
 
-            <!--展示列表样式-->
+            <!--歌曲展示列表样式-->
             <Style x:Key="ListBoxItemForDisplayStyle"
                    TargetType="ListBoxItem">
                 <Setter Property="MinHeight"
@@ -731,7 +731,6 @@
                                         <RepeatButton Name="RepeatButton1"
                                                       Height="3"
                                                       Command="{x:Static Slider.DecreaseLarge}"
-                                                      
                                                       Style="{StaticResource RepeatButtonTransparent}" />
                                     </Track.DecreaseRepeatButton>
                                     <Track.IncreaseRepeatButton>
@@ -965,8 +964,8 @@
                         Value="40" />
                 <Setter Property="Height"
                         Value="35" />
-                <Setter Property="FontWeight" 
-                        Value="Bold"/>
+                <Setter Property="FontWeight"
+                        Value="Bold" />
                 <Setter Property="FontSize"
                         Value="18" />
                 <Setter Property="Foreground"
@@ -1063,31 +1062,60 @@
             </Style>
 
             <!--专辑展示页面样式-->
-            <Style x:Key="ItemsControlStyle"
-                   TargetType="ItemsControl">
-                <Setter Property="ItemsPanel">
+            <Style x:Key="AlbumListStyle"
+                   TargetType="ListBox">
+                <Setter Property="Template">
                     <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <WrapPanel>
-                            </WrapPanel>
-                        </ItemsPanelTemplate>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Hidden">
+                                <WrapPanel Orientation="Horizontal"
+                                           IsItemsHost="True"
+                                           ScrollViewer.CanContentScroll="True" />
+                            </ScrollViewer>
+                        </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="ItemTemplate">
+            </Style>
+            <Style x:Key="AlbumListItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="Template">
                     <Setter.Value>
-                        <DataTemplate>
+                        <ControlTemplate TargetType="ListBoxItem">
                             <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=ExpandIn}">
 
                                 <StackPanel Width="220"
                                             Height="260"
                                             Margin="0,20,0,0">
                                     <Grid>
+                                        <Border Width="200"
+                                                Height="200"
+                                                CornerRadius="8"
+                                                Background="LightGray"
+                                                Margin="5,5,5,0">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="20"
+                                                                  ShadowDepth="0"
+                                                                  Color="Black"
+                                                                  Opacity="0.4" />
+                                            </Border.Effect>
+                                            <Grid>
+                                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                                           FontSize="80"
+                                                           FontWeight="ExtraBold"
+                                                           Text="&#xe64b;"
+                                                           Foreground="#33000000"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+
+                                            </Grid>
+                                        </Border>
                                         <Image x:Name="albumImg"
                                                Source="{Binding PicUrl}"
                                                Width="200"
                                                Height="200"
                                                Margin="5,5,5,0">
-                                            <!--切掉图片多余的角-->
+
                                             <Image.OpacityMask>
                                                 <VisualBrush>
                                                     <VisualBrush.Visual>
@@ -1141,7 +1169,7 @@
                                                Margin="10,0,0,0" />
                                 </StackPanel>
                             </materialDesign:TransitioningContent>
-                            <DataTemplate.Triggers>
+                            <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver"
                                          Value="True">
                                     <Setter TargetName="background"
@@ -1155,11 +1183,12 @@
                                             Value="Visible" />
 
                                 </Trigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
+           
 
             <!--图标文字按钮-->
             <Style x:Key="IconWithContentButton"

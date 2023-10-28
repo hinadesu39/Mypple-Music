@@ -11,5 +11,6 @@ namespace Mypple_Music.Extensions
         public static readonly string MainViewRegionName = "MainView";
         public static readonly string SettingsiewRegionName = "SettingsView";
         public static readonly string ArtistRegionName = "ArtistView";
+        public static readonly string AlbumRegionName = "AlbumView";
     }
 }

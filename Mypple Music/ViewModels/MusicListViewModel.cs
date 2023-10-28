@@ -3,10 +3,12 @@ using Mypple_Music.Models;
 using Mypple_Music.Service;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -84,6 +86,10 @@ namespace Mypple_Music.ViewModels
                 .Publish(
                     new PlayListCreatedModel(MusicList, MusicList.IndexOf(SelectedMusic), "MainView")
                 );
+            //发送歌曲给歌词界面
+            eventAggregator
+               .GetEvent<MusicPlayedEvent>()
+               .Publish(new MusicPlayedModel(Music, "LyricView"));
         }
 
         async void Config()
@@ -91,6 +97,19 @@ namespace Mypple_Music.ViewModels
             IsSearchVisible = false;
             MusicList = new ObservableCollection<Music>(await musicService.GetAllAsync());
                       
+        }
+
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            //设置播放状态
+            var playingMusic = MusicList.FirstOrDefault(m => m.Status == Music.PlayStatus.StartPlay);
+            if (playingMusic != null)
+                playingMusic.Status = Music.PlayStatus.StopPlay;
+        }
+
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+
         }
     }
 }

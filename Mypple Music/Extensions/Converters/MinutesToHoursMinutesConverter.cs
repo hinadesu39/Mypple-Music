@@ -12,11 +12,12 @@ namespace Mypple_Music.Extensions.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int minutes)
+            if (value is double second)
             {
-                int hours = minutes / 60;
-                minutes = minutes % 60;
-                return $"{hours}小时{minutes}分";
+                int hours = (int)(second / 3600);
+                int minutes = (int)((second % 3600) / 60);
+                second = (int)((second % 3600) % 60);
+                return $"{hours}小时{minutes}分{second}秒";
             }
             return value;
         }

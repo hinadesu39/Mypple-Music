@@ -15,7 +15,8 @@
         <Image Source="{Binding Music.PicUrl}"
                d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
                Stretch="Fill"
-               RenderTransformOrigin="0.5,0.5">
+               RenderTransformOrigin="0.5,0.5"
+               RenderOptions.BitmapScalingMode="LowQuality">
             <Image.RenderTransform>
                 <ScaleTransform />
             </Image.RenderTransform>
@@ -55,7 +56,7 @@
                   Margin="50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
                 <Image d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg"
                        Source="{Binding Music.PicUrl}"
@@ -82,10 +83,12 @@
                                Text="{Binding Music.Title}"
                                FontSize="18"
                                Foreground="Snow"
-                               FontWeight="Bold" />
+                               FontWeight="Bold" 
+                               TextWrapping="Wrap"/>
                     <TextBlock d:Text="MIMI"
                                Text="{Binding Music.Artist}"
                                FontSize="16"
+                               Margin="0,10,0,0"
                                Foreground="Snow" />
                 </StackPanel>
             </Grid>

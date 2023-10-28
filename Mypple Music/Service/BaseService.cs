@@ -32,6 +32,24 @@ namespace Mypple_Music.Service
             return res;
         }
 
+        public async Task<TEntity?> GetByIdAsync(Guid id)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"{serviceName}/GetById?id={id}";
+            var res = await client.ExecuteAsync<TEntity>(request);
+            return res;
+        }
+
+        public async Task<List<TEntity>> GetByNameAsync(string name)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"{serviceName}/GetById?name={name}";
+            var res = await client.ExecuteAsync<List<TEntity>>(request);
+            return res;
+        }
+
         public Task UploadAsync(string url)
         {
             throw new NotImplementedException();
