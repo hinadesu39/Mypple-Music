@@ -616,7 +616,7 @@
                                            HorizontalAlignment="Left"
                                            Margin="5,0,0,0">
                                 </Rectangle>
-
+                                
                                 <DataGridCellsPresenter Height="40" />
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -635,6 +635,11 @@
                                             TargetName="borderHeader"
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
                                 </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+
+                                </Trigger>
+
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -1082,8 +1087,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
-                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=ExpandIn}">
-
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
                                 <StackPanel Width="220"
                                             Height="260"
                                             Margin="0,20,0,0">
@@ -1146,7 +1150,9 @@
                                                 VerticalAlignment="Bottom"
                                                 HorizontalAlignment="Left"
                                                 Visibility="Hidden"
-                                                Margin="20,10,10,10" />
+                                                Margin="20,10,10,10"
+                                                Command="{Binding DataContext.PlayAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
                                         <Button x:Name="infoButton"
                                                 Style="{StaticResource CornerRadiusButton}"
                                                 Content="&#xe719;"
@@ -1156,7 +1162,9 @@
                                                 VerticalAlignment="Bottom"
                                                 HorizontalAlignment="Right"
                                                 Margin="10,10,20,10"
-                                                Visibility="Hidden" />
+                                                Visibility="Hidden"
+                                                Command="{Binding DataContext.SettingAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
                                     </Grid>
                                     <TextBlock Text="{Binding Title}"
                                                FontSize="15"
@@ -1169,6 +1177,7 @@
                                                Margin="10,0,0,0" />
                                 </StackPanel>
                             </materialDesign:TransitioningContent>
+
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver"
                                          Value="True">
@@ -1181,14 +1190,16 @@
                                     <Setter TargetName="playButton"
                                             Property="Visibility"
                                             Value="Visible" />
+                                    <!--<Setter Property="Tag"
+                                            Value="{Binding RelativeSource={RelativeSource Self},Path=}" />-->
 
                                 </Trigger>
+
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
-           
 
             <!--图标文字按钮-->
             <Style x:Key="IconWithContentButton"

@@ -18,6 +18,15 @@ namespace Mypple_Music.ViewModels
     {
         private IArtistService artistService;
         private readonly IRegionManager RegionManager;
+
+        private bool isSearchVisible;
+
+        public bool IsSearchVisible
+        {
+            get { return isSearchVisible; }
+            set { isSearchVisible = value; RaisePropertyChanged(); }
+        }
+
         private ObservableCollection<Artist> artists;
 
         public ObservableCollection<Artist> Artists
@@ -30,6 +39,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
+        public DelegateCommand ChangeVisibilityCommand { get; set; }
         public DelegateCommand<Artist> NavigateCommand { get; set; }
 
         public ArtistViewModel(IContainerProvider containerProvider, IRegionManager regionManager, IArtistService artistService)
@@ -37,9 +47,15 @@ namespace Mypple_Music.ViewModels
         {
            
             this.artistService = artistService;
+            ChangeVisibilityCommand = new DelegateCommand(ChangeVisibility);
             NavigateCommand = new DelegateCommand<Artist>(Navigate);
             RegionManager = regionManager;
             Config();
+        }
+
+        private void ChangeVisibility()
+        {
+            
         }
 
         private void Navigate(Artist artist)

@@ -6,6 +6,6 @@ namespace Mypple_Music.Events
 {
     public class AppSession:BindableBase
     {
-        public static ObservableCollection<Music> MusicList;
-    }
+
+	}
 }

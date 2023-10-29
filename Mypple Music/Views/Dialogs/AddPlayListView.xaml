@@ -16,7 +16,7 @@
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
         <Border BorderBrush="#22000000"
-                Margin="0,0.5,0,0"  
+                Margin="0,0.5,0,0"
                 BorderThickness="0,1,0,1"></Border>
 
         <TextBlock Text="新增播放列表"
@@ -69,8 +69,8 @@
                 <Image.OpacityMask>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                            <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Width}"
+                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Height}"
                                     CornerRadius="8"
                                     Background="White" />
                         </VisualBrush.Visual>

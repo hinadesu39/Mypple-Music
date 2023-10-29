@@ -1,5 +1,8 @@
-﻿using Prism.Mvvm;
+﻿using Mypple_Music.Common;
+using Prism.Mvvm;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Mypple_Music.Models
 {
@@ -15,6 +18,20 @@ namespace Mypple_Music.Models
             set { id = value; }
         }
 
+        /// <summary>
+        /// 歌曲名
+        /// </summary>
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set
+            {
+                title = value;
+                RaisePropertyChanged();
+            }
+        }
         /// <summary>
         /// 歌曲url
         /// </summary>
@@ -48,39 +65,27 @@ namespace Mypple_Music.Models
             get { return picUrl; }
             set
             {
-                picUrl = value;
+                picUrl = value;               
+                CreateLocalPicAsync(picUrl);
                 RaisePropertyChanged();
             }
         }
-
-        ///// <summary>
-        ///// 本地下载后歌曲名片的路径
-        ///// </summary>
-        //private string localPicUrl;
-        //public string LocalPicUrl
-        //{
-        //    get { return localPicUrl; }
-        //    set
-        //    {
-        //        localPicUrl = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
 
         /// <summary>
-        /// 歌曲名
+        /// 本地下载后歌曲名片的路径
         /// </summary>
-        private string title;
-
-        public string Title
+        private string localPicUrl;
+        public string LocalPicUrl
         {
-            get { return title; }
+            get { return localPicUrl; }
             set
             {
-                title = value;
+                localPicUrl = value;
                 RaisePropertyChanged();
             }
         }
+
+
 
         /// <summary>
         /// 歌曲时长
@@ -224,7 +229,7 @@ namespace Mypple_Music.Models
         /// <summary>
         /// 播放状态
         /// </summary>
-        private PlayStatus status = PlayStatus.ClosePlay;
+        private PlayStatus status = PlayStatus.StopPlay;
         public PlayStatus Status
         {
             get { return status; }
@@ -241,8 +246,12 @@ namespace Mypple_Music.Models
         public enum PlayStatus
         {
             StartPlay, //正在播放
-            StopPlay, //停止播放
-            ClosePlay //彻底关闭
+            PausePlay, //暂停播放
+            StopPlay //彻底关闭
+        }
+        async void CreateLocalPicAsync(Uri picUrl)
+        {
+            LocalPicUrl = await FileHelper.GetImageAsync(picUrl);
         }
     }
 }

@@ -14,13 +14,14 @@
              d:DesignWidth="800">
     <UserControl.Resources>
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
+        <converter:StatusToBoolConverter x:Key="StatusToBool" />
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Border BorderBrush="#22000000"
@@ -74,8 +75,7 @@
                    Source="{Binding Album.PicUrl}"
                    Width="250"
                    Height="250"
-                   Margin="10"
-                   >
+                   Margin="10">
                 <!--切掉图片多余的角-->
                 <Image.OpacityMask>
                     <VisualBrush>
@@ -180,23 +180,80 @@
                 <DataGridTemplateColumn  Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image x:Name="albumImg"
-                                   Source="{Binding PicUrl}"
-                                   Width="45"
-                                   Height="45"
-                                   Margin="10,0,0,0">
-                                <!--切掉图片多余的角-->
-                                <Image.OpacityMask>
-                                    <VisualBrush>
-                                        <VisualBrush.Visual>
-                                            <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                    CornerRadius="5"
-                                                    Background="White" />
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </Image.OpacityMask>
-                            </Image>
+                            <Grid>
+                                <Image x:Name="albumImg"
+                                       Source="{Binding PicUrl}"
+                                       Width="45"
+                                       Height="45"
+                                       Margin="10,0,0,0">
+                                    <!--切掉图片多余的角-->
+                                    <Image.OpacityMask>
+                                        <VisualBrush>
+                                            <VisualBrush.Visual>
+                                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                        CornerRadius="5"
+                                                        Background="White" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Image.OpacityMask>
+                                </Image>
+                                <!--图片中间的播放按钮-->
+                                <ToggleButton x:Name="playButton"
+                                              Margin="10,0,0,0"
+                                              Height="35"
+                                              IsChecked="{Binding DataContext.PlayOrPause, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                              Visibility="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Checked">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                                                   CommandParameter="{Binding}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="Unchecked">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                                                   CommandParameter="{Binding}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border x:Name="borderIn"
+                                                    Background="Transparent"
+                                                    CornerRadius="2">
+
+                                                <StackPanel VerticalAlignment="Center"
+                                                            HorizontalAlignment="Center">
+                                                    <TextBlock x:Name="btnContent"
+                                                               HorizontalAlignment="Center"
+                                                               Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                                               FontFamily="{StaticResource IconFont}"
+                                                               Text="&#xea82;"
+                                                               FontSize="16"
+                                                               FontWeight="Bold">
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver"
+                                                         Value="True">
+                                                    <Setter TargetName="borderIn"
+                                                            Property="Background"
+                                                            Value="#22000000" />
+                                                </Trigger>
+                                                <Trigger Property="IsChecked"
+                                                         Value="True">
+                                                    <Setter TargetName="borderIn"
+                                                            Property="Background"
+                                                            Value="#33000000" />
+                                                    <Setter TargetName="btnContent"
+                                                            Property="Text"
+                                                            Value="&#xea81;" />
+
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

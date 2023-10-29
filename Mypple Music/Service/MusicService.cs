@@ -25,5 +25,14 @@ namespace Mypple_Music.Service
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }
+
+        public async Task<Music[]> GetMusicsByArtistIdAsync(Guid ArtistId)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"/Music.Main/api/Musics/GetByArtistId?artistId={ArtistId}";
+            var res = await client.ExecuteAsync<Music[]>(request);
+            return res;
+        }
     }
 }

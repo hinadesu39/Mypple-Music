@@ -284,6 +284,27 @@ namespace Mypple_Music.ViewModels
                         return m.filter == "MainView";
                     }
                 );
+            eventAggregator
+                .GetEvent<StopPlayEvent>()
+                .Subscribe(
+                    arg =>
+                    {
+                        if (arg.isStop)
+                        {
+                            MediaElement.Pause();
+                            PlayOrPause = false;
+                        }
+                        else
+                        {
+                            MediaElement.Play();
+                            PlayOrPause = true;
+                        }
+                    },
+                    m =>
+                    {
+                        return m.filter == "MainView";
+                    }
+                );
         }
 
         #endregion 构造函数
@@ -357,12 +378,12 @@ namespace Mypple_Music.ViewModels
         /// </summary>
         private void MediaEnded(string obj = "Next")
         {
-            //Player.Timer.Dispose();
             switch (Player.Mode)
             {
+                //随机播放
                 case PlayerModel.PlayMode.ShufflePlay:
                     if (Player.Music != null)
-                        Player.Music.Status = Music.PlayStatus.ClosePlay;
+                        Player.Music.Status = Music.PlayStatus.StopPlay;
                     //创建一个随机数种子提高随机数不重复概率
                     byte[] buffer = Guid.NewGuid().ToByteArray();
                     int seed = BitConverter.ToInt32(buffer, 0);
@@ -375,6 +396,7 @@ namespace Mypple_Music.ViewModels
                     InitPlay(PlayList[randomIndex]);
                     Player.Music.Status = Music.PlayStatus.StartPlay;
                     break;
+                //顺序播放
                 case PlayerModel.PlayMode.PlayInOrder:
                     if (obj == "Pre")
                     {
@@ -386,12 +408,12 @@ namespace Mypple_Music.ViewModels
                     }
                     //改变歌曲播放状态
                     if (Player.Music != null)
-                        Player.Music.Status = Music.PlayStatus.ClosePlay;
+                        Player.Music.Status = Music.PlayStatus.StopPlay;
                     InitPlay(PlayList[PlayIndex]);
                     Player.Music.Status = Music.PlayStatus.StartPlay;
                     break;
                 case PlayerModel.PlayMode.RepeatOne:
-                    InitPlay(Player.Music);
+                    MediaElement.Position = TimeSpan.Zero;
                     break;
             }
             eventAggregator
@@ -423,11 +445,16 @@ namespace Mypple_Music.ViewModels
         /// <param name="music"></param>
         private async void InitPlay(Music music)
         {
+            //如果发现播放的是同一首歌
+            if (music.AudioUrl == MediaElement.Source)
+            {
+                MediaElement.Position = TimeSpan.Zero;
+                return;
+            }
             //初始化控件数据
             Player.Music = music;
             PlayIndex = PlayList.IndexOf(music);
             Player.PlayProgress = 0;
-            Player.PlayProgressLength = 1;
             MediaElement.Source = music.AudioUrl;
             Player.PlayProgressLength = music.Duration;
         }
@@ -437,10 +464,18 @@ namespace Mypple_Music.ViewModels
             if (PlayOrPause)
             {
                 MediaElement.Play();
+                Player.Music.Status = Music.PlayStatus.StartPlay;
+                eventAggregator
+                    .GetEvent<StopPlayEvent>()
+                    .Publish(new StopModel(false, "PlayListView"));
             }
             else
             {
                 MediaElement.Pause();
+                Player.Music.Status = Music.PlayStatus.PausePlay;
+                eventAggregator
+                    .GetEvent<StopPlayEvent>()
+                    .Publish(new StopModel(true, "PlayListView"));
             }
         }
 
@@ -460,10 +495,13 @@ namespace Mypple_Music.ViewModels
         private void GoBack()
         {
             if (!isUpdating)
+
                 if (journal != null && journal.CanGoBack)
                 {
                     journal.GoBack();
                     isUpdating = true;
+                    if (IsLyricViewAlive) //如果从歌词界面返回则及时关闭歌词按钮效果
+                        IsLyricViewAlive = false;
                     var preNavi = MenuBars.FirstOrDefault(
                         m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
                     );
@@ -572,7 +610,7 @@ namespace Mypple_Music.ViewModels
                     AddPlayList();
                     break;
                 case "TurnOffLyricview":
-                    if (!IsLyricViewAlive)
+                    if (!IsLyricViewAlive && !isUpdating)
                     {
                         GoBack();
                     }

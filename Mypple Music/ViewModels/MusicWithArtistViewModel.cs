@@ -1,4 +1,5 @@
 ﻿using Mypple_Music.Models;
+using Mypple_Music.Service;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -12,6 +13,8 @@ namespace Mypple_Music.ViewModels
 {
     public class MusicWithArtistViewModel : NavigationViewModel
     {
+        private IMusicService musicService;
+        private IAlbumService albumService;
         private Artist artist;
 
         private ObservableCollection<Album> albums;
@@ -26,23 +29,20 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public MusicWithArtistViewModel(IContainerProvider containerProvider)
+        public MusicWithArtistViewModel(IContainerProvider containerProvider, IAlbumService albumService, IMusicService musicService)
             : base(containerProvider)
         {
             Albums = new ObservableCollection<Album>();
-            Config();
+            this.albumService = albumService;
+            this.musicService = musicService;
         }
 
-        void Config()
-        {
-            
-        }
-
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (navigationContext.Parameters.ContainsKey("Artist"))
             {
                 this.artist = navigationContext.Parameters.GetValue<Artist>("Artist");
+                await albumService.get
             }
         }
     }

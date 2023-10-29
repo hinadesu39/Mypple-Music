@@ -7,6 +7,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -74,42 +75,53 @@ namespace Mypple_Music.ViewModels
         private void SelectedMusicChanged(Music Music)
         {
             //设置播放状态
-            var playingMusic = MusicList.FirstOrDefault(m => m.Status == Music.PlayStatus.StartPlay);
+            var playingMusic = MusicList.FirstOrDefault(
+                m => m.Status == Music.PlayStatus.StartPlay
+            );
             if (playingMusic != null)
                 playingMusic.Status = Music.PlayStatus.StopPlay;
             SelectedMusic = Music;
             SelectedMusic.Status = Music.PlayStatus.StartPlay;
 
-            //把当前播放列表发送给播放器待播放            
+            //把当前播放列表发送给播放器待播放
             eventAggregator
                 .GetEvent<PlayListCreatedEvent>()
                 .Publish(
-                    new PlayListCreatedModel(MusicList, MusicList.IndexOf(SelectedMusic), "MainView")
+                    new PlayListCreatedModel(
+                        MusicList,
+                        MusicList.IndexOf(SelectedMusic),
+                        "MainView"
+                    )
                 );
             //发送歌曲给歌词界面
             eventAggregator
-               .GetEvent<MusicPlayedEvent>()
-               .Publish(new MusicPlayedModel(Music, "LyricView"));
+                .GetEvent<MusicPlayedEvent>()
+                .Publish(new MusicPlayedModel(Music, "LyricView"));
         }
 
         async void Config()
         {
             IsSearchVisible = false;
             MusicList = new ObservableCollection<Music>(await musicService.GetAllAsync());
-                      
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //设置播放状态
-            var playingMusic = MusicList.FirstOrDefault(m => m.Status == Music.PlayStatus.StartPlay);
-            if (playingMusic != null)
-                playingMusic.Status = Music.PlayStatus.StopPlay;
+            try
+            {
+                //设置播放状态
+                var playingMusic = MusicList.FirstOrDefault(
+                    m => m.Status == Music.PlayStatus.StartPlay
+                );
+                if (playingMusic != null)
+                    playingMusic.Status = Music.PlayStatus.StopPlay;
+            }
+            catch (Exception ex)
+            {
+               Debug.WriteLine(ex);
+            }
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-
-        }
+        public override void OnNavigatedTo(NavigationContext navigationContext) { }
     }
 }

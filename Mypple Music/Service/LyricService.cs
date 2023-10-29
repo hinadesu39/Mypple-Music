@@ -1,20 +1,17 @@
 ﻿using Mypple_Music.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 namespace Mypple_Music.Service
 {
     public class LyricService : ILyricService
     {
+       
+
         public ObservableCollection<Lyric> LyricSplitter(string lyric)
         {
-            ObservableCollection<Lyric> Lyrics = new ();
+            ObservableCollection<Lyric> Lyrics = new();
 
             // 遍历每一行歌词
             foreach (var line in lyric.Split('\n'))
@@ -33,7 +30,7 @@ namespace Mypple_Music.Service
                     TimeSpan timeSpan = TimeSpan.Parse(sb.ToString());
                     double progress = timeSpan.TotalSeconds;
 
-                    // 提取歌词内容                   
+                    // 提取歌词内容
                     var content = line.Substring(line.IndexOf(']') + 1);
                     if (content != string.Empty)
                         Lyrics.Add(new Lyric() { Content = content, TimeSpan = progress });
@@ -50,9 +47,7 @@ namespace Mypple_Music.Service
                     //    Lyrics.Add(new Lyric() { Content = newContent[0], TimeSpan = progress });
 
                     //}
-
                 }
-
             }
             return Lyrics;
         }

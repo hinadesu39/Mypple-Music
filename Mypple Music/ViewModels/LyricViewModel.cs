@@ -1,4 +1,5 @@
 ﻿using ImTools;
+using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
@@ -30,6 +32,15 @@ namespace Mypple_Music.ViewModels
 
         private ILyricService lyricService;
         private int musicIndex;
+
+        private string blurBackground;
+
+        public string BlurBackground
+        {
+            get { return blurBackground; }
+            set { blurBackground = value; RaisePropertyChanged(); }
+        }
+
 
         private Music music;
 
@@ -80,11 +91,12 @@ namespace Mypple_Music.ViewModels
             ClickSentenceCommand = new DelegateCommand(ClickSentence);
 
             //事件订阅
-            eventAggregator.GetEvent<MusicPlayedEvent>().Subscribe(arg =>
+            eventAggregator.GetEvent<MusicPlayedEvent>().Subscribe(async arg =>
             {
                
                 Music = arg.music;
                 Lyrics = this.lyricService.LyricSplitter(Music.Lyric);
+                BlurBackground =Path.GetFullPath(await FileHelper.GetGaussianBlurImageAsync(Music.PicUrl));
             },
             m =>
             {
@@ -120,6 +132,8 @@ namespace Mypple_Music.ViewModels
                 Music = lyricInfo.PlayList[lyricInfo.PlayIndex];
                 mediaElement = lyricInfo.MediaElement;
                 Lyrics = lyricService.LyricSplitter(Music.Lyric);
+                BlurBackground = Path.GetFullPath(await FileHelper.GetGaussianBlurImageAsync(Music.PicUrl));
+
 
                 //设置滚动
                 while (await Timer.WaitForNextTickAsync())

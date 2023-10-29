@@ -11,41 +11,41 @@
              d:DesignWidth="800"
              FontFamily="微软雅黑">
     <Grid ClipToBounds="True">
-        <!--背景部分-->
-        <Image Source="{Binding Music.PicUrl}"
-               d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
-               Stretch="Fill"
-               RenderTransformOrigin="0.5,0.5"
-               RenderOptions.BitmapScalingMode="LowQuality">
-            <Image.RenderTransform>
-                <ScaleTransform />
-            </Image.RenderTransform>
-            <Image.Effect>
-                <BlurEffect Radius="800" />
-            </Image.Effect>
-            <!--<Image.Triggers>
-                <EventTrigger RoutedEvent="Image.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard Timeline.DesiredFrameRate="24">
-                            <DoubleAnimation RepeatBehavior="Forever"
-                                             AutoReverse="True"
-                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                             From="1"
-                                             To="2"
-                                             Duration="0:0:30" />
-                            <DoubleAnimation RepeatBehavior="Forever"
-                                             AutoReverse="True"
-                                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                             From="1"
-                                             To="2"
-                                             Duration="0:0:30" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Image.Triggers>-->
-        </Image>
-        <Rectangle Fill="#77000000" />
-
+        <Grid>
+            <!--<Grid.Effect>
+                <BlurEffect Radius="50" />
+            </Grid.Effect>-->
+            <Image Source="{Binding BlurBackground}"
+                   d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
+                   Stretch="Fill"
+                   RenderTransformOrigin="0.5,0.5"
+                   RenderOptions.BitmapScalingMode="LowQuality">
+                <Image.RenderTransform>
+                    <ScaleTransform />
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation RepeatBehavior="Forever"
+                                                 AutoReverse="True"
+                                                 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                 From="1"
+                                                 To="1.3"
+                                                 Duration="0:0:30" />
+                                <DoubleAnimation RepeatBehavior="Forever"
+                                                 AutoReverse="True"
+                                                 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                 From="1"
+                                                 To="1.3"
+                                                 Duration="0:0:30" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+            <Rectangle Fill="#99000000" />
+        </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
@@ -56,7 +56,7 @@
                   Margin="50">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <Image d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg"
                        Source="{Binding Music.PicUrl}"
@@ -83,8 +83,8 @@
                                Text="{Binding Music.Title}"
                                FontSize="18"
                                Foreground="Snow"
-                               FontWeight="Bold" 
-                               TextWrapping="Wrap"/>
+                               FontWeight="Bold"
+                               TextWrapping="Wrap" />
                     <TextBlock d:Text="MIMI"
                                Text="{Binding Music.Artist}"
                                FontSize="16"

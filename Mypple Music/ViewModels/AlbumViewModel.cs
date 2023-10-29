@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Extensions;
+﻿using Mypple_Music.Events;
+using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
 using Prism.Commands;
@@ -17,13 +18,24 @@ namespace Mypple_Music.ViewModels
     public class AlbumViewModel : NavigationViewModel
     {
         private IAlbumService albumService;
+        private IMusicService musicService;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
         private bool isUpdating;
 
-        private int selectedIndex;
+
+        private bool isSearchVisible;
+
+        public bool IsSearchVisible
+        {
+            get { return isSearchVisible; }
+            set { isSearchVisible = value; RaisePropertyChanged(); }
+        }
+
+
+        private int selectedIndex = -1;
 
         public int SelectedIndex
         {
@@ -47,12 +59,16 @@ namespace Mypple_Music.ViewModels
             }
         }
 
+        public DelegateCommand ChangeVisibilityCommand { get; set; }
         public DelegateCommand<Album> ConfirmAlbumCommand { get; set; }
+        public DelegateCommand<Album> PlayAlbumCommand { get; set; }
+        public DelegateCommand<Album> SettingAlbumCommand { get; set; }
         public DelegateCommand<Album> SelectedAlbumChangedCommand { get; set; }
 
         public AlbumViewModel(
             IContainerProvider containerProvider,
             IAlbumService albumService,
+            IMusicService musicService,
             IRegionManager RegionManager,
             IDialogHostService dialog
         )
@@ -60,11 +76,41 @@ namespace Mypple_Music.ViewModels
         {
             this.container = containerProvider;
             this.albumService = albumService;
+            this.musicService = musicService;
             this.RegionManager = RegionManager;
             this.dialog = dialog;
+            ChangeVisibilityCommand = new DelegateCommand(ChangeVisibility);
             ConfirmAlbumCommand = new(ConfirmAlbum);
             SelectedAlbumChangedCommand = new(SelectedAlbumChanged);
+            PlayAlbumCommand = new(PlayAlbum);
+            SettingAlbumCommand = new(SettingAlbum);
             GetAlbumList();
+        }
+
+        private void ChangeVisibility()
+        {
+            
+        }
+
+        private void SettingAlbum(Album album)
+        {
+            Debug.WriteLine(album);
+        }
+
+        private async void PlayAlbum(Album album)
+        {
+            var MusicList = new ObservableCollection<Music>(await musicService.GetMusicsByAlbumIdAsync(album.Id));
+            var music = MusicList.ToList()[0];
+            //把当前播放列表发送给播放器待播放            
+            eventAggregator
+                .GetEvent<PlayListCreatedEvent>()
+                .Publish(
+                    new PlayListCreatedModel(MusicList, 0, "MainView")
+                );
+            //发送歌曲给歌词界面
+            eventAggregator
+               .GetEvent<MusicPlayedEvent>()
+               .Publish(new MusicPlayedModel(music, "LyricView"));
         }
 
         private void SelectedAlbumChanged(Album album)

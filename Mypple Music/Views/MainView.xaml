@@ -638,8 +638,8 @@
                                                                CommandParameter="LyricView" />
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="Unchecked">
-                                        <i:InvokeCommandAction Command="{Binding ExecuteCommand}" 
-                                                               CommandParameter="TurnOffLyricview"/>
+                                        <i:InvokeCommandAction Command="{Binding ExecuteCommand}"
+                                                               CommandParameter="TurnOffLyricview" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <ToggleButton.Template>
