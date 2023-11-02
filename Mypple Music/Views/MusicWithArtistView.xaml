@@ -16,17 +16,20 @@
     <UserControl.Resources>
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
+        <converter:ValueConverter x:Key="Value" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
-            <RowDefinition />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Border BorderBrush="#22000000"
                 BorderThickness="0 0 0 1">
             <DockPanel LastChildFill="False"
                        VerticalAlignment="Bottom">
-                <TextBlock Text="Aimer"
+                <TextBlock d:Text="Aimer"
+                           Text="{Binding Artist.Name}"
                            FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
@@ -48,117 +51,161 @@
                         Style="{StaticResource TransParentButton}" />
             </DockPanel>
         </Border>
-        <StackPanel Grid.Row="1">
-            <TextBlock Foreground="Gray"
-                       FontWeight="Bold"
-                       Margin="10,3,0,0">
-                <TextBlock.Text>7张专辑, 9首歌</TextBlock.Text>
-            </TextBlock>
-            <ListBox Margin="10,10,30,10"
-                     ItemContainerStyle="{StaticResource ListBoxItemForDisplayStyle}"
-                     ItemsSource="{Binding Albums}"
-                     DockPanel.Dock="Top"
-                     Height="{Binding ElementName=MusicWithArtistViewControl,Path=ActualHeight}"
-                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                     ScrollViewer.CanContentScroll="False">
+        <TextBlock Grid.Row="1"
+                   Foreground="Gray"
+                   FontWeight="Bold"
+                   Margin="10,3,0,0"
+                   d:Text="7张专辑， 9首歌">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0}张专辑，{1}首歌">
+                    <Binding Path="CountOfAlbum" />
+                    <Binding Path="CountOfMusic" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <ListBox Margin="10,10,30,10"
+                 ItemsSource="{Binding Albums}"
+                 DockPanel.Dock="Top"
+                 Grid.Row="2"
+                 ItemContainerStyle="{StaticResource ListBoxItemForDisplayStyle}"
+                 Height="{Binding ElementName=MusicWithArtistViewControl,Path=ActualHeight,Converter={StaticResource Value},ConverterParameter=100}"
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                 ScrollViewer.CanContentScroll="False">
+            <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedAlbumChangedCommand}"
+                                           CommandParameter="{Binding SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>-->
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,0,0,30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <!--图片不存在时默认展示-->
+                        <Border Width="200"
+                                Height="200"
+                                CornerRadius="8"
+                                Background="LightGray"
+                                Margin="20,0,0,0"
+                                VerticalAlignment="Top">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20"
+                                                  ShadowDepth="0"
+                                                  Color="Black"
+                                                  Opacity="0.4" />
+                            </Border.Effect>
+                            <Grid>
+                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                           FontSize="80"
+                                           FontWeight="ExtraBold"
+                                           Text="&#xe64b;"
+                                           Foreground="#33000000"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="220" />
-                                <ColumnDefinition Width="1*" />
-                            </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0"
-                                   Height="200"
-                                   Width="200"
-                                   Source="{Binding PicUrl}"
-                                   Margin="20,0,0,0"
-                                   VerticalAlignment="Top">
-                                <Image.OpacityMask>
-                                    <VisualBrush>
-                                        <VisualBrush.Visual>
-                                            <Border Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                    Width="{Binding RelativeSource={RelativeSource AncestorType=Image},Path=ActualWidth}"
-                                                    CornerRadius="8"
-                                                    Background="White" />
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </Image.OpacityMask>
-                            </Image>
-                            <StackPanel Grid.Column="1"
-                                        Margin="50,0,0,0">
-                                <TextBlock Text="{Binding Title}"
+                            </Grid>
+                        </Border>
+                        <Image Grid.Column="0"
+                               Height="200"
+                               Width="200"
+                               Source="{Binding LocalPicUrl}"
+                               Margin="20,0,0,0"
+                               VerticalAlignment="Top">
+                            <Image.OpacityMask>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Border Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                Width="{Binding RelativeSource={RelativeSource AncestorType=Image},Path=ActualWidth}"
+                                                CornerRadius="8"
+                                                Background="White" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Image.OpacityMask>
+                        </Image>
+                        <StackPanel Grid.Column="1"
+                                    Margin="30,0,0,0">
+                            <TextBlock Text="{Binding Title}"
+                                       FontWeight="Bold"
+                                       FontSize="20" />
+                            <DockPanel LastChildFill="False">
+                                <TextBlock Foreground="Gray"
                                            FontWeight="Bold"
-                                           FontSize="20" />
-                                <DockPanel LastChildFill="False">
-                                    <TextBlock Foreground="Gray"
-                                               FontWeight="Bold"
-                                               FontSize="12">
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0}·{1}">
-                                                <Binding Path="Type" />
-                                                <Binding Path="PublishTime" />
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                    <Button DockPanel.Dock="Right"
-                                            Margin="0,0,10,3"
-                                            Content="&#xe719;"
-                                            FontFamily="{StaticResource IconFont}"
-                                            Style="{StaticResource TransParentButton}" />
-                                    <Button DockPanel.Dock="Right"
-                                            Margin="0,0,10,3"
-                                            Content="&#xe665;"
-                                            FontFamily="{StaticResource IconFont}"
-                                            Style="{StaticResource TransParentButton}" />
+                                           FontSize="12">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}·{1}">
+                                            <Binding Path="Type" />
+                                            <Binding Path="PublishTime" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Button DockPanel.Dock="Right"
+                                        Margin="0,0,10,3"
+                                        Content="&#xe719;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        Style="{StaticResource TransParentButton}" />
+                                <Button DockPanel.Dock="Right"
+                                        Margin="0,0,10,3"
+                                        Content="&#xe665;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        Style="{StaticResource TransParentButton}" />
 
-                                </DockPanel>
-                                <DataGrid AutoGenerateColumns="False"
-                                          AlternationCount="2"
-                                          ItemsSource="{Binding MusicList}"
-                                          IsReadOnly="True"
-                                          SelectionUnit="FullRow"
-                                          GridLinesVisibility="None"
-                                          RowStyle="{StaticResource DataGridRowStyle}"
-                                          MinRowHeight="45"
-                                          CellStyle="{StaticResource DataGridCellStyle}">
-                                    <DataGrid.InputBindings>
-                                        <MouseBinding MouseAction="LeftDoubleClick"
-                                                      Command="{Binding SelectedMusicChangedCommand}"
-                                                      CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
-                                    </DataGrid.InputBindings>
+                            </DockPanel>
+                            <DataGrid AutoGenerateColumns="False"
+                                      AlternationCount="2"
+                                      SelectedIndex="{Binding MusicIndex}"
+                                      ItemsSource="{Binding MusicList}"
+                                      IsReadOnly="True"
+                                      SelectionUnit="FullRow"
+                                      GridLinesVisibility="None"
+                                      RowStyle="{StaticResource DataGridRowStyle}"
+                                      MinRowHeight="45"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      CellStyle="{StaticResource DataGridCellStyle}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.FocuseChangedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <DataGrid.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick"
+                                                  Command="{Binding DataContext.SelectedMusicChangedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                  CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                </DataGrid.InputBindings>
 
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Header=""
-                                                                Width="0.3*">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="&#xea12;"
-                                                               Margin="5,0,0,0"
-                                                               FontFamily="{StaticResource IconFont}"
-                                                               Foreground="{DynamicResource PrimaryHueLightBrush}"
-                                                               Visibility="{Binding Status,Converter={StaticResource StatusToVisibility}}" />
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header=""
+                                                            Width="0.3*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="&#xea12;"
+                                                           Margin="5,0,0,0"
+                                                           FontFamily="{StaticResource IconFont}"
+                                                           Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                                           Visibility="{Binding Status,Converter={StaticResource StatusToVisibility}}" />
 
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="标题"
-                                                            Width="2*"
-                                                            Binding="{Binding Title}" />
-                                        <DataGridTextColumn Header="时长"
-                                                            Width="1*"
-                                                            Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="标题"
+                                                        Width="2*"
+                                                        Binding="{Binding Title}" />
+                                    <DataGridTextColumn Header="时长"
+                                                        Width="1*"
+                                                        Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
 
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                </DataGrid.Columns>
+                            </DataGrid>
 
 
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
     </Grid>
 </UserControl>

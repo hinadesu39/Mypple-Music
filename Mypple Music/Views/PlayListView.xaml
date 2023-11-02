@@ -7,6 +7,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:model="clr-namespace:Mypple_Music.Models"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
              FontFamily="微软雅黑"
              mc:Ignorable="d"
@@ -14,7 +15,7 @@
              d:DesignWidth="800">
     <UserControl.Resources>
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
-        <converter:StatusToBoolConverter x:Key="StatusToBool" />
+        <converter:StatusToStringConverter x:Key="StatusToString" />
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
@@ -29,17 +30,20 @@
                 BorderThickness="0,0,0,1"></Border>
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
+                 md:TextFieldAssist.HasClearButton="True"
                  Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
                  Width="150"
                  Height="30"
                  HorizontalAlignment="Right"
-                 Margin="0,0,80,0" />
+                 Margin="0,0,80,0"
+                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}" />
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
                 FontWeight="Bold"
                 Margin="0,0,10,0"
-                Command="{Binding ChangeVisibilityCommand}">
+                Command="{Binding SearchCommand}"
+                CommandParameter="{Binding ElementName=SearchBox,Path=Text}">
 
         </Button>
         <Grid Grid.Row="1"
@@ -72,7 +76,7 @@
             </Border>
             <Image x:Name="albumImg"
                    d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
-                   Source="{Binding Album.PicUrl}"
+                   Source="{Binding Album.LocalPicUrl}"
                    Width="250"
                    Height="250"
                    Margin="10">
@@ -182,7 +186,8 @@
                         <DataTemplate>
                             <Grid>
                                 <Image x:Name="albumImg"
-                                       Source="{Binding PicUrl}"
+                                       Source="{Binding LocalPicUrl}"
+                                       d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
                                        Width="45"
                                        Height="45"
                                        Margin="10,0,0,0">
@@ -202,7 +207,7 @@
                                 <ToggleButton x:Name="playButton"
                                               Margin="10,0,0,0"
                                               Height="35"
-                                              IsChecked="{Binding DataContext.PlayOrPause, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                              Tag="{Binding Status,Converter={StaticResource StatusToString}}"
                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Checked">
@@ -239,8 +244,8 @@
                                                             Property="Background"
                                                             Value="#22000000" />
                                                 </Trigger>
-                                                <Trigger Property="IsChecked"
-                                                         Value="True">
+                                                <Trigger Property="Tag"
+                                                         Value="true">
                                                     <Setter TargetName="borderIn"
                                                             Property="Background"
                                                             Value="#33000000" />

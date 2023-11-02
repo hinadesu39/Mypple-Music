@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Events
 {
-    public class StopPlayEvent:PubSubEvent<StopModel>
-    {
-    }
-    public record StopModel(bool isStop,string filter);
+    public class LoadingEvent : PubSubEvent<LoadingModel> { }
+
+    public record LoadingModel(bool IsLoading, string filter = "MainView");
 }

@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Mypple_Music.Common;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,21 @@ namespace Mypple_Music.Models
             set
             {
                 picUrl = value;
+                CreateLocalPicAsync(picUrl);
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 本地下载后歌曲名片的路径
+        /// </summary>
+        private string localPicUrl;
+        public string LocalPicUrl
+        {
+            get { return localPicUrl; }
+            set
+            {
+                localPicUrl = value;
                 RaisePropertyChanged();
             }
         }
@@ -94,6 +110,31 @@ namespace Mypple_Music.Models
         {
             get { return publishTime; }
             set { publishTime = value; }
+        }
+
+        /// <summary>
+        /// 歌曲列表
+        /// </summary>
+        private ObservableCollection<Music> musicList;
+
+        public ObservableCollection<Music> MusicList
+        {
+            get { return musicList; }
+            set { musicList = value; RaisePropertyChanged(); }
+        }
+
+        private int musicIndex = -1;
+
+        public int MusicIndex
+        {
+            get { return musicIndex; }
+            set { musicIndex = value; RaisePropertyChanged(); }
+        }
+
+
+        async void CreateLocalPicAsync(Uri picUrl)
+        {
+            LocalPicUrl = await DownloadHelper.GetImageAsync(picUrl);
         }
     }
 }

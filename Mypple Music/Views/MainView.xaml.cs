@@ -1,4 +1,6 @@
-﻿using Mypple_Music.Extensions;
+﻿using Mypple_Music.Events;
+using Mypple_Music.Extensions;
+using Mypple_Music.Views.Dialogs;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
@@ -24,9 +26,24 @@ namespace Mypple_Music.Views
     public partial class MainView : Window
     {
 
-        public MainView()
+        public MainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+
+            //加载动画注册
+            eventAggregator.GetEvent<LoadingEvent>().Subscribe(arg =>
+            {
+                DialogHost.IsOpen = arg.IsLoading;
+                if(arg.IsLoading == true)
+                {
+                    DialogHost.DialogContent = new ProgressView();
+                }
+            },
+            m =>
+            {
+                return m.filter == "MainView";
+            });
+
             ColorZone.MouseDown += (s, e) =>
             {
                 if (e.LeftButton == MouseButtonState.Pressed)

@@ -58,8 +58,32 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
+                <!--图片不存在时默认展示-->
+                <Border Width="200"
+                        Height="200"
+                        CornerRadius="8"
+                        Background="LightGray"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="20"
+                                          ShadowDepth="0"
+                                          Color="Black"
+                                          Opacity="0.4" />
+                    </Border.Effect>
+                    <Grid>
+                        <TextBlock FontFamily="{StaticResource IconFont}"
+                                   FontSize="80"
+                                   FontWeight="ExtraBold"
+                                   Text="&#xe64b;"
+                                   Foreground="#33000000"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+
+                    </Grid>
+                </Border>
                 <Image d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg"
-                       Source="{Binding Music.PicUrl}"
+                       Source="{Binding Music.LocalPicUrl}"
                        Height="200"
                        Width="200"
                        HorizontalAlignment="Left"

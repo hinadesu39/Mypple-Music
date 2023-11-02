@@ -18,6 +18,7 @@ namespace Mypple_Music.ViewModels
     public class MusicListViewModel : NavigationViewModel
     {
         private IMusicService musicService;
+        private ObservableCollection<Music> tempMusic;
 
         private Music selectedMusic;
 
@@ -54,22 +55,50 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public DelegateCommand ChangeVisibilityCommand { set; get; }
+        public DelegateCommand<string> SearchCommand { get; set; }
+        public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
 
         public MusicListViewModel(IContainerProvider containerProvider, IMusicService musicService)
             : base(containerProvider)
         {
             this.musicService = musicService;
+            SearchCommand = new DelegateCommand<string>(Search);
+            TextEmptyCommand = new DelegateCommand(TextEmpty);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
-            ChangeVisibilityCommand = new DelegateCommand(() =>
-            {
-                if (IsSearchVisible == true)
-                    IsSearchVisible = false;
-                else
-                    IsSearchVisible = true;
-            });
+
             Config();
+        }
+
+        private void TextEmpty()
+        {
+            if (tempMusic != null)
+            {
+                MusicList = tempMusic;
+            }
+        }
+
+        private async void Search(string para)
+        {
+            if (IsSearchVisible)
+            {
+                if (para == string.Empty)
+                {
+                    IsSearchVisible = false;
+                    MusicList = tempMusic;
+                    return;
+                }
+                //查找
+                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para));
+                if (searchedMusicList != null)
+                {
+                    MusicList = new ObservableCollection<Music>(searchedMusicList);
+                }
+            }
+            else
+            {
+                IsSearchVisible = true;
+            }
         }
 
         private void SelectedMusicChanged(Music Music)
@@ -103,23 +132,24 @@ namespace Mypple_Music.ViewModels
         {
             IsSearchVisible = false;
             MusicList = new ObservableCollection<Music>(await musicService.GetAllAsync());
+            tempMusic = MusicList;
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            try
-            {
-                //设置播放状态
-                var playingMusic = MusicList.FirstOrDefault(
-                    m => m.Status == Music.PlayStatus.StartPlay
-                );
-                if (playingMusic != null)
-                    playingMusic.Status = Music.PlayStatus.StopPlay;
-            }
-            catch (Exception ex)
-            {
-               Debug.WriteLine(ex);
-            }
+            //try
+            //{
+            //    //设置播放状态
+            //    var playingMusic = MusicList.FirstOrDefault(
+            //        m => m.Status == Music.PlayStatus.StartPlay
+            //    );
+            //    if (playingMusic != null)
+            //        playingMusic.Status = Music.PlayStatus.StopPlay;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex);
+            //}
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext) { }

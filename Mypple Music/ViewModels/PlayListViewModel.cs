@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Events;
+﻿using MaterialDesignColors;
+using Mypple_Music.Events;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
 using Prism.Commands;
@@ -12,25 +13,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TagLib.Id3v2;
 
 namespace Mypple_Music.ViewModels
 {
     public class PlayListViewModel : NavigationViewModel
     {
         private bool isUpdating;
+        private string whichAlbum;
         private IMusicService musicService;
+        private ObservableCollection<Music> tempMusic;
 
-        private bool playOrPause;
-
-        public bool PlayOrPause
-        {
-            get { return playOrPause; }
-            set
-            {
-                playOrPause = value;
-                RaisePropertyChanged();
-            }
-        }
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -103,7 +96,8 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public DelegateCommand ChangeVisibilityCommand { set; get; }
+        public DelegateCommand<string> SearchCommand { get; set; }
+        public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
 
@@ -111,57 +105,67 @@ namespace Mypple_Music.ViewModels
             : base(containerProvider)
         {
             this.musicService = musicService;
+            SearchCommand = new DelegateCommand<string>(Search);
+            TextEmptyCommand = new DelegateCommand(TextEmpty);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
-            ChangeVisibilityCommand = new DelegateCommand(() =>
-            {
-                if (IsSearchVisible == true)
-                    IsSearchVisible = false;
-                else
-                    IsSearchVisible = true;
-            });
-            eventAggregator.GetEvent<StopPlayEvent>().Subscribe(arg =>
-            {
-                isUpdating = true;
-                PlayOrPause = !arg.isStop;
-                isUpdating = false;
-            },
-            m =>
-            {
-                return m.filter == "PlayListView";
-            });
         }
 
         private void PauseOrPlay(Music music)
         {
-            if (isUpdating)
-                return;
-            switch (music.Status)
+            if(SelectedMusic != music)
             {
-                case Music.PlayStatus.StartPlay:
-                    isUpdating = true;
-                    music.Status = Music.PlayStatus.PausePlay;
-                    eventAggregator.GetEvent<StopPlayEvent>().Publish(new StopModel(true, "MainView"));
-                    isUpdating = false;
-                    break;
-                case Music.PlayStatus.PausePlay:
-                    isUpdating = true;
-                    music.Status = Music.PlayStatus.StartPlay;
-                    eventAggregator.GetEvent<StopPlayEvent>().Publish(new StopModel(false, "MainView"));
-                    isUpdating = false;
-                    break;
-                case Music.PlayStatus.StopPlay:
-                    isUpdating = true;
-                    SelectedMusicChanged(music);
-                    isUpdating = false;
-                    break;
-                default:
-                    break;
+                SelectedMusicChanged(music);
+                return;
+            }
+            if (music.Status == Music.PlayStatus.PausePlay)
+            {
+                music.Status = Music.PlayStatus.StartPlay;
+            }
+            else if(music.Status == Music.PlayStatus.StartPlay)
+            {
+                music.Status = Music.PlayStatus.PausePlay;
+            }
+        }
+
+        private void TextEmpty()
+        {
+            if (tempMusic != null)
+            {
+                MusicList = tempMusic;
+            }
+        }
+
+        private void Search(string para)
+        {
+            if (IsSearchVisible)
+            {
+                if (para == string.Empty)
+                {
+                    IsSearchVisible = false;
+                    MusicList = tempMusic;
+                    return;
+                }
+                //查找
+                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para));
+                if (searchedMusicList != null)
+                {
+                    MusicList = new ObservableCollection<Music>(searchedMusicList);
+                }
+            }
+            else
+            {
+                IsSearchVisible = true;
             }
         }
 
         private void SelectedMusicChanged(Music Music)
         {
+            if (isUpdating)
+            {
+                return;
+            }
+            isUpdating = true;
             //设置播放状态
             var playingMusic = MusicList.FirstOrDefault(
                 m => m.Status == Music.PlayStatus.StartPlay
@@ -185,29 +189,32 @@ namespace Mypple_Music.ViewModels
             eventAggregator
                 .GetEvent<MusicPlayedEvent>()
                 .Publish(new MusicPlayedModel(Music, "LyricView"));
+            isUpdating = false;
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+
             if (navigationContext.Parameters.ContainsKey("Album"))
             {
+                //发现打开的是已加载的播放列表，则直接退出不必重新加载
+                if (whichAlbum != null && Album.Title == whichAlbum)
+                {
+                    return;
+                }
                 Album = navigationContext.Parameters.GetValue<Album>("Album");
                 MusicList = new ObservableCollection<Music>(
                     await musicService.GetMusicsByAlbumIdAsync(Album.Id)
                 );
+                tempMusic = MusicList;
                 Count = MusicList.Count;
                 Duration = MusicList.Sum(m => m.Duration);
+                whichAlbum = Album.Title;
             }
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //设置播放状态
-            var playingMusic = MusicList.FirstOrDefault(
-                m => m.Status == Music.PlayStatus.StartPlay
-            );
-            if (playingMusic != null)
-                playingMusic.Status = Music.PlayStatus.StopPlay;
         }
     }
 }

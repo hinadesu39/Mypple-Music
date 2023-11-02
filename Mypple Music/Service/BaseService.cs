@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Mypple_Music.Events;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Service
 {
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class
+    public class BaseService<TEntity> : IBaseService<TEntity>
+        where TEntity : class
     {
         private readonly HttpRestClient client;
         private readonly string serviceName;
@@ -26,7 +28,7 @@ namespace Mypple_Music.Service
         public async Task<List<TEntity>> GetAllAsync()
         {
             BaseRequest request = new BaseRequest();
-            request.Method = RestSharp.Method.Get;            
+            request.Method = RestSharp.Method.Get;
             request.Route = $"{serviceName}/GetAll";
             var res = await client.ExecuteAsync<List<TEntity>>(request);
             return res;
@@ -45,8 +47,9 @@ namespace Mypple_Music.Service
         {
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
-            request.Route = $"{serviceName}/GetById?name={name}";
+            request.Route = $"{serviceName}/GetByName?name={name}";
             var res = await client.ExecuteAsync<List<TEntity>>(request);
+
             return res;
         }
 

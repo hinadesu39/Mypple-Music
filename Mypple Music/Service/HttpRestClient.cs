@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Mypple_Music.Events;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Mypple_Music.Service
 
         public async Task<Uri> UploadAsync(BaseRequest baseRequest)
         {
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
             var url = new Uri(apiUrl + baseRequest.Route);
             var request = new RestRequest(url, baseRequest.Method);
             request.AlwaysMultipartFormData = true;
@@ -28,12 +30,14 @@ namespace Mypple_Music.Service
                 request.AddFile("File", baseRequest.Parameter.ToString());
             }
             RestResponse response = await client.ExecuteAsync(request);
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
             return JsonConvert.DeserializeObject<Uri>(response.Content);
 
         }
 
         public async Task<T> ExecuteAsync<T>(BaseRequest baseRequest)
         {
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
             var url = new Uri(apiUrl + baseRequest.Route);
             var request = new RestRequest(url, baseRequest.Method);
             request.AddHeader("Content-Type", baseRequest.ContentType);
@@ -43,6 +47,7 @@ namespace Mypple_Music.Service
                 request.AddStringBody(body, ContentType.Json);
             }
             RestResponse response = await client.ExecuteAsync(request);
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
             return JsonConvert.DeserializeObject<T>(response.Content);
 
         }

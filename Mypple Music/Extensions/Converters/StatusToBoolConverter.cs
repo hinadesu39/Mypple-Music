@@ -1,4 +1,5 @@
 ﻿using Mypple_Music.Models;
+using SixLabors.ImageSharp.Processing.Processors.Normalization;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +15,7 @@ namespace Mypple_Music.Extensions.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && value.ToString() == Music.PlayStatus.StartPlay.ToString())
+            if (value != null && (value.ToString() == Music.PlayStatus.StartPlay.ToString()))
             {
                 return true;
             }
@@ -24,9 +25,21 @@ namespace Mypple_Music.Extensions.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture
+        )
         {
-            throw new NotImplementedException();
+            if (value != null && (bool)value)
+            {
+                return Music.PlayStatus.StartPlay;
+            }
+            else
+            {
+                return Music.PlayStatus.PausePlay;
+            }
         }
     }
 }

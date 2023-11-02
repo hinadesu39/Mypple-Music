@@ -29,6 +29,7 @@
     <Window.Resources>
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
         <converter:BoolToStringConverter x:Key="BoolToString" />
+        <converter:StatusToBoolConverter x:Key="StatusToBool" />
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -331,18 +332,10 @@
                                     Command="{Binding ChangeMusicCommand}"
                                     CommandParameter="Pre" />
                             <ToggleButton x:Name="PlayOrPauseButton"
-                                          IsChecked="{Binding PlayOrPause}"
+                                          IsChecked="{Binding Player.Music.Status,Converter={StaticResource StatusToBool}}"
                                           Width="50"
                                           Content="&#xea82;"
                                           Tag="&#xea81;">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Checked">
-                                        <i:InvokeCommandAction Command="{Binding PlayCommand}" />
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="Unchecked">
-                                        <i:InvokeCommandAction Command="{Binding PlayCommand}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border x:Name="borderIn"
@@ -454,7 +447,7 @@
                                             Panel.ZIndex="1"
                                             Background="Transparent">
                                         <Image Grid.Column="0"
-                                               Source="{Binding Player.Music.PicUrl}"
+                                               Source="{Binding Player.Music.LocalPicUrl}"
                                                Height="55"
                                                Width="55"
                                                HorizontalAlignment="Left">
@@ -628,6 +621,7 @@
                                     </Border>
                                 </StackPanel>
                             </Popup>
+                            <!--歌词界面-->
                             <ToggleButton x:Name="LyricViewButton"
                                           Width="50"
                                           Content="&#xe7d2;"

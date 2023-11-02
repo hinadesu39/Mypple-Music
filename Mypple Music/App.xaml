@@ -273,6 +273,13 @@
                         <ControlTemplate TargetType="{x:Type ListBoxItem}">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                            <!--<ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="IsSelected"
+                                            Value="True" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>-->
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -596,7 +603,8 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGridRow}">
-                            <Grid Margin="5,0,0,0">
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
+                                <Grid Margin="5,0,0,0">
                                 <Border x:Name="border"
                                         Background="{TemplateBinding Background}"
                                         BorderThickness="1"
@@ -616,9 +624,10 @@
                                            HorizontalAlignment="Left"
                                            Margin="5,0,0,0">
                                 </Rectangle>
-                                
+
                                 <DataGridCellsPresenter Height="40" />
                             </Grid>
+                            </materialDesign:TransitioningContent>
                             <ControlTemplate.Triggers>
                                 <EventTrigger RoutedEvent="MouseDoubleClick">
                                     <BeginStoryboard>
@@ -1092,6 +1101,7 @@
                                             Height="260"
                                             Margin="0,20,0,0">
                                     <Grid>
+                                        <!--图片不存在时默认展示-->
                                         <Border Width="200"
                                                 Height="200"
                                                 CornerRadius="8"
@@ -1115,7 +1125,7 @@
                                             </Grid>
                                         </Border>
                                         <Image x:Name="albumImg"
-                                               Source="{Binding PicUrl}"
+                                               Source="{Binding LocalPicUrl}"
                                                Width="200"
                                                Height="200"
                                                Margin="5,5,5,0">

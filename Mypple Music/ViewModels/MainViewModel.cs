@@ -24,7 +24,6 @@ namespace Mypple_Music.ViewModels
         private bool isUpdating = false; //后台更新触发SelectionChanged后直接返回不执行命令
         public static MediaElement MediaElement;
 
-        private readonly IMediator mediator;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
@@ -110,18 +109,6 @@ namespace Mypple_Music.ViewModels
             set
             {
                 userAvatar = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool playOrPause;
-
-        public bool PlayOrPause
-        {
-            get { return playOrPause; }
-            set
-            {
-                playOrPause = value;
                 RaisePropertyChanged();
             }
         }
@@ -220,7 +207,6 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand GoForwardCommand { get; set; }
         public DelegateCommand UserCenterCommand { get; set; }
         public DelegateCommand LoginOutCommand { get; set; }
-        public DelegateCommand PlayCommand { get; set; }
         public DelegateCommand<MediaElement> MediaLoadedCommand { get; set; }
         public DelegateCommand<string> MediaEndedCommand { get; set; }
         public DelegateCommand<object> VolumeValueChangedCommand { get; set; }
@@ -233,12 +219,10 @@ namespace Mypple_Music.ViewModels
         public MainViewModel(
             IDialogHostService dialog,
             IRegionManager regionManager,
-            IContainerProvider Container,
-            IMediator mediator
+            IContainerProvider Container
         )
             : base(Container)
         {
-            this.mediator = mediator;
             this.dialog = dialog;
             this.RegionManager = regionManager;
             this.container = Container;
@@ -254,7 +238,7 @@ namespace Mypple_Music.ViewModels
             ExecuteCommand = new DelegateCommand<string>(Execute);
 
             //创建播放器
-            PlayCommand = new DelegateCommand(Play);
+            //PlayCommand = new DelegateCommand(Play);
             MediaLoadedCommand = new DelegateCommand<MediaElement>(MediaLoadedAsync);
             MediaEndedCommand = new DelegateCommand<string>(MediaEnded);
             VolumeValueChangedCommand = new DelegateCommand<object>(VolumeValueChanged);
@@ -273,11 +257,13 @@ namespace Mypple_Music.ViewModels
                 .Subscribe(
                     arg =>
                     {
+                        //将当前播放音乐状态设置成关闭
+                        if (Player.Music != null)
+                            Player.Music.Status = Music.PlayStatus.StopPlay;
                         PlayList = arg.Musics;
                         PlayIndex = arg.id;
                         InitPlay(PlayList[PlayIndex]);
                         MediaElement.Play();
-                        PlayOrPause = true;
                     },
                     m =>
                     {
@@ -285,19 +271,17 @@ namespace Mypple_Music.ViewModels
                     }
                 );
             eventAggregator
-                .GetEvent<StopPlayEvent>()
+                .GetEvent<MusicPlayStatusChangedEvent>()
                 .Subscribe(
                     arg =>
                     {
-                        if (arg.isStop)
-                        {
-                            MediaElement.Pause();
-                            PlayOrPause = false;
-                        }
-                        else
+                        if (arg.Status == Music.PlayStatus.StartPlay)
                         {
                             MediaElement.Play();
-                            PlayOrPause = true;
+                        }
+                        else if (arg.Status == Music.PlayStatus.PausePlay)
+                        {
+                            MediaElement.Pause();
                         }
                     },
                     m =>
@@ -459,26 +443,6 @@ namespace Mypple_Music.ViewModels
             Player.PlayProgressLength = music.Duration;
         }
 
-        private void Play()
-        {
-            if (PlayOrPause)
-            {
-                MediaElement.Play();
-                Player.Music.Status = Music.PlayStatus.StartPlay;
-                eventAggregator
-                    .GetEvent<StopPlayEvent>()
-                    .Publish(new StopModel(false, "PlayListView"));
-            }
-            else
-            {
-                MediaElement.Pause();
-                Player.Music.Status = Music.PlayStatus.PausePlay;
-                eventAggregator
-                    .GetEvent<StopPlayEvent>()
-                    .Publish(new StopModel(true, "PlayListView"));
-            }
-        }
-
         private void goUserCenterAsync()
         {
             DialogParameters parameter = new DialogParameters();
@@ -594,8 +558,7 @@ namespace Mypple_Music.ViewModels
                             {
                                 "LyricInfo",
                                 new LyricCreatedModel(
-                                    new List<Music>(PlayList),
-                                    PlayIndex,
+                                    Player.Music,
                                     MediaElement
                                 )
                             }

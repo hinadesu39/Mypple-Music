@@ -7,6 +7,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
              xmlns:model="clr-namespace:Mypple_Music.Models"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              mc:Ignorable="d"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              FontFamily="微软雅黑"
@@ -17,7 +18,6 @@
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
     <Grid>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />
@@ -33,17 +33,20 @@
                    FontWeight="Bold" />
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
+                 md:TextFieldAssist.HasClearButton="True"
                  Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
                  Width="150"
                  Height="30"
                  HorizontalAlignment="Right"
-                 Margin="0,0,80,0" />
+                 Margin="0,0,80,0"
+                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}" />
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
                 FontWeight="Bold"
                 Margin="0,0,10,0"
-                Command="{Binding ChangeVisibilityCommand}">
+                Command="{Binding SearchCommand}"
+                CommandParameter="{Binding ElementName=SearchBox,Path=Text}">
 
         </Button>
         <DataGrid Grid.Row="1"
@@ -53,6 +56,8 @@
                   IsReadOnly="True"
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
+                  ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   RowStyle="{StaticResource DataGridRowStyle}"
                   MinRowHeight="45"
                   CellStyle="{StaticResource DataGridCellStyle}"
@@ -123,6 +128,5 @@
 
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </UserControl>

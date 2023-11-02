@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Mypple_Music.Events;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -17,8 +18,9 @@ namespace Mypple_Music.ViewModels
 
         public NavigationViewModel(IContainerProvider containerProvider)
         {
-            this.containerProvider = containerProvider;
+            this.containerProvider = containerProvider;          
             eventAggregator = containerProvider.Resolve<IEventAggregator>();
+            AppSession.EventAggregator = eventAggregator;
         }
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {

@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Events;
+﻿using MaterialDesignColors;
+using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
@@ -24,16 +25,19 @@ namespace Mypple_Music.ViewModels
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
         private bool isUpdating;
-
+        private ObservableCollection<Album> tempAlbum;
 
         private bool isSearchVisible;
 
         public bool IsSearchVisible
         {
             get { return isSearchVisible; }
-            set { isSearchVisible = value; RaisePropertyChanged(); }
+            set
+            {
+                isSearchVisible = value;
+                RaisePropertyChanged();
+            }
         }
-
 
         private int selectedIndex = -1;
 
@@ -59,7 +63,8 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public DelegateCommand ChangeVisibilityCommand { get; set; }
+        public DelegateCommand<string> SearchCommand { get; set; }
+        public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Album> ConfirmAlbumCommand { get; set; }
         public DelegateCommand<Album> PlayAlbumCommand { get; set; }
         public DelegateCommand<Album> SettingAlbumCommand { get; set; }
@@ -79,7 +84,8 @@ namespace Mypple_Music.ViewModels
             this.musicService = musicService;
             this.RegionManager = RegionManager;
             this.dialog = dialog;
-            ChangeVisibilityCommand = new DelegateCommand(ChangeVisibility);
+            SearchCommand = new DelegateCommand<string>(Search);
+            TextEmptyCommand = new DelegateCommand(TextEmpty);
             ConfirmAlbumCommand = new(ConfirmAlbum);
             SelectedAlbumChangedCommand = new(SelectedAlbumChanged);
             PlayAlbumCommand = new(PlayAlbum);
@@ -87,9 +93,35 @@ namespace Mypple_Music.ViewModels
             GetAlbumList();
         }
 
-        private void ChangeVisibility()
+        private void TextEmpty()
         {
-            
+            if(tempAlbum != null)
+            {
+                AlbumList = tempAlbum;
+            }
+        }
+
+        private async void Search(string para)
+        {
+            if (IsSearchVisible)
+            {
+                if (para == string.Empty)
+                {
+                    IsSearchVisible = false;
+                    AlbumList = tempAlbum;
+                    return;
+                }
+                //查找
+                var searchedAlbumList =  AlbumList.Where(a => a.Title.Contains(para));
+                if (searchedAlbumList != null)
+                {
+                    AlbumList = new ObservableCollection<Album>(searchedAlbumList);
+                }
+            }
+            else
+            {
+                IsSearchVisible = true;
+            }
         }
 
         private void SettingAlbum(Album album)
@@ -99,18 +131,18 @@ namespace Mypple_Music.ViewModels
 
         private async void PlayAlbum(Album album)
         {
-            var MusicList = new ObservableCollection<Music>(await musicService.GetMusicsByAlbumIdAsync(album.Id));
+            var MusicList = new ObservableCollection<Music>(
+                await musicService.GetMusicsByAlbumIdAsync(album.Id)
+            );
             var music = MusicList.ToList()[0];
-            //把当前播放列表发送给播放器待播放            
+            //把当前播放列表发送给播放器待播放
             eventAggregator
                 .GetEvent<PlayListCreatedEvent>()
-                .Publish(
-                    new PlayListCreatedModel(MusicList, 0, "MainView")
-                );
+                .Publish(new PlayListCreatedModel(MusicList, 0, "MainView"));
             //发送歌曲给歌词界面
             eventAggregator
-               .GetEvent<MusicPlayedEvent>()
-               .Publish(new MusicPlayedModel(music, "LyricView"));
+                .GetEvent<MusicPlayedEvent>()
+                .Publish(new MusicPlayedModel(music, "LyricView"));
         }
 
         private void SelectedAlbumChanged(Album album)
@@ -142,16 +174,16 @@ namespace Mypple_Music.ViewModels
         async void GetAlbumList()
         {
             AlbumList = new ObservableCollection<Album>(await albumService.GetAllAsync());
+            tempAlbum = AlbumList;
             Debug.WriteLine(AlbumList);
         }
 
-        public override void OnNavigatedFrom(NavigationContext navigationContext) 
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             //重置选中项
             isUpdating = true;
             SelectedIndex = -1;
             isUpdating = false;
-
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext) { }

@@ -1,4 +1,8 @@
 ﻿using Mypple_Music.Common;
+using Mypple_Music.Events;
+using Mypple_Music.ViewModels;
+using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.IO;
@@ -32,6 +36,7 @@ namespace Mypple_Music.Models
                 RaisePropertyChanged();
             }
         }
+
         /// <summary>
         /// 歌曲url
         /// </summary>
@@ -65,7 +70,7 @@ namespace Mypple_Music.Models
             get { return picUrl; }
             set
             {
-                picUrl = value;               
+                picUrl = value;
                 CreateLocalPicAsync(picUrl);
                 RaisePropertyChanged();
             }
@@ -85,8 +90,6 @@ namespace Mypple_Music.Models
             }
         }
 
-
-
         /// <summary>
         /// 歌曲时长
         /// </summary>
@@ -96,14 +99,18 @@ namespace Mypple_Music.Models
         public double Duration
         {
             get { return duration; }
-            set { duration = value; RaisePropertyChanged(); }
+            set
+            {
+                duration = value;
+                RaisePropertyChanged();
+            }
         }
 
         /// <summary>
         /// 歌手
         /// </summary>
-        /// 
-         private Guid artistId;
+        ///
+        private Guid artistId;
         public Guid ArtistId
         {
             get { return artistId; }
@@ -230,12 +237,19 @@ namespace Mypple_Music.Models
         /// 播放状态
         /// </summary>
         private PlayStatus status = PlayStatus.StopPlay;
+
+
         public PlayStatus Status
         {
             get { return status; }
             set
             {
                 status = value;
+                //通知播放状态的改变
+                if (status != PlayStatus.StopPlay)
+                    AppSession.EventAggregator
+                       .GetEvent<MusicPlayStatusChangedEvent>()
+                        .Publish(new MusicPlayStatusChangedModel(status, "MainView"));
                 RaisePropertyChanged();
             }
         }
@@ -249,9 +263,10 @@ namespace Mypple_Music.Models
             PausePlay, //暂停播放
             StopPlay //彻底关闭
         }
+
         async void CreateLocalPicAsync(Uri picUrl)
         {
-            LocalPicUrl = await FileHelper.GetImageAsync(picUrl);
+            LocalPicUrl = await DownloadHelper.GetImageAsync(picUrl);
         }
     }
 }

@@ -5,24 +5,21 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Mypple_Music.Extensions.Converters
 {
-    public class StatusToVisibilityConverter : IValueConverter
+    public class StatusToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && (value.ToString() == Music.PlayStatus.StartPlay.ToString() || value.ToString() == Music.PlayStatus.PausePlay.ToString()))
+            if (value != null && (value.ToString() == Music.PlayStatus.StartPlay.ToString()))
             {
-                return Visibility.Visible;
+                return "true";
             }
             else
             {
-                return Visibility.Hidden;
+                return "false";
             }
         }
 

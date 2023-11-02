@@ -20,6 +20,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.ComponentModel;
 using System.Diagnostics;
+using Prism.Events;
+using Mypple_Music.Models;
 
 namespace Mypple_Music
 {
@@ -91,8 +93,8 @@ namespace Mypple_Music
             containerRegistry.Register<IMusicService, MusicService>();
             containerRegistry.Register<IArtistService, ArtistService>();
             containerRegistry.Register<IAlbumService, AlbumService>();
-            
-          
+
+
             containerRegistry.RegisterForNavigation<NowToListenView, NowToListenViewModel>();
             containerRegistry.RegisterForNavigation<BroadcastView, BroadcastViewModel>();
             containerRegistry.RegisterForNavigation<BrowserView, BrowserViewModel>();
