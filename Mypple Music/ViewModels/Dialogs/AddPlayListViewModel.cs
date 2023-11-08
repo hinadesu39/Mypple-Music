@@ -12,11 +12,11 @@ using TagLib.IFD.Tags;
 
 namespace Mypple_Music.ViewModels.Dialogs
 {
-    public class AddPlayListViewModel :BindableBase, IDialogHostAware
+    public class AddPlayListViewModel : BindableBase, IDialogHostAware
     {
         public string DialogHostName { get; set; }
-        public DelegateCommand SaveCommand { get ; set; }
-        public DelegateCommand CancelCommand { get ; set ; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
 
         public AddPlayListViewModel()
         {
@@ -30,10 +30,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
         }
 
-        private void Save()
-        {
-           
-        }
+        private void Save() { }
 
         public void OnDialogOpend(IDialogParameters parameters)
         {

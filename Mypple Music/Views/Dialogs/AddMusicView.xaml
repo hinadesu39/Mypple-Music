@@ -1,0 +1,179 @@
+﻿<UserControl x:Class="Mypple_Music.Views.Dialogs.AddMusicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Views.Dialogs"
+             xmlns:model="clr-namespace:Mypple_Music.Models"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+             xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
+             mc:Ignorable="d"
+             Height="500"
+             Width="800"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             FontFamily="微软雅黑">
+    <UserControl.Resources>
+        <converter:ValueConverter x:Key="Value" />
+        <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <Border BorderBrush="#22000000"
+                Margin="0,0.5,0,0"
+                BorderThickness="0,0,0,1"></Border>
+        <StackPanel Orientation="Horizontal"
+                    Margin="10,0,0,0">
+            <TextBox x:Name="SearchBox"
+                     md:HintAssist.Hint="从资料库中添加..."
+                     md:TextFieldAssist.HasClearButton="True"
+                     Width="150"
+                     Height="30"
+                     HorizontalAlignment="Right"
+                     Margin="0,0,30,0"
+                     extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}" />
+            <Button HorizontalAlignment="Right"
+                    Content="&#xe600;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding ElementName=SearchBox,Path=Text}">
+
+            </Button>
+        </StackPanel>
+      
+        <DataGrid Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  AlternationCount="2"
+                  ItemsSource="{Binding MusicList}"
+                  GridLinesVisibility="None"
+                  ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                  RowStyle="{StaticResource ToAddMusicRowStyle}"
+                  MinRowHeight="45"
+                  CellStyle="{StaticResource DataGridCellStyle}"
+                  CanUserAddRows="False"
+                  SelectionUnit="FullRow">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                              Command="{Binding SelectedMusicChangedCommand}"
+                              CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+            </DataGrid.InputBindings>
+            <d:DataGrid.Items>
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+                <model:Music Album="111"
+                             Artist="111"
+                             Duration="111"
+                             Type="True"
+                             PlayTimes="11"
+                             Title="222" />
+
+            </d:DataGrid.Items>
+            <DataGrid.Columns>
+
+                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridCheckBoxColumn.Header>
+                        <Border Background="Transparent">
+                            <CheckBox IsChecked="{Binding DataContext.IsAllItemsSelected,RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </Border>
+                    </DataGridCheckBoxColumn.Header>
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}"
+                               BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="标题"
+                                    Width="2*"
+                                    Binding="{Binding Title}" />
+                <DataGridTextColumn Header="时长"
+                                    Width="1*"
+                                    Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
+                <DataGridTextColumn Header="艺人"
+                                    Width="1*"
+                                    Binding="{Binding Artist}" />
+                <DataGridTextColumn Header="专辑"
+                                    Width="1*"
+                                    Binding="{Binding Album}" />
+                <DataGridTextColumn Header="类型"
+                                    Width="1*"
+                                    Binding="{Binding Type}" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <DockPanel Grid.Row="2"
+                   Background="Transparent"
+                   LastChildFill="False">
+            <Button Content="添加"
+                    Width="150"
+                    DockPanel.Dock="Right"
+                    Margin="0,0,30,0" />
+            <Button Content="返回"
+                    Width="150"
+                    DockPanel.Dock="Right"
+                    Margin="0,0,30,0"
+                    Command="{Binding CancelCommand}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

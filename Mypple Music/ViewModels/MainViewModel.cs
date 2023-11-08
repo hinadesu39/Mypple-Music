@@ -28,6 +28,7 @@ namespace Mypple_Music.ViewModels
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
+        private ObservableCollection<MenuBar> AllBars;
 
         //private readonly IDialogHostService dialog;
 
@@ -435,8 +436,10 @@ namespace Mypple_Music.ViewModels
                 MediaElement.Position = TimeSpan.Zero;
                 return;
             }
+
             //初始化控件数据
             Player.Music = music;
+            Player.Music.Status = Music.PlayStatus.StartPlay;
             PlayIndex = PlayList.IndexOf(music);
             Player.PlayProgress = 0;
             MediaElement.Source = music.AudioUrl;
@@ -462,43 +465,56 @@ namespace Mypple_Music.ViewModels
 
                 if (journal != null && journal.CanGoBack)
                 {
+                    var preNavi = AllBars.FirstOrDefault(
+                        m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
+                    );
+                    if (preNavi != null)
+                        preNavi.IsSelected = false;
+
                     journal.GoBack();
+
                     isUpdating = true;
                     if (IsLyricViewAlive) //如果从歌词界面返回则及时关闭歌词按钮效果
                         IsLyricViewAlive = false;
-                    var preNavi = MenuBars.FirstOrDefault(
+
+                    var curNavi = AllBars.FirstOrDefault(
                         m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
                     );
-                    if (preNavi != null)
-                    {
-                        MenuBarsIndex = MenuBars.IndexOf(preNavi);
-                        PlayListIndex = -1;
-                        MusicInfoIndex = -1;
-                        isUpdating = false;
-                        return;
-                    }
-                    preNavi = MusicInfoBars.FirstOrDefault(
-                        m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
-                    );
-                    if (preNavi != null)
-                    {
-                        MusicInfoIndex = MusicInfoBars.IndexOf(preNavi);
-                        PlayListIndex = -1;
-                        MenuBarsIndex = -1;
-                        isUpdating = false;
-                        return;
-                    }
-                    preNavi = PlayListBars.FirstOrDefault(
-                        m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
-                    );
-                    if (preNavi != null)
-                    {
-                        PlayListIndex = PlayListBars.IndexOf(preNavi);
-                        MenuBarsIndex = -1;
-                        MusicInfoIndex = -1;
-                        isUpdating = false;
-                        return;
-                    }
+
+                    if (curNavi != null)
+                        curNavi.IsSelected = true;
+                    isUpdating = false;
+                    //if (preNavi != null)
+                    //{
+                    //    MenuBarsIndex = MenuBars.IndexOf(preNavi);
+                    //    PlayListIndex = -1;
+                    //    MusicInfoIndex = -1;
+                    //    isUpdating = false;
+                    //    return;
+                    //}
+                    //preNavi = MusicInfoBars.FirstOrDefault(
+                    //    m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
+                    //);
+                    //if (preNavi != null)
+                    //{
+                    //    MusicInfoIndex = MusicInfoBars.IndexOf(preNavi);
+                    //    PlayListIndex = -1;
+                    //    MenuBarsIndex = -1;
+                    //    isUpdating = false;
+                    //    return;
+                    //}
+                    //preNavi = PlayListBars.FirstOrDefault(
+                    //    m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
+                    //);
+                    //if (preNavi != null)
+                    //{
+                    //    PlayListIndex = PlayListBars.IndexOf(preNavi);
+                    //    MenuBarsIndex = -1;
+                    //    MusicInfoIndex = -1;
+                    //    isUpdating = false;
+                    //    return;
+                    //}
+
                     isUpdating = false;
                 }
         }
@@ -511,7 +527,12 @@ namespace Mypple_Music.ViewModels
         {
             if (menu == null || isUpdating)
                 return;
+            var preNavi = AllBars.FirstOrDefault(m => m.IsSelected == true && m != menu);
+            if (preNavi != null)
+                preNavi.IsSelected = false;
 
+            NavigationParameters para = new NavigationParameters();
+            para.Add("Title", menu.Title);
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                 menu.NameSpace,
                 Callback =>
@@ -521,24 +542,28 @@ namespace Mypple_Music.ViewModels
                     if (IsLyricViewAlive)
                         IsLyricViewAlive = false; //如果是从歌词界面跳转，要先关闭歌词界面
                     isUpdating = false;
-                }
+                },
+                para
             );
+
+
+
             //更新导航条
-            switch (menu.BelongsTo)
-            {
-                case "MenuBars":
-                    PlayListIndex = -1;
-                    MusicInfoIndex = -1;
-                    break;
-                case "PlayListBars":
-                    MenuBarsIndex = -1;
-                    MusicInfoIndex = -1;
-                    break;
-                case "MusicInfoBars":
-                    PlayListIndex = -1;
-                    MenuBarsIndex = -1;
-                    break;
-            }
+            //switch (menu.BelongsTo)
+            //{
+            //    case "MenuBars":
+            //        PlayListIndex = -1;
+            //        MusicInfoIndex = -1;
+            //        break;
+            //    case "PlayListBars":
+            //        MenuBarsIndex = -1;
+            //        MusicInfoIndex = -1;
+            //        break;
+            //    case "MusicInfoBars":
+            //        PlayListIndex = -1;
+            //        MenuBarsIndex = -1;
+            //        break;
+            //}
         }
 
         /// <summary>
@@ -625,7 +650,6 @@ namespace Mypple_Music.ViewModels
                     BelongsTo = "MenuBars"
                 }
             );
-
             MusicInfoBars.Add(
                 new MenuBar()
                 {
@@ -682,6 +706,10 @@ namespace Mypple_Music.ViewModels
                     BelongsTo = "PlayListBars"
                 }
             );
+            //将所有导航菜单归并到一个集合当中
+            AllBars = new ObservableCollection<MenuBar>(MenuBars.Concat(MusicInfoBars).Concat(PlayListBars));
+
+
         }
 
         /// <summary>

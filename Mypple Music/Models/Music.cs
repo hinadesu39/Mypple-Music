@@ -204,6 +204,18 @@ namespace Mypple_Music.Models
         }
 
         /// <summary>
+        /// 是否被选中
+        /// </summary>
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; RaisePropertyChanged(); }
+        }
+
+
+        /// <summary>
         /// 发行时间
         /// </summary>
         private int publishTime;

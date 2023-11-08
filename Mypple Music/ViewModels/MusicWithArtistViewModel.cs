@@ -161,6 +161,7 @@ namespace Mypple_Music.ViewModels
             if (navigationContext.Parameters.ContainsKey("Artist"))
             {
                 this.Artist = navigationContext.Parameters.GetValue<Artist>("Artist");
+                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
                 Albums = new ObservableCollection<Album>(
                     await albumService.GetAlbumsByArtistIdAsync(Artist.Id)
                 );
@@ -172,6 +173,7 @@ namespace Mypple_Music.ViewModels
                     );
                     CountOfMusic += album.MusicList.Count;
                 }
+                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
             }
         }
 

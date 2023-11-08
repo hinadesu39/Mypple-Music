@@ -41,8 +41,8 @@ namespace Mypple_Music.Extensions
                     Debug.WriteLine(firstItemHeight);
                     scrollViewer.ScrollToVerticalOffsetWithAnimation(
                         firstItemHeight * (listBox.SelectedIndex - 2),
-                        TimeSpan.FromSeconds(0.6),
-                        new QuadraticEase()
+                        TimeSpan.FromSeconds(1),
+                        new ElasticEase() { Oscillations = 1, Springiness = 6}
                     );
                 }
 

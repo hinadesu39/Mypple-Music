@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:Mypple_Music.Views"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:model="clr-namespace:Mypple_Music.Models"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -22,26 +24,41 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="14"
-                   FontWeight="Bold"></TextBlock>
+                   FontWeight="Bold" />
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
+                 md:TextFieldAssist.HasClearButton="True"
                  Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
                  Width="150"
                  Height="30"
                  HorizontalAlignment="Right"
-                 Margin="0,0,80,0" />
+                 Margin="0,0,80,0"
+                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}">
+
+        </TextBox>
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
                 FontWeight="Bold"
                 Margin="0,0,10,0"
-                Command="{Binding ChangeVisibilityCommand}">
+                Command="{Binding SearchCommand}"
+                CommandParameter="{Binding ElementName=SearchBox,Path=Text}">
         </Button>
+
+
         <ListBox ItemsSource="{Binding AlbumList}"
                  HorizontalAlignment="Center"
                  Grid.Row="1"
                  Style="{StaticResource AlbumListStyle}"
-                 ItemContainerStyle="{StaticResource AlbumListItemStyle}">
+                 ItemContainerStyle="{StaticResource AlbumListItemStyle}"
+                 SelectedIndex="{Binding SelectedIndex}"
+                 ScrollViewer.CanContentScroll="False">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
             <d:ListBox.Items>
                 <model:Album Artist="稲葉曇"

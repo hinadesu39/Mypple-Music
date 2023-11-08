@@ -19,7 +19,7 @@
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="Contanier">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
@@ -95,8 +95,9 @@
             <Grid Grid.Column="1"
                   Margin="30,0,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
                     <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="50" />
                 </Grid.RowDefinitions>
                 <StackPanel Margin="0,10,0,0">
                     <TextBlock Grid.Row="0"
@@ -119,8 +120,8 @@
                                Text="{Binding Duration,Converter={StaticResource MinutesToHoursMinutes}}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="1"
-                            Orientation="Horizontal">
+                <DockPanel Grid.Row="2"
+                           LastChildFill="False">
                     <Button Content="播放"
                             Tag="&#xea82;"
                             Style="{StaticResource IconWithContentButton}"
@@ -131,7 +132,90 @@
                             Style="{StaticResource IconWithContentButton}"
                             Width="100"
                             Height="35" />
-                </StackPanel>
+                    <ToggleButton x:Name="InfoBtn"
+                                  Width="40"
+                                  Height="30"
+                                  Margin="0,0,30,0"
+                                  DockPanel.Dock="Right"
+                                  IsChecked="{Binding IsChecked}">
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border x:Name="borderIn"
+                                        Background="Transparent"
+                                        CornerRadius="2">
+                                    <StackPanel VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   FontFamily="{StaticResource IconFont}"
+                                                   Text="&#xe719;"
+                                                   FontSize="20"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource PrimaryHueLightBrush}">
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+
+                                        <Setter TargetName="borderIn"
+                                                Property="Background"
+                                                Value="#22000000" />
+                                    </Trigger>
+
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                    <!--信息弹出-->
+                    <Popup x:Name="InfoPopupContrainer"
+                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
+                           StaysOpen="False"
+                           Placement="Bottom"
+                           AllowsTransparency="True"
+                           PlacementTarget="{Binding ElementName=InfoBtn}"
+                           HorizontalOffset="-100">
+                        <!--<StackPanel HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background=""
+                                    Width="120">-->
+                        
+                        <Border CornerRadius="5"
+                                Background="{DynamicResource DefaultBackground}"
+                                Width="120"
+                                BorderThickness="0.5"
+                                BorderBrush="#66000000">
+                           
+                            <ListBox x:Name="dataBar"
+                                     Margin="0,0,0,5"
+                                     ItemContainerStyle="{StaticResource PopUpListBoxItemStyle}"
+                                     ItemsSource="{Binding PopUpList}"
+                                     DockPanel.Dock="Top"
+                                     SelectedIndex="{Binding PopUpSelectedIndex}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.NavigateCommand,RelativeSource={RelativeSource AncestorType=Popup}}"
+                                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Background="Transparent"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+                        </Border>
+                        <!--</StackPanel>-->
+                    </Popup>
+
+                </DockPanel>
             </Grid>
         </Grid>
         <DataGrid Grid.Row="2"
@@ -144,7 +228,9 @@
                   RowStyle="{StaticResource DataGridRowStyle}"
                   MinRowHeight="55"
                   CellStyle="{StaticResource DataGridCellStyle}"
-                  VerticalAlignment="Top">
+                  VerticalAlignment="Top"
+                  ScrollViewer.CanContentScroll="False"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                               Command="{Binding SelectedMusicChangedCommand}"

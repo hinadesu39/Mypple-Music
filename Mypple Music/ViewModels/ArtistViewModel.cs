@@ -1,4 +1,6 @@
-﻿using Mypple_Music.Extensions;
+﻿using MaterialDesignColors;
+using Mypple_Music.Events;
+using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
 using Prism.Commands;
@@ -18,6 +20,7 @@ namespace Mypple_Music.ViewModels
     {
         private IArtistService artistService;
         private readonly IRegionManager RegionManager;
+        private ObservableCollection<Artist> tempArtist;
 
         private bool isSearchVisible;
 
@@ -26,6 +29,15 @@ namespace Mypple_Music.ViewModels
             get { return isSearchVisible; }
             set { isSearchVisible = value; RaisePropertyChanged(); }
         }
+
+        private int selectedArtistIndex = 0;
+
+        public int SelectedArtistIndex
+        {
+            get { return selectedArtistIndex; }
+            set { selectedArtistIndex = value; RaisePropertyChanged(); }
+        }
+
 
         private ObservableCollection<Artist> artists;
 
@@ -39,7 +51,8 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public DelegateCommand ChangeVisibilityCommand { get; set; }
+        public DelegateCommand<string> SearchCommand { get; set; }
+        public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Artist> NavigateCommand { get; set; }
 
         public ArtistViewModel(IContainerProvider containerProvider, IRegionManager regionManager, IArtistService artistService)
@@ -47,15 +60,44 @@ namespace Mypple_Music.ViewModels
         {
            
             this.artistService = artistService;
-            ChangeVisibilityCommand = new DelegateCommand(ChangeVisibility);
+            SearchCommand = new DelegateCommand<string>(Search);
+            TextEmptyCommand = new DelegateCommand(TextEmpty);
             NavigateCommand = new DelegateCommand<Artist>(Navigate);
             RegionManager = regionManager;
             Config();
         }
 
-        private void ChangeVisibility()
+        private void TextEmpty()
         {
-            
+            if (tempArtist != null)
+            {
+                Artists = tempArtist;
+                SelectedArtistIndex = 0;
+            }
+        }
+
+        private async void Search(string para)
+        {
+            if (IsSearchVisible)
+            {
+                if (para == string.Empty)
+                {
+                    IsSearchVisible = false;
+                    Artists = tempArtist;
+                    return;
+                }
+                //查找
+                var searchedArtistList = Artists.Where(a => a.Name.Contains(para));
+                if (searchedArtistList != null)
+                {
+                    Artists = new ObservableCollection<Artist>(searchedArtistList);
+                    SelectedArtistIndex = 0;
+                }
+            }
+            else
+            {
+                IsSearchVisible = true;
+            }
         }
 
         private void Navigate(Artist artist)
@@ -67,12 +109,16 @@ namespace Mypple_Music.ViewModels
                     "MusicWithArtistView",
                     para
                 );
+                
             }
         }
 
         async void Config()
-        {            
+        {
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
             Artists = new ObservableCollection<Artist>(await artistService.GetAllAsync());
+            tempArtist = Artists;
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
         }
     }
 }

@@ -104,13 +104,13 @@ namespace Mypple_Music.ViewModels
         private void SelectedMusicChanged(Music Music)
         {
             //设置播放状态
-            var playingMusic = MusicList.FirstOrDefault(
-                m => m.Status == Music.PlayStatus.StartPlay
-            );
-            if (playingMusic != null)
-                playingMusic.Status = Music.PlayStatus.StopPlay;
+            //var playingMusic = MusicList.FirstOrDefault(
+            //    m => m.Status == Music.PlayStatus.StartPlay
+            //);
+            //if (playingMusic != null)
+            //    playingMusic.Status = Music.PlayStatus.StopPlay;
             SelectedMusic = Music;
-            SelectedMusic.Status = Music.PlayStatus.StartPlay;
+            //SelectedMusic.Status = Music.PlayStatus.StartPlay;
 
             //把当前播放列表发送给播放器待播放
             eventAggregator
@@ -130,9 +130,11 @@ namespace Mypple_Music.ViewModels
 
         async void Config()
         {
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
             IsSearchVisible = false;
             MusicList = new ObservableCollection<Music>(await musicService.GetAllAsync());
             tempMusic = MusicList;
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)

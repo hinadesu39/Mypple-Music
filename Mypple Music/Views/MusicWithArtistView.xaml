@@ -162,8 +162,9 @@
                                       GridLinesVisibility="None"
                                       RowStyle="{StaticResource DataGridRowStyle}"
                                       MinRowHeight="45"
+                                      CellStyle="{StaticResource DataGridCellStyle}"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                      CellStyle="{StaticResource DataGridCellStyle}">
+                                      PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding DataContext.FocuseChangedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"

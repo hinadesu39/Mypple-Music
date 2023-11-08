@@ -25,5 +25,14 @@ namespace Mypple_Music.Service
             var res = await client.ExecuteAsync<Album[]>(request);
             return res;
         }
+
+        public async Task<Album[]> GetAlbumsByMusicPostOrderAsync()
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"/Music.Main/api/Albums/GetAlbumsByMusicPostOrder";
+            var res = await client.ExecuteAsync<Album[]>(request);
+            return res;
+        }
     }
 }

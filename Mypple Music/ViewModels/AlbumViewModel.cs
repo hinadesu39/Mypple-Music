@@ -1,4 +1,5 @@
-﻿using MaterialDesignColors;
+﻿using ImTools;
+using MaterialDesignColors;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
@@ -26,6 +27,15 @@ namespace Mypple_Music.ViewModels
         private IRegionNavigationJournal journal;
         private bool isUpdating;
         private ObservableCollection<Album> tempAlbum;
+
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; RaisePropertyChanged(); }
+        }
+
 
         private bool isSearchVisible;
 
@@ -173,9 +183,10 @@ namespace Mypple_Music.ViewModels
 
         async void GetAlbumList()
         {
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
             AlbumList = new ObservableCollection<Album>(await albumService.GetAllAsync());
             tempAlbum = AlbumList;
-            Debug.WriteLine(AlbumList);
+            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
@@ -186,6 +197,8 @@ namespace Mypple_Music.ViewModels
             isUpdating = false;
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext) { }
+        public override void OnNavigatedTo(NavigationContext navigationContext) 
+        {           
+        }
     }
 }

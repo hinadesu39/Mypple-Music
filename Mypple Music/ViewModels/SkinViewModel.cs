@@ -11,6 +11,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Mypple_Music.ViewModels
@@ -38,6 +39,18 @@ namespace Mypple_Music.ViewModels
                     //保存更改
                     config.Save();
                     ConfigurationManager.RefreshSection("appSettings");
+
+                    //切换自定义主题
+                    ResourceDictionary resourceDictionary = new ResourceDictionary();
+                    if (value)
+                    {
+                        resourceDictionary.Source = new Uri("pack://application:,,,/Resource/DarkTheme.xaml");
+                    }
+                    else
+                    {
+                        resourceDictionary.Source = new Uri("pack://application:,,,/Resource/LightTheme.xaml");
+                    }
+                    Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
                 }
             }
         }

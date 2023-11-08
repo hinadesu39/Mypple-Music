@@ -3,20 +3,21 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:local="clr-namespace:Mypple_Music"
                         xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+                        xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                         xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resource/LightTheme.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/Resource/DarkTheme.xaml" />-->
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                              PrimaryColor="Teal"
                                              SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
-
             <!--文本输入框样式-->
             <Style x:Key="TextBoxStyle"
                    TargetType="TextBox">
@@ -203,11 +204,51 @@
                 </Setter>
             </Style>
 
+            <!--弹出菜单列表样式-->
+            <Style x:Key="PopUpListBoxItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="30" />
+                <Setter Property="Margin"
+                        Value="3,5,3,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Grid>
+                                <Border x:Name="border"></Border>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="3" />
+
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <!--导航列表样式-->
             <Style x:Key="MyListBoxItemStyle"
                    TargetType="ListBoxItem">
                 <Setter Property="MinHeight"
                         Value="30" />
+                <Setter Property="IsSelected"
+                        Value="{Binding IsSelected}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -261,7 +302,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
 
             <!--歌曲展示列表样式-->
             <Style x:Key="ListBoxItemForDisplayStyle"
@@ -595,7 +635,54 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
+            <!--待选择歌曲DataGrid行样式-->
+            <Style x:Key="ToAddMusicRowStyle"
+                   TargetType="DataGridRow">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridRow}">
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
+                                <Grid Margin="8,0,0,0">
+                                    <Border x:Name="border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="1"
+                                            BorderBrush="Transparent"
+                                            CornerRadius="3"
+                                            Margin="1">
+                                        <Border.OpacityMask>
+                                            <SolidColorBrush Color="Black"
+                                                             Opacity="0.3" />
+                                        </Border.OpacityMask>
+                                    </Border>
+                                    <DataGridCellsPresenter Height="40" />
+                                </Grid>
+                            </materialDesign:TransitioningContent>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <!--  隔行换色  -->
+                    <Trigger Property="AlternationIndex"
+                             Value="0">
+                        <Setter Property="Background"
+                                Value="#11000000" />
+                    </Trigger>
+                    <Trigger Property="AlternationIndex"
+                             Value="1">
+                        <Setter Property="Background"
+                                Value="#44000000" />
+                    </Trigger>
 
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource PrimaryHueLightBrush}" />
+                    </Trigger>
+
+
+                </Style.Triggers>
+            </Style>
 
             <!-- DataGrid 行样式 -->
             <Style x:Key="DataGridRowStyle"
@@ -605,28 +692,28 @@
                         <ControlTemplate TargetType="{x:Type DataGridRow}">
                             <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
                                 <Grid Margin="5,0,0,0">
-                                <Border x:Name="border"
-                                        Background="{TemplateBinding Background}"
-                                        BorderThickness="1"
-                                        BorderBrush="Transparent"
-                                        CornerRadius="3"
-                                        Margin="1">
-                                    <Border.OpacityMask>
-                                        <SolidColorBrush Color="Black"
-                                                         Opacity="0.3" />
-                                    </Border.OpacityMask>
-                                </Border>
-                                <Rectangle x:Name="borderHeader"
-                                           Width="4"
-                                           RadiusX="2"
-                                           RadiusY="2"
-                                           Height="30"
-                                           HorizontalAlignment="Left"
-                                           Margin="5,0,0,0">
-                                </Rectangle>
+                                    <Border x:Name="border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="1"
+                                            BorderBrush="Transparent"
+                                            CornerRadius="3"
+                                            Margin="1">
+                                        <Border.OpacityMask>
+                                            <SolidColorBrush Color="Black"
+                                                             Opacity="0.3" />
+                                        </Border.OpacityMask>
+                                    </Border>
+                                    <Rectangle x:Name="borderHeader"
+                                               Width="4"
+                                               RadiusX="2"
+                                               RadiusY="2"
+                                               Height="30"
+                                               HorizontalAlignment="Left"
+                                               Margin="5,0,0,0">
+                                    </Rectangle>
 
-                                <DataGridCellsPresenter Height="40" />
-                            </Grid>
+                                    <DataGridCellsPresenter Height="40" />
+                                </Grid>
                             </materialDesign:TransitioningContent>
                             <ControlTemplate.Triggers>
                                 <EventTrigger RoutedEvent="MouseDoubleClick">
@@ -889,7 +976,7 @@
                                            Text="{Binding Content}">
                                     <TextBlock.Foreground>
                                         <SolidColorBrush x:Name="ForegroundBrush"
-                                                         Color="#BABABA" />
+                                                         Color="Gray" />
                                     </TextBlock.Foreground>
                                 </TextBlock>
                                 <!--<TextBlock x:Name="Trans"
@@ -912,7 +999,7 @@
                                     </MultiTrigger.Conditions>
                                     <Setter TargetName="Lyric"
                                             Property="Foreground"
-                                            Value="Gray" />
+                                            Value="#BABABA" />
                                     <!--<Setter TargetName="Trans"
                                             Property="Foreground"
                                             Value="#77000000" />-->
@@ -927,10 +1014,10 @@
                                                                 Storyboard.TargetProperty="Color"
                                                                 To="White"
                                                                 Duration="0:0:0.3" />
-                                                <DoubleAnimation Storyboard.TargetName="Lyric"
+                                                <!--<DoubleAnimation Storyboard.TargetName="Lyric"
                                                                  Storyboard.TargetProperty="FontSize"
                                                                  To="28"
-                                                                 Duration="0:0:0.3" />
+                                                                 Duration="0:0:0.3" />-->
                                                 <!--<ColorAnimation Storyboard.TargetName="TransForegroundBrush"
                                                                 Storyboard.TargetProperty="Color"
                                                                 To="White"
@@ -947,12 +1034,12 @@
                                             <Storyboard Timeline.DesiredFrameRate="24">
                                                 <ColorAnimation Storyboard.TargetName="ForegroundBrush"
                                                                 Storyboard.TargetProperty="Color"
-                                                                To="#BABABA"
+                                                                To="Gray"
                                                                 Duration="0:0:0.6" />
-                                                <DoubleAnimation Storyboard.TargetName="Lyric"
+                                                <!--<DoubleAnimation Storyboard.TargetName="Lyric"
                                                                  Storyboard.TargetProperty="FontSize"
                                                                  To="25"
-                                                                 Duration="0:0:0.3" />
+                                                                 Duration="0:0:0.3" />-->
                                                 <!--<ColorAnimation Storyboard.TargetName="TransForegroundBrush"
                                                                 Storyboard.TargetProperty="Color"
                                                                 To="#55000000"
@@ -1179,7 +1266,8 @@
                                     <TextBlock Text="{Binding Title}"
                                                FontSize="15"
                                                TextWrapping="Wrap"
-                                               Margin="10,0,0,0" />
+                                               Margin="10,0,0,0"
+                                               Foreground="{DynamicResource DefaultForgeground}" />
                                     <TextBlock Text="{Binding Artist}"
                                                FontSize="12"
                                                Foreground="#7E7E7E"

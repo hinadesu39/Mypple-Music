@@ -41,12 +41,12 @@ namespace Mypple_Music.Models
             set { belongsTo = value; }
         }
 
-        private bool isAlive;
+        private bool isSelected;
 
-        public bool IsAlive
+        public bool IsSelected
         {
-            get { return isAlive; }
-            set { isAlive = value; RaisePropertyChanged(); }
+            get { return isSelected; }
+            set { isSelected = value; RaisePropertyChanged(); }
         }
     }
 }

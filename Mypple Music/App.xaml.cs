@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Prism.Events;
 using Mypple_Music.Models;
+using Mypple_Music.Events;
 
 namespace Mypple_Music
 {
@@ -43,8 +44,8 @@ namespace Mypple_Music
             var paletteHelper = new PaletteHelper();
             ITheme theme = paletteHelper.GetTheme();
 
-            var IsDarkTheme = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsDarkTheme"));
-            theme.SetBaseTheme(IsDarkTheme ? Theme.Dark : Theme.Light);
+            AppSession.IsDarkTheme = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsDarkTheme"));
+            theme.SetBaseTheme(AppSession.IsDarkTheme ? Theme.Dark : Theme.Light);
 
 
             var color = (Color)ColorConverter.ConvertFromString(ConfigurationManager.AppSettings.Get("Color"));
@@ -54,6 +55,18 @@ namespace Mypple_Music
             theme.PrimaryDark = new ColorPair(color);
 
             paletteHelper.SetTheme(theme);
+
+            ResourceDictionary resourceDictionary = new ResourceDictionary();
+            if (AppSession.IsDarkTheme)
+            {
+                resourceDictionary.Source = new Uri("pack://application:,,,/Resource/DarkTheme.xaml");
+            }
+            else
+            {
+                resourceDictionary.Source = new Uri("pack://application:,,,/Resource/LightTheme.xaml");
+            }
+            Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
+
             base.OnInitialized();
             //var dialog = Container.Resolve<IDialogService>();
             //dialog.ShowDialog("LoginView", callBack =>
@@ -101,7 +114,7 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<MusicListView, MusicListViewModel>();
             containerRegistry.RegisterForNavigation<LyricView, LyricViewModel>();
-            containerRegistry.RegisterForNavigation<AlbumView, AlbumViewModel>();
+            containerRegistry.RegisterForNavigation<AlbumView, AlbumViewModel>();            
             containerRegistry.RegisterForNavigation<RecentPostsView, RecentPostsViewModel>();
             containerRegistry.RegisterForNavigation<PlayListView, PlayListViewModel>();
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
@@ -110,6 +123,7 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<AllPlayListsView, AllPlayListsViewModel>();
             containerRegistry.RegisterForNavigation<ArtistView, ArtistViewModel>();
             containerRegistry.RegisterForNavigation<MusicWithArtistView, MusicWithArtistViewModel>();
+            containerRegistry.RegisterForNavigation<AddMusicView, AddMusicViewModel>();
 
         }
         //注册外部服务方法如下

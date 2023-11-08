@@ -20,11 +20,12 @@
                 Margin="0,0.5,0,0"
                 BorderThickness="0,0,0,1"></Border>
 
-        <TextBlock Text="专辑"
+        <TextBlock x:Name="Title"
+                   Text="专辑"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="14"
-                   FontWeight="Bold"></TextBlock>
+                   FontWeight="Bold" />
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
                  md:TextFieldAssist.HasClearButton="True"

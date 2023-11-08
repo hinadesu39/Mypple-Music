@@ -10,5 +10,6 @@ namespace Mypple_Music.Service
     public interface IAlbumService:IBaseService<Album>
     {
         public Task<Album[]> GetAlbumsByArtistIdAsync(Guid ArtistId);
+        public Task<Album[]> GetAlbumsByMusicPostOrderAsync();
     }
 }
