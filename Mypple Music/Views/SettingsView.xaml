@@ -15,7 +15,7 @@
     <UserControl.Resources>
 
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />

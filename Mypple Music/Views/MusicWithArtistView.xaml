@@ -18,7 +18,7 @@
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
         <converter:ValueConverter x:Key="Value" />
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="30" />

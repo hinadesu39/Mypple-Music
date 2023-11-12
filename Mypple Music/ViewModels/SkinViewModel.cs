@@ -1,6 +1,7 @@
 ﻿using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
+using Mypple_Music.Events;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -19,7 +20,9 @@ namespace Mypple_Music.ViewModels
     public class SkinViewModel : BindableBase, INavigationAware
     {
         //打开当前应用程序的配置文件
-        public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        public static Configuration config = ConfigurationManager.OpenExeConfiguration(
+            ConfigurationUserLevel.None
+        );
         public DelegateCommand<object> ChangeHueCommand { set; get; }
         public IEnumerable<ISwatch> Swatches { get; } = SwatchHelper.Swatches;
 
@@ -33,6 +36,8 @@ namespace Mypple_Music.ViewModels
                 {
                     ModifyTheme(theme => theme.SetBaseTheme(value ? Theme.Dark : Theme.Light));
 
+                    AppSession.IsDarkTheme = value;
+
                     //修改配置内容
                     config.AppSettings.Settings["IsDarkTheme"].Value = value.ToString();
 
@@ -44,16 +49,25 @@ namespace Mypple_Music.ViewModels
                     ResourceDictionary resourceDictionary = new ResourceDictionary();
                     if (value)
                     {
-                        resourceDictionary.Source = new Uri("pack://application:,,,/Resource/DarkTheme.xaml");
+                        resourceDictionary.Source = new Uri(
+                            "pack://application:,,,/Resource/DarkTheme.xaml"
+                        );
                     }
                     else
                     {
-                        resourceDictionary.Source = new Uri("pack://application:,,,/Resource/LightTheme.xaml");
+                        resourceDictionary.Source = new Uri(
+                            "pack://application:,,,/Resource/LightTheme.xaml"
+                        );
                     }
                     Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
+                    //通知主题改变
+                    AppSession.EventAggregator
+                        .GetEvent<ThemeChangedEvent>()
+                        .Publish(new ThemeChangedModel(value));
                 }
             }
         }
+
         public SkinViewModel()
         {
             ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
@@ -67,11 +81,10 @@ namespace Mypple_Music.ViewModels
             modificationAction?.Invoke(theme);
 
             paletteHelper.SetTheme(theme);
-
-
         }
 
         private readonly PaletteHelper paletteHelper = new PaletteHelper();
+
         private void ChangeHue(object? obj)
         {
             //主题色号
@@ -101,9 +114,6 @@ namespace Mypple_Music.ViewModels
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-
-        }
+        public void OnNavigatedFrom(NavigationContext navigationContext) { }
     }
 }

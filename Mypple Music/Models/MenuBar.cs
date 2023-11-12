@@ -9,6 +9,14 @@ namespace Mypple_Music.Models
 {
     public class MenuBar : BindableBase
     {
+        private Guid id;
+
+        public Guid Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         private string icon;
 
         public string Icon
@@ -31,14 +39,6 @@ namespace Mypple_Music.Models
         {
             get { return nameSpace; }
             set { nameSpace = value; }
-        }
-
-        private string belongsTo;
-
-        public string BelongsTo
-        {
-            get { return belongsTo; }
-            set { belongsTo = value; }
         }
 
         private bool isSelected;

@@ -494,7 +494,8 @@
 
             <Style x:Key="ExpanderStyle"
                    TargetType="{x:Type Expander}">
-
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
                 <Setter Property="HorizontalContentAlignment"
                         Value="Stretch" />
                 <Setter Property="VerticalContentAlignment"

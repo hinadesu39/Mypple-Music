@@ -5,7 +5,6 @@ using Mypple_Music.ViewModels;
 using Mypple_Music.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
-using Prism.Services.Dialogs;
 using System.Configuration;
 using System;
 using System.Windows;
@@ -15,13 +14,6 @@ using Mypple_Music.Views.Dialogs;
 using Mypple_Music.Extensions;
 using DryIoc;
 using MediatR;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using System.ComponentModel;
-using System.Diagnostics;
-using Prism.Events;
-using Mypple_Music.Models;
 using Mypple_Music.Events;
 
 namespace Mypple_Music
@@ -106,6 +98,7 @@ namespace Mypple_Music
             containerRegistry.Register<IMusicService, MusicService>();
             containerRegistry.Register<IArtistService, ArtistService>();
             containerRegistry.Register<IAlbumService, AlbumService>();
+            containerRegistry.Register<IPlayListService, PlayListService>();
 
 
             containerRegistry.RegisterForNavigation<NowToListenView, NowToListenViewModel>();
@@ -124,6 +117,7 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<ArtistView, ArtistViewModel>();
             containerRegistry.RegisterForNavigation<MusicWithArtistView, MusicWithArtistViewModel>();
             containerRegistry.RegisterForNavigation<AddMusicView, AddMusicViewModel>();
+            containerRegistry.RegisterForNavigation<MusicWithAlbumView, MusicWithAlbumViewModel>();
 
         }
         //注册外部服务方法如下

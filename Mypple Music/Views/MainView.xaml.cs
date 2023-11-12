@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Events;
+﻿using MediatR;
+using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Views.Dialogs;
 using Prism.Events;
@@ -25,24 +26,28 @@ namespace Mypple_Music.Views
     /// </summary>
     public partial class MainView : Window
     {
-
         public MainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+            Loaded += MainView_Loaded;
 
             //加载动画注册
-            eventAggregator.GetEvent<LoadingEvent>().Subscribe(arg =>
-            {
-                DialogHost.IsOpen = arg.IsLoading;
-                if(arg.IsLoading == true)
-                {
-                    DialogHost.DialogContent = new ProgressView();
-                }
-            },
-            m =>
-            {
-                return m.filter == "MainView";
-            });
+            eventAggregator
+                .GetEvent<LoadingEvent>()
+                .Subscribe(
+                    arg =>
+                    {
+                        DialogHost.IsOpen = arg.IsLoading;
+                        if (arg.IsLoading == true)
+                        {
+                            DialogHost.DialogContent = new ProgressView();
+                        }
+                    },
+                    m =>
+                    {
+                        return m.filter == "MainView";
+                    }
+                );
 
             ColorZone.MouseDown += (s, e) =>
             {
@@ -67,7 +72,6 @@ namespace Mypple_Music.Views
             btn_Min.Click += (s, e) =>
             {
                 this.WindowState = WindowState.Minimized;
-
             };
             btn_Max.Click += (s, e) =>
             {
@@ -77,10 +81,8 @@ namespace Mypple_Music.Views
                 }
                 else
                 {
-
                     this.WindowState = WindowState.Maximized;
                 }
-
             };
             btn_Close.Click += (s, e) =>
             {
@@ -88,6 +90,43 @@ namespace Mypple_Music.Views
                 //if (dialogRes.Result != Prism.Services.Dialogs.ButtonResult.OK) return;
                 this.Close();
             };
+        }
+
+        WindowAccentCompositor windowAccentCompositor = null;
+
+        public void MainView_Loaded(object sender, RoutedEventArgs e)
+        {
+            windowAccentCompositor = new(
+                this,
+                false,
+                c =>
+                {
+                    //没有可用的模糊特效
+                    c.A = 255;
+                    Background = new SolidColorBrush(c);
+                }
+            );
+            windowAccentCompositor.Color = AppSession.IsDarkTheme
+                ? Color.FromArgb(180, 0, 0, 0)
+                : Color.FromArgb(180, 255, 255, 255);
+            windowAccentCompositor.IsEnabled = true;
+
+            AppSession.EventAggregator
+                .GetEvent<ThemeChangedEvent>()
+                .Subscribe(
+                    arg =>
+                    {
+                        windowAccentCompositor.Color = AppSession.IsDarkTheme
+                            ? Color.FromArgb(180, 0, 0, 0)
+                            : Color.FromArgb(180, 255, 255, 255);
+                        windowAccentCompositor.DarkMode = AppSession.IsDarkTheme;
+                        windowAccentCompositor.IsEnabled = true;
+                    },
+                    f =>
+                    {
+                        return f.filter == "MainView";
+                    }
+                );
         }
     }
 }

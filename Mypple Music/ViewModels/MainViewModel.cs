@@ -2,6 +2,8 @@
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
+using Mypple_Music.Models.Request;
+using Mypple_Music.Service;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
@@ -10,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +27,7 @@ namespace Mypple_Music.ViewModels
         private bool isUpdating = false; //后台更新触发SelectionChanged后直接返回不执行命令
         public static MediaElement MediaElement;
 
+        private readonly IPlayListService playListService;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
@@ -220,14 +224,15 @@ namespace Mypple_Music.ViewModels
         public MainViewModel(
             IDialogHostService dialog,
             IRegionManager regionManager,
-            IContainerProvider Container
+            IContainerProvider Container,
+            IPlayListService playListService
         )
             : base(Container)
         {
             this.dialog = dialog;
             this.RegionManager = regionManager;
             this.container = Container;
-
+            this.playListService = playListService;
             MenuBars = new ObservableCollection<MenuBar>();
             MusicInfoBars = new ObservableCollection<MenuBar>();
             PlayListBars = new ObservableCollection<MenuBar>();
@@ -406,6 +411,10 @@ namespace Mypple_Music.ViewModels
                 .Publish(new MusicPlayedModel(Player.Music, "LyricView"));
         }
 
+        /// <summary>
+        /// 播放器加载
+        /// </summary>
+        /// <param name="mediaElement"></param>
         private async void MediaLoadedAsync(MediaElement mediaElement)
         {
             MediaElement = mediaElement;
@@ -533,6 +542,7 @@ namespace Mypple_Music.ViewModels
 
             NavigationParameters para = new NavigationParameters();
             para.Add("Title", menu.Title);
+            para.Add("Id", menu.Id);
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                 menu.NameSpace,
                 Callback =>
@@ -546,24 +556,6 @@ namespace Mypple_Music.ViewModels
                 para
             );
 
-
-
-            //更新导航条
-            //switch (menu.BelongsTo)
-            //{
-            //    case "MenuBars":
-            //        PlayListIndex = -1;
-            //        MusicInfoIndex = -1;
-            //        break;
-            //    case "PlayListBars":
-            //        MenuBarsIndex = -1;
-            //        MusicInfoIndex = -1;
-            //        break;
-            //    case "MusicInfoBars":
-            //        PlayListIndex = -1;
-            //        MenuBarsIndex = -1;
-            //        break;
-            //}
         }
 
         /// <summary>
@@ -580,13 +572,7 @@ namespace Mypple_Music.ViewModels
                     {
                         NavigationParameters para = new NavigationParameters
                         {
-                            {
-                                "LyricInfo",
-                                new LyricCreatedModel(
-                                    Player.Music,
-                                    MediaElement
-                                )
-                            }
+                            { "LyricInfo", new LyricCreatedModel(Player.Music, MediaElement) }
                         };
                         RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                             obj.ToString(),
@@ -606,21 +592,45 @@ namespace Mypple_Music.ViewModels
             }
         }
 
+        /// <summary>
+        /// 添加播放列表
+        /// </summary>
         private async void AddPlayList()
         {
             DialogParameters parameter = new DialogParameters();
             var dialogRes = await dialog.ShowDialog("AddPlayListView", parameter);
+            if (dialogRes.Result == ButtonResult.OK)
+            {
+                var playList = dialogRes.Parameters.GetValue<PlayList>("Value");
+                Debug.WriteLine(playList.PicUrl);
+                playList.PicUrl = await playListService.UploadAsync(playList.LocalPicUrl);
+                var res = await playListService.AddPlayListAsync(
+                    new PlayListAddRequest(playList.PicUrl, playList.Title, playList.Description)
+                );
+                PlayListBars.Add(
+                    new MenuBar()
+                    {
+                        Id = res.Id,
+                        Icon = "PlaylistMusicOutline",
+                        Title = res.Title,
+                        NameSpace = "PlayListView"
+
+                    }
+                );
+            }
         }
 
-        void CreateMenuBar()
+        /// <summary>
+        /// 创建导航菜单
+        /// </summary>
+        async void CreateMenuBar()
         {
             MenuBars.Add(
                 new MenuBar()
                 {
                     Icon = "MotionPlayOutline",
                     Title = "现在就听",
-                    NameSpace = "NowToListenView",
-                    BelongsTo = "MenuBars"
+                    NameSpace = "NowToListenView"
                 }
             );
             MenuBars.Add(
@@ -628,8 +638,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "ViewGridOutline",
                     Title = "浏览",
-                    NameSpace = "BrowserView",
-                    BelongsTo = "MenuBars"
+                    NameSpace = "BrowserView"
                 }
             );
             MenuBars.Add(
@@ -637,8 +646,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "Broadcast",
                     Title = "广播",
-                    NameSpace = "BroadcastView",
-                    BelongsTo = "MenuBars"
+                    NameSpace = "BroadcastView"
                 }
             );
             MenuBars.Add(
@@ -646,8 +654,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "Cog",
                     Title = "设置",
-                    NameSpace = "SettingsView",
-                    BelongsTo = "MenuBars"
+                    NameSpace = "SettingsView"
                 }
             );
             MusicInfoBars.Add(
@@ -655,8 +662,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "ClockTimeNineOutline",
                     Title = "最近添加",
-                    NameSpace = "RecentPostsView",
-                    BelongsTo = "MusicInfoBars"
+                    NameSpace = "RecentPostsView"
                 }
             );
             MusicInfoBars.Add(
@@ -664,8 +670,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "AccountMusicOutline",
                     Title = "艺人",
-                    NameSpace = "ArtistView",
-                    BelongsTo = "MusicInfoBars"
+                    NameSpace = "ArtistView"
                 }
             );
             MusicInfoBars.Add(
@@ -673,8 +678,7 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "Album",
                     Title = "专辑",
-                    NameSpace = "AlbumView",
-                    BelongsTo = "MusicInfoBars"
+                    NameSpace = "AlbumView"
                 }
             );
             MusicInfoBars.Add(
@@ -682,8 +686,8 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "MusicNoteOutline",
                     Title = "歌曲",
-                    NameSpace = "MusicListView",
-                    BelongsTo = "MusicInfoBars"
+                    NameSpace = "MusicListView"
+            
                 }
             );
 
@@ -692,24 +696,37 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "Drag",
                     Title = "所有播放列表",
-                    NameSpace = "AllPlayListsView",
-                    BelongsTo = "PlayListBars"
+                    NameSpace = "AllPlayListsView"
                 }
             );
 
+            var playList = await playListService.GetAllAsync();
+            foreach (var item in playList)
+            {
+                PlayListBars.Add(
+                    new MenuBar()
+                    {
+                        Id = item.Id,
+                        Icon = "PlaylistMusicOutline",
+                        Title = item.Title,
+                        NameSpace = "PlayListView"
+                        
+                    }
+                );
+            }
             PlayListBars.Add(
                 new MenuBar()
                 {
                     Icon = "CardsHeartOutline",
                     Title = "我的最爱",
-                    NameSpace = "PlayListView",
-                    BelongsTo = "PlayListBars"
+                    NameSpace = "PlayListView"
+                  
                 }
             );
             //将所有导航菜单归并到一个集合当中
-            AllBars = new ObservableCollection<MenuBar>(MenuBars.Concat(MusicInfoBars).Concat(PlayListBars));
-
-
+            AllBars = new ObservableCollection<MenuBar>(
+                MenuBars.Concat(MusicInfoBars).Concat(PlayListBars)
+            );
         }
 
         /// <summary>
@@ -724,7 +741,11 @@ namespace Mypple_Music.ViewModels
             //UserDto = AppSession.UserDto;
             //UserAvatar = AppSession.UserAvatar;
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
-                "RecentPostsView"
+                "RecentPostsView",
+                Callback =>
+                {
+                    journal = Callback.Context.NavigationService.Journal;
+                }
             );
         }
     }

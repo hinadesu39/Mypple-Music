@@ -5,11 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Mypple_Music.Views.Dialogs"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
     <Grid Width="600"
-          Height="400">
+          Height="400"
+          Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />
@@ -30,63 +33,72 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Border Width="180"
-                    Height="180"
-                    CornerRadius="8"
-                    Background="LightGray"
-                    Margin="10">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="20"
-                                      ShadowDepth="0"
-                                      Color="Black"
-                                      Opacity="0.4" />
-                </Border.Effect>
-                <Grid>
-                    <TextBlock FontFamily="{StaticResource IconFont}"
-                               FontSize="80"
-                               FontWeight="ExtraBold"
-                               Text="&#xea86;"
-                               Foreground="#33000000"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                    <Button Content="&#xe67e;"
-                            Style="{StaticResource CornerRadiusButtonWithFillColor}"
-                            FontFamily="{StaticResource IconFont}"
-                            FontSize="28"
-                            FontWeight="Bold"
-                            Width="50"
-                            Height="50" />
-                </Grid>
-            </Border>
-            <Image x:Name="albumImg"
-                   d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
-                   Width="180"
-                   Height="180"
-                   Margin="10">
+            <Grid HorizontalAlignment="Center">
+                <Border Width="180"
+                        Height="180"
+                        CornerRadius="8"
+                        Background="LightGray"
+                        Margin="10">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="20"
+                                          ShadowDepth="0"
+                                          Color="Black"
+                                          Opacity="0.4" />
+                    </Border.Effect>
+                    <Grid>
+                        <TextBlock FontFamily="{StaticResource IconFont}"
+                                   FontSize="80"
+                                   FontWeight="ExtraBold"
+                                   Text="&#xea86;"
+                                   Foreground="#33000000"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
 
-                <!--切掉图片多余的角-->
+                    </Grid>
+                </Border>
+                <Image x:Name="musicImg"
+                       Source="{Binding PicUrl}"
+                       d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
+                       Width="180"
+                       Height="180"
+                       Margin="10">
 
-                <Image.OpacityMask>
-                    <VisualBrush>
-                        <VisualBrush.Visual>
-                            <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Width}"
-                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Height}"
-                                    CornerRadius="8"
-                                    Background="White" />
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </Image.OpacityMask>
-            </Image>
+                    <!--切掉图片多余的角-->
+
+                    <Image.OpacityMask>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
+                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                        CornerRadius="8"
+                                        Background="White" />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Image.OpacityMask>
+                </Image>
+                <Button Content="&#xe67e;"
+                        Style="{StaticResource CornerRadiusButton}"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Width="50"
+                        Height="50" 
+                        Command="{Binding SetPicCommand}"/>
+            </Grid>
 
             <StackPanel Grid.Column="1"
                         VerticalAlignment="Center">
-                <TextBox  md:HintAssist.Hint="未命名播放列表"
-                          Margin="10"
-                          FontSize="22" />
-                <TextBox  md:HintAssist.Hint="添加描述"
-                          Width="380"
-                          Height="200"
-                          Style="{StaticResource TextBoxStyle}" />
+                <TextBox Text="{Binding Title}"
+                         md:HintAssist.Hint="未命名播放列表"
+                         Margin="10"
+                         FontSize="22"
+                         md:TextFieldAssist.HasClearButton="True" />
+                <TextBox Text="{Binding Description}"
+                         md:HintAssist.Hint="添加描述"
+                         Width="380"
+                         Height="200"
+                         md:TextFieldAssist.HasClearButton="True"
+                         Style="{StaticResource TextBoxStyle}" />
 
             </StackPanel>
         </Grid>
@@ -96,7 +108,8 @@
             <Button Content="确定"
                     Width="230"
                     HorizontalAlignment="Left"
-                    Margin="20,0,0,0" />
+                    Margin="20,0,0,0" 
+                    Command="{Binding SaveCommand}"/>
             <Button Content="取消"
                     Width="230"
                     HorizontalAlignment="Right"

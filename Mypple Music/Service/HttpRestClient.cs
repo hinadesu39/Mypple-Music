@@ -26,11 +26,10 @@ namespace Mypple_Music.Service
             request.AlwaysMultipartFormData = true;
             if (baseRequest.Parameter != null)
             {
-                request.AddFile("File", baseRequest.Parameter.ToString());
+                request.AddFile("File",baseRequest.Parameter.ToString());
             }
             RestResponse response = await client.ExecuteAsync(request);          
             return JsonConvert.DeserializeObject<Uri>(response.Content);
-
         }
 
         public async Task<T> ExecuteAsync<T>(BaseRequest baseRequest)
@@ -40,8 +39,7 @@ namespace Mypple_Music.Service
             request.AddHeader("Content-Type", baseRequest.ContentType);
             if (baseRequest.Parameter != null)
             {
-                string body = JsonConvert.SerializeObject(baseRequest.Parameter);
-                request.AddStringBody(body, ContentType.Json);
+                request.AddJsonBody(baseRequest.Parameter);
             }
             RestResponse response = await client.ExecuteAsync(request);          
             return JsonConvert.DeserializeObject<T>(response.Content);

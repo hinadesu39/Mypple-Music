@@ -18,7 +18,7 @@
         <converter:ValueConverter x:Key="Value" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />
@@ -47,7 +47,7 @@
 
             </Button>
         </StackPanel>
-      
+
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
                   AlternationCount="2"
@@ -168,7 +168,8 @@
             <Button Content="添加"
                     Width="150"
                     DockPanel.Dock="Right"
-                    Margin="0,0,30,0" />
+                    Margin="0,0,30,0" 
+                    Command="{Binding SaveCommand}"/>
             <Button Content="返回"
                     Width="150"
                     DockPanel.Dock="Right"

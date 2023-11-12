@@ -11,7 +11,7 @@
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="1000">
-    <Grid>
+    <Grid Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />

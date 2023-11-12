@@ -172,7 +172,7 @@ namespace Mypple_Music.ViewModels
             NavigationParameters para = new NavigationParameters();
             para.Add("Album", album);
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
-                "PlayListView",
+                "MusicWithAlbumView",
                 Callback =>
                 {
                     journal = Callback.Context.NavigationService.Journal;

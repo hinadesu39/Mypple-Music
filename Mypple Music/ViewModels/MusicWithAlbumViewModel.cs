@@ -8,51 +8,33 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using TagLib.Id3v2;
 
 namespace Mypple_Music.ViewModels
 {
-    public class PlayListViewModel : NavigationViewModel
+    public class MusicWithAlbumViewModel : NavigationViewModel
     {
         private bool isUpdating;
-        private string whichPlayList;
+        private string whichAlbum;
         private IMusicService musicService;
         private readonly IDialogHostService dialog;
-        private IPlayListService playListService;
         private ObservableCollection<Music> tempMusic;
-        private Guid playListId;
-        private Music musicToEdit;
 
         /// <summary>
         /// PopUpButton弹起状态
         /// </summary>
-        private bool isMainChecked;
+        private bool isChecked;
 
-        public bool IsMainChecked
+        public bool IsChecked
         {
-            get { return isMainChecked; }
+            get { return isChecked; }
             set
             {
-                isMainChecked = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isSubChecked;
-
-        public bool IsSubChecked
-        {
-            get { return isSubChecked; }
-            set
-            {
-                isSubChecked = value;
+                isChecked = value;
                 RaisePropertyChanged();
             }
         }
@@ -108,14 +90,14 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private PlayList playList;
+        private Album album;
 
-        public PlayList PlayList
+        public Album Album
         {
-            get { return playList; }
+            get { return album; }
             set
             {
-                playList = value;
+                album = value;
                 RaisePropertyChanged();
             }
         }
@@ -144,26 +126,14 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private ObservableCollection<string> mainPopUpList;
+        private ObservableCollection<string> popUpList;
 
-        public ObservableCollection<string> MainPopUpList
+        public ObservableCollection<string> PopUpList
         {
-            get { return mainPopUpList; }
+            get { return popUpList; }
             set
             {
-                mainPopUpList = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> subPopUpList;
-
-        public ObservableCollection<string> SubPopUpList
-        {
-            get { return subPopUpList; }
-            set
-            {
-                subPopUpList = value;
+                popUpList = value;
                 RaisePropertyChanged();
             }
         }
@@ -173,73 +143,37 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
-        public DelegateCommand<Music> MusicToFocusCommand { get; set; }
 
-        public PlayListViewModel(
+        public MusicWithAlbumViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
-            IDialogHostService dialog,
-            IPlayListService playListService
+            IDialogHostService dialog
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
-            this.playListService = playListService;
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
-            MusicToFocusCommand = new DelegateCommand<Music>(MusicToFocus);
-            Config();
-        }
-
-        private void MusicToFocus(Music music)
-        {
-            musicToEdit = music;
-        }
-
-        private void Config()
-        {
-            var mainMenu = new List<string>();
-            mainMenu.Add("添加歌曲");
-            mainMenu.Add("更多");
-            mainMenu.Add("属性");
-            MainPopUpList = new ObservableCollection<string>(mainMenu);
-
-            var subMenu = new List<string>();
-            subMenu.Add("下载该歌曲");
-            subMenu.Add("从播放列表中移除");
-            subMenu.Add("属性");
-            SubPopUpList = new ObservableCollection<string>(subMenu);
-
+            var menu = new List<string>();
+            menu.Add("下载全部歌曲");
+            menu.Add("更多");
+            menu.Add("属性");
+            PopUpList = new ObservableCollection<string>(menu);
         }
 
         private async void Navigation(string obj)
         {
             if (isUpdating)
                 return;
-            IsMainChecked = false;
-            DialogParameters parameter = new DialogParameters();
+            IsChecked = false;
             switch (obj)
             {
-                case "添加歌曲":
-                    parameter.Add("Id", playListId);
-                    var dialogRes = await dialog.ShowDialog("AddMusicView", parameter);
-                    if (dialogRes.Result == ButtonResult.OK)
-                    {
-                        var musicAddToPlayListRequest =
-                            dialogRes.Parameters.GetValue<MusicAddToPlayListRequest>("Value");
-                        var res = await playListService.AddMusicToPlayListAsync(
-                            musicAddToPlayListRequest
-                        );
-                        MusicList.AddRange(res);
-                        tempMusic = MusicList;
-                    }
-                    break;
-                case "删除该播放列表":
+                case "下载全部歌曲":
                     break;
                 case "更多":
                     break;
@@ -335,20 +269,17 @@ namespace Mypple_Music.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //发现打开的是已加载的播放列表，则直接退出不必重新加载
-            if (whichPlayList != null && PlayList.Title == whichPlayList)
+            if (navigationContext.Parameters.ContainsKey("Album"))
             {
-                return;
-            }
-
-            if (navigationContext.Parameters.ContainsKey("Id"))
-            {
-                playListId = navigationContext.Parameters.GetValue<Guid>("Id");
-
+                //发现打开的是已加载的播放列表，则直接退出不必重新加载
+                if (whichAlbum != null && Album.Title == whichAlbum)
+                {
+                    return;
+                }
+                Album = navigationContext.Parameters.GetValue<Album>("Album");
                 AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
-                PlayList = await playListService.GetByIdAsync(playListId);
                 MusicList = new ObservableCollection<Music>(
-                    await musicService.GetMusicsByPlayListIdAsync(playListId)
+                    await musicService.GetMusicsByAlbumIdAsync(Album.Id)
                 );
                 AppSession.EventAggregator
                     .GetEvent<LoadingEvent>()
@@ -356,8 +287,7 @@ namespace Mypple_Music.ViewModels
                 tempMusic = MusicList;
                 Count = MusicList.Count;
                 Duration = MusicList.Sum(m => m.Duration);
-                if (whichPlayList == null)
-                    whichPlayList = PlayList.Title;
+                whichAlbum = Album.Title;
             }
         }
 
