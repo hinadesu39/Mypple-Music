@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
@@ -8,6 +8,7 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,6 +32,7 @@ namespace Mypple_Music.ViewModels
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
+        private readonly ILogger logger;
         private IRegionNavigationJournal journal;
         private ObservableCollection<MenuBar> AllBars;
 
@@ -225,10 +227,13 @@ namespace Mypple_Music.ViewModels
             IDialogHostService dialog,
             IRegionManager regionManager,
             IContainerProvider Container,
-            IPlayListService playListService
+            IPlayListService playListService,
+            ILogger logger
         )
             : base(Container)
         {
+            this.logger = logger;
+            logger.Information("Success");
             this.dialog = dialog;
             this.RegionManager = regionManager;
             this.container = Container;
@@ -257,7 +262,7 @@ namespace Mypple_Music.ViewModels
             //});
             //this.dialog = dialog;
 
-            //事件订阅
+            //播放列表创建事件订阅
             eventAggregator
                 .GetEvent<PlayListCreatedEvent>()
                 .Subscribe(
@@ -276,6 +281,7 @@ namespace Mypple_Music.ViewModels
                         return m.filter == "MainView";
                     }
                 );
+            //播放状态变化事件订阅
             eventAggregator
                 .GetEvent<MusicPlayStatusChangedEvent>()
                 .Subscribe(
@@ -451,7 +457,7 @@ namespace Mypple_Music.ViewModels
             Player.Music.Status = Music.PlayStatus.StartPlay;
             PlayIndex = PlayList.IndexOf(music);
             Player.PlayProgress = 0;
-            MediaElement.Source = music.AudioUrl;
+            MediaElement.Source = DownloadHelper.GetMusicPath(music.AudioUrl);
             Player.PlayProgressLength = music.Duration;
         }
 

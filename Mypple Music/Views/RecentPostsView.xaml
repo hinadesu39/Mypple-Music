@@ -52,7 +52,14 @@
                  Style="{StaticResource AlbumListStyle}"
                  ItemContainerStyle="{StaticResource AlbumListItemStyle}"
                  SelectedIndex="{Binding SelectedIndex}"
-                 ScrollViewer.CanContentScroll="False">
+                 ScrollViewer.CanContentScroll="False"
+                 VirtualizingPanel.ScrollUnit="Pixel"
+                 VirtualizingPanel.VirtualizationMode="Recycling"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <ListBox.Resources>
+                <Style TargetType="extension:SmoothScrollViewer"
+                       BasedOn="{StaticResource ScrollViewerStyle}" />
+            </ListBox.Resources>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
@@ -63,7 +70,7 @@
             <d:ListBox.Items>
                 <model:Album Artist="稲葉曇"
                              Title="ポストシェルタ"
-                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                             PicUrl="http://localhost/FileService/2023/10/25/春泥棒 (Spring Thief).jpg" />
                 <model:Album Artist="ヨルシカ"
                              Title="ただ君に晴れ"
                              PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />

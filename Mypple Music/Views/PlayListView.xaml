@@ -133,7 +133,7 @@
                             Style="{StaticResource IconWithContentButton}"
                             Width="100"
                             Height="35" />
-                    
+
                     <ToggleButton x:Name="InfoBtn"
                                   Width="40"
                                   Height="30"
@@ -169,14 +169,26 @@
                             </ControlTemplate>
                         </ToggleButton.Template>
                     </ToggleButton>
-                    <Button DockPanel.Dock="Right"
-                            Content="&#xe665;"
-                            Width="40"
-                            Height="30"
-                            Margin="0,0,10,0"
-                            FontFamily="{StaticResource IconFont}"
-                            Style="{StaticResource TransParentButton}" />
-                    
+                    <Grid DockPanel.Dock="Right">
+
+                        <Button Content="&#xe665;"
+                                Width="40"
+                                Height="30"
+                                Margin="0,0,10,0"
+                                FontFamily="{StaticResource IconFont}"
+                                Style="{StaticResource TransParentButton}"
+                                Command="{Binding DownloadAllCommand}"
+                                Visibility="{Binding ElementName=DownloadBar,Path=Visibility, Converter={StaticResource ReverseVisibility}}" />
+                        <ProgressBar x:Name="DownloadBar"
+                                     IsIndeterminate="True"
+                                     Margin="0,0,10,0"
+                                     DockPanel.Dock="Right"
+                                     Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Value="0"
+                                     Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
+                        </ProgressBar>
+                    </Grid>
+
                     <!--主信息弹出-->
                     <Popup x:Name="InfoPopupContrainer"
                            IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
@@ -244,8 +256,7 @@
                 <ListBox Margin="0,0,0,5"
                          ItemContainerStyle="{StaticResource PopUpListBoxItemStyle}"
                          ItemsSource="{Binding SubPopUpList}"
-                         DockPanel.Dock="Top"
-                         >
+                         DockPanel.Dock="Top">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding DataContext.NavigateCommand,RelativeSource={RelativeSource AncestorType=Popup}}"

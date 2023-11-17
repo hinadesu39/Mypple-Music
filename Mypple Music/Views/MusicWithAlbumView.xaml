@@ -18,14 +18,17 @@
         <converter:StatusToStringConverter x:Key="StatusToString" />
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
+        <converter:ReverseVisibilityConverter x:Key="ReverseVisibility" />
     </UserControl.Resources>
     <Grid x:Name="Contanier"
           Background="{DynamicResource DefaultBackground}">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+
         <Border BorderBrush="#22000000"
                 Margin="0,0.5,0,0"
                 BorderThickness="0,0,0,1"></Border>
@@ -133,6 +136,7 @@
                             Style="{StaticResource IconWithContentButton}"
                             Width="100"
                             Height="35" />
+
                     <ToggleButton x:Name="InfoBtn"
                                   Width="40"
                                   Height="30"
@@ -168,6 +172,29 @@
                             </ControlTemplate>
                         </ToggleButton.Template>
                     </ToggleButton>
+
+                    <Grid DockPanel.Dock="Right">
+
+                        <Button Content="&#xe665;"
+                                Width="40"
+                                Height="30"
+                                Margin="0,0,10,0"
+                                FontFamily="{StaticResource IconFont}"
+                                Style="{StaticResource TransParentButton}"
+                                Command="{Binding DownloadAllCommand}"
+                                Visibility="{Binding ElementName=DownloadBar,Path=Visibility, Converter={StaticResource ReverseVisibility}}" />
+                        <ProgressBar x:Name="DownloadBar"
+                                     IsIndeterminate="True"
+                                     Margin="0,0,10,0"
+                                     DockPanel.Dock="Right"
+                                     Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Value="0"
+                                     Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
+                        </ProgressBar>
+                    </Grid>
+
+
+
                     <!--信息弹出-->
                     <Popup x:Name="InfoPopupContrainer"
                            IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
@@ -219,6 +246,7 @@
                 </DockPanel>
             </Grid>
         </Grid>
+
         <DataGrid Grid.Row="2"
                   AutoGenerateColumns="False"
                   AlternationCount="2"

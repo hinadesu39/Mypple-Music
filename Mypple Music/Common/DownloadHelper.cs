@@ -11,6 +11,22 @@ namespace Mypple_Music.Common
 {
     public class DownloadHelper
     {
+        public static Uri GetMusicPath(Uri audioUrl)
+        {
+            if (audioUrl == null)
+                return null;
+            string title = Path.GetFileName(audioUrl.ToString());
+            string localPath = Path.Combine("music", title);
+            if (File.Exists(Path.GetFullPath(localPath)))
+            {
+                return new Uri(Path.GetFullPath(localPath));
+            }
+            else
+            {
+                return audioUrl;
+            }
+
+        }
         public static async Task<string> GetMusicAsync(Uri audioUrl)
         {
             try

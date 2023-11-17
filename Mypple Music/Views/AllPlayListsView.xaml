@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Mypple_Music.Views"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:model="clr-namespace:Mypple_Music.Models"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="{DynamicResource DefaultBackground}">
         <Grid.RowDefinitions>
@@ -14,27 +17,87 @@
         </Grid.RowDefinitions>
         <Border BorderBrush="#22000000"
                 Margin="0,0.5,0,0"
-                BorderThickness="0,1,0,1"></Border>
+                BorderThickness="0,0,0,1"></Border>
 
-        <TextBlock Text="所有播放列表"
+        <TextBlock x:Name="Title"
+                   Text="所有播放列表"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="14"
                    FontWeight="Bold" />
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
+                 md:TextFieldAssist.HasClearButton="True"
                  Visibility="{Binding IsSearchVisible,Converter={StaticResource BooleanToVisibilityConverter}}"
                  Width="150"
                  Height="30"
                  HorizontalAlignment="Right"
-                 Margin="0,0,80,0" />
+                 Margin="0,0,80,0"
+                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}">
+
+        </TextBox>
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
                 FontWeight="Bold"
                 Margin="0,0,10,0"
-                Command="{Binding ChangeVisibilityCommand}">
-
+                Command="{Binding SearchCommand}"
+                CommandParameter="{Binding ElementName=SearchBox,Path=Text}">
         </Button>
+
+
+        <ListBox ItemsSource="{Binding PlayList}"
+                 HorizontalAlignment="Center"
+                 Grid.Row="1"
+                 Style="{StaticResource AlbumListStyle}"
+                 ItemContainerStyle="{StaticResource AlbumListItemStyle}"
+                 SelectedIndex="{Binding SelectedIndex}"
+                 ScrollViewer.CanContentScroll="False">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ConfirmPlayListCommand}"
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <d:ListBox.Items>
+                <model:Album Artist="稲葉曇"
+                             Title="ポストシェルタ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                <model:Album Artist="ヨルシカ"
+                             Title="ただ君に晴れ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="春泥棒"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="花に亡霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="詩書きとコーヒー"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="雲と幽霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="稲葉曇"
+                             Title="ポストシェルタ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+                <model:Album Artist="ヨルシカ"
+                             Title="ただ君に晴れ"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="春泥棒"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="花に亡霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="詩書きとコーヒー"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+                <model:Album Artist="ヨルシカ"
+                             Title="雲と幽霊"
+                             PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+            </d:ListBox.Items>
+        </ListBox>
     </Grid>
 </UserControl>

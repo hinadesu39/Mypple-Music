@@ -1,10 +1,12 @@
 ﻿using MaterialDesignColors;
+using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using Mypple_Music.Service;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -13,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TagLib.Id3v2;
@@ -22,13 +25,26 @@ namespace Mypple_Music.ViewModels
     public class PlayListViewModel : NavigationViewModel
     {
         private bool isUpdating;
-        private string whichPlayList;
+        private Guid whichPlayList;
         private IMusicService musicService;
         private readonly IDialogHostService dialog;
         private IPlayListService playListService;
+        private readonly IEventAggregator eventAggregator;
         private ObservableCollection<Music> tempMusic;
         private Guid playListId;
         private Music musicToEdit;
+
+
+        /// <summary>
+        /// 下载是否进行
+        /// </summary>
+        private bool isDownloading;
+
+        public bool IsDownloading
+        {
+            get { return isDownloading; }
+            set { isDownloading = value; RaisePropertyChanged(); }
+        }
 
         /// <summary>
         /// PopUpButton弹起状态
@@ -174,18 +190,21 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand<Music> MusicToFocusCommand { get; set; }
+        public DelegateCommand DownloadAllCommand { set; get; }
 
         public PlayListViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
             IDialogHostService dialog,
-            IPlayListService playListService
+            IPlayListService playListService,
+            IEventAggregator eventAggregator
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
             this.playListService = playListService;
+            this.eventAggregator = eventAggregator;
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
@@ -193,7 +212,31 @@ namespace Mypple_Music.ViewModels
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
             MusicToFocusCommand = new DelegateCommand<Music>(MusicToFocus);
+            DownloadAllCommand = new DelegateCommand(DownloadAllAsync);
             Config();
+        }
+
+        private async void DownloadAllAsync()
+        {
+            IsDownloading = true;
+            foreach (var m in MusicList)
+            {
+                try
+                {
+                    var res = await DownloadHelper.GetMusicAsync(m.AudioUrl);
+                    if (res != null)
+                    {
+                        eventAggregator.SendMessage($"{m.Title} 下载成功！");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    eventAggregator.SendMessage($"{m.Title} 下载失败,请稍后再试！");
+                }
+            }
+            IsDownloading = false;
         }
 
         private void MusicToFocus(Music music)
@@ -335,16 +378,16 @@ namespace Mypple_Music.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //发现打开的是已加载的播放列表，则直接退出不必重新加载
-            if (whichPlayList != null && PlayList.Title == whichPlayList)
-            {
-                return;
-            }
+
 
             if (navigationContext.Parameters.ContainsKey("Id"))
             {
                 playListId = navigationContext.Parameters.GetValue<Guid>("Id");
-
+                //发现打开的是已加载的播放列表，则直接退出不必重新加载
+                if (whichPlayList != Guid.Empty && PlayList.Id == whichPlayList)
+                {
+                    return;
+                }
                 AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
                 PlayList = await playListService.GetByIdAsync(playListId);
                 MusicList = new ObservableCollection<Music>(
@@ -356,8 +399,8 @@ namespace Mypple_Music.ViewModels
                 tempMusic = MusicList;
                 Count = MusicList.Count;
                 Duration = MusicList.Sum(m => m.Duration);
-                if (whichPlayList == null)
-                    whichPlayList = PlayList.Title;
+                if (whichPlayList == Guid.Empty)
+                    whichPlayList = PlayList.Id;
             }
         }
 

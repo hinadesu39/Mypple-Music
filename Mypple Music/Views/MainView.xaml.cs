@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using MaterialDesignThemes.Wpf;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Views.Dialogs;
@@ -30,6 +30,14 @@ namespace Mypple_Music.Views
         {
             InitializeComponent();
             Loaded += MainView_Loaded;
+
+            //注册消息通知
+            eventAggregator.RegisterMessage(
+                arg =>
+                {
+                    Snackbar.MessageQueue.Enqueue(arg.Message);
+                }
+            );
 
             //加载动画注册
             eventAggregator

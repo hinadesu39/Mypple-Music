@@ -18,6 +18,146 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
+            <!--滚动条样式-->
+            <Style x:Key="ScrollThumbStyle"
+                   TargetType="Thumb">
+                <Setter Property="SnapsToDevicePixels"
+                        Value="True" />
+                <Setter Property="OverridesDefaultStyle"
+                        Value="true" />
+                <Setter Property="IsTabStop"
+                        Value="false" />
+                <Setter Property="Focusable"
+                        Value="false" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Thumb">
+                            <Rectangle Width="8"
+                                       Fill="LightGray"
+                                       RadiusX="2"
+                                       RadiusY="2">
+                            </Rectangle>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrollBarStyle"
+                   TargetType="ScrollBar">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ScrollBar">
+                            <Grid Width="18"
+                                  Margin="0"
+                                  x:Name="GridRoot">
+                                <Track Margin="0,2"
+                                       HorizontalAlignment="Right"
+                                       Name="PART_Track"
+                                       Width="14"
+                                       Maximum="{TemplateBinding Maximum}"
+                                       Minimum="{TemplateBinding Minimum}"
+                                       Value="{TemplateBinding Value}"
+                                       IsDirectionReversed="true">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="ScrollBar.PageUpCommand"
+                                                      Focusable="False">
+                                            <RepeatButton.Template>
+                                                <ControlTemplate>
+                                                    <Border Background="Transparent"></Border>
+                                                </ControlTemplate>
+                                            </RepeatButton.Template>
+                                        </RepeatButton>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="ScrollBar.PageDownCommand"
+                                                      Focusable="False">
+                                            <RepeatButton.Template>
+                                                <ControlTemplate>
+                                                    <Border Background="Transparent"></Border>
+                                                </ControlTemplate>
+                                            </RepeatButton.Template>
+                                        </RepeatButton>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource ScrollThumbStyle}">
+                                        </Thumb>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                            <!-- 它对 ScrollBar 使用一个模板，并将其旋转为“水平”
+                    它还会更改命令，使其执行“向左”和“向右”命令，而不是执行“向上”和“向下”命令 -->
+                            <!--
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Orientation"
+                                         Value="Horizontal">
+
+                                    -->
+                            <!-- 将 ScrollBar 从“垂直”旋转为“水平” -->
+                            <!--
+                                    <Setter Property="LayoutTransform"
+                                            TargetName="GridRoot">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90" />
+                                        </Setter.Value>
+                                    </Setter>
+
+                                    -->
+                            <!-- Track 在内部绑定到“方向”，因此我们需要将其旋转回“垂直” -->
+                            <!--
+                                    <Setter TargetName="PART_Track"
+                                            Property="Orientation"
+                                            Value="Vertical" />
+
+                                    -->
+                            <!-- 更改命令，以执行“水平”命令 -->
+                            <!--
+                                    <Setter Property="Command"
+                                            Value="ScrollBar.LineLeftCommand"
+                                            TargetName="DecreaseRepeat" />
+                                    <Setter Property="Command"
+                                            Value="ScrollBar.LineRightCommand"
+                                            TargetName="IncreaseRepeat" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>-->
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrollViewerStyle"
+                   TargetType="extension:SmoothScrollViewer">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    SnapsToDevicePixels="True">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                             Margin="{TemplateBinding Padding}"
+                                                             ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <ScrollBar x:Name="PART_VerticalScrollBar"
+                                               HorizontalAlignment="Right"
+                                               Maximum="{TemplateBinding ScrollableHeight}"
+                                               Orientation="Vertical"
+                                               Style="{StaticResource ScrollBarStyle}"
+                                               ViewportSize="{TemplateBinding ViewportHeight}"
+                                               Value="{TemplateBinding VerticalOffset}"
+                                               Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                                    <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                               Maximum="{TemplateBinding ScrollableWidth}"
+                                               Orientation="Horizontal"
+                                               Style="{StaticResource ScrollBarStyle}"
+                                               VerticalAlignment="Bottom"
+                                               Value="{TemplateBinding HorizontalOffset}"
+                                               ViewportSize="{TemplateBinding ViewportWidth}"
+                                               Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <!--文本输入框样式-->
             <Style x:Key="TextBoxStyle"
                    TargetType="TextBox">
@@ -45,7 +185,7 @@
                                                    Text="未添加描述"
                                                    Visibility="Collapsed"
                                                    VerticalAlignment="Top"
-                                                   Foreground="#99000000"
+                                                   Foreground="{DynamicResource DefaultForgeground}"
                                                    Margin="8 3 0 0" />
 
                                         <ScrollViewer x:Name="PART_ContentHost"
@@ -101,83 +241,84 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type TextBox}">
                             <Border x:Name="border"
-                                    BorderThickness="0"
+                                    BorderThickness="0.2 0.2 0.2 1"
+                                    BorderBrush="#757575"
                                     Background="#22000000"
                                     SnapsToDevicePixels="True"
-                                    CornerRadius="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-
-                                        <ColumnDefinition />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="mt"
-                                               Text="搜索"
-                                               Grid.Column="0"
-                                               Visibility="Collapsed"
-                                               VerticalAlignment="Center"
-                                               Foreground="#99000000"
-                                               Margin="15 0 0 0" />
-                                    <Button Grid.Column="1"
-                                            Content="&#xe600;"
-                                            FontFamily="Resource/#iconfont"
-                                            FontSize="16"
-                                            Width="40"
-                                            Height="30"
-                                            Margin="0,0,5,0"
-                                            HorizontalAlignment="Right"
-                                            x:Name="btn">
-                                        <Button.Resources>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Foreground"
-                                                        Value="White" />
-                                                <Setter Property="BorderThickness"
-                                                        Value="0" />
-
-                                                <Setter Property="Cursor"
-                                                        Value="Hand" />
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border x:Name="border"
-                                                                    CornerRadius="5"
-                                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                                    SnapsToDevicePixels="True">
-                                                                <TextBlock Text="{TemplateBinding Content}"
-                                                                           Foreground="{TemplateBinding Foreground}"
-                                                                           VerticalAlignment="Center"
-                                                                           HorizontalAlignment="Center" />
-                                                            </Border>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver"
-                                                                         Value="True">
-                                                                    <Setter TargetName="border"
-                                                                            Property="Background"
-                                                                            Value="#33000000" />
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed"
-                                                                         Value="True">
-                                                                    <Setter TargetName="border"
-                                                                            Property="Background"
-                                                                            Value="#22000000" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Resources>
-                                    </Button>
-                                    <ScrollViewer x:Name="PART_ContentHost"
-                                                  Grid.Column="0"
-                                                  Focusable="false"
-                                                  HorizontalScrollBarVisibility="Hidden"
-                                                  VerticalScrollBarVisibility="Hidden"
-                                                  Margin="10 0 0 0"
-                                                  Background="Transparent"
-                                                  VerticalAlignment="Center" />
-                                </Grid>
+                                    CornerRadius="5,5,3,3">
+                                <Border x:Name="borderIn"
+                                        CornerRadius="5,5,3,3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="mt"
+                                                   Text="搜索"
+                                                   Visibility="Collapsed"
+                                                   Foreground="#e0e0e0"
+                                                   Margin="15 3 0 0"
+                                                   VerticalAlignment="Center" />
+                                        <Button Grid.Column="1"
+                                                Content="&#xe600;"
+                                                FontFamily="Resource/#iconfont"
+                                                FontSize="16"
+                                                Width="40"
+                                                Height="30"
+                                                Margin="0,0,5,0"
+                                                HorizontalAlignment="Right"
+                                                x:Name="btn">
+                                            <Button.Resources>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Foreground"
+                                                            Value="{DynamicResource DefaultForgeground}" />
+                                                    <Setter Property="BorderThickness"
+                                                            Value="0" />
+                                                    <Setter Property="Cursor"
+                                                            Value="Hand" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border x:Name="border"
+                                                                        CornerRadius="5"
+                                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                                        SnapsToDevicePixels="True">
+                                                                    <TextBlock Text="{TemplateBinding Content}"
+                                                                               Foreground="{TemplateBinding Foreground}"
+                                                                               VerticalAlignment="Center"
+                                                                               HorizontalAlignment="Center" />
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver"
+                                                                             Value="True">
+                                                                        <Setter TargetName="border"
+                                                                                Property="Background"
+                                                                                Value="Gray" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsPressed"
+                                                                             Value="True">
+                                                                        <Setter TargetName="border"
+                                                                                Property="Background"
+                                                                                Value="#22000000" />
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                      Grid.Column="0"
+                                                      Focusable="false"
+                                                      HorizontalScrollBarVisibility="Hidden"
+                                                      VerticalScrollBarVisibility="Hidden"
+                                                      Margin="10 0 0 0"
+                                                      Background="Transparent"
+                                                      VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled"
@@ -186,17 +327,24 @@
                                             TargetName="border"
                                             Value="0.56" />
                                 </Trigger>
+                                <Trigger Property="IsKeyboardFocused"
+                                         Value="true">
+                                    <Setter Property="BorderBrush"
+                                            TargetName="borderIn"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="borderIn"
+                                            Value="0,0,0,2" />
+                                    <Setter Property="BorderThickness"
+                                            TargetName="border"
+                                            Value="0.2,0.2,0.2,0" />
+                                </Trigger>
                                 <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Mode=Self}}"
                                              Value="">
                                     <Setter TargetName="mt"
                                             Property="Visibility"
                                             Value="Visible" />
-                                    <Setter TargetName="btn"
-                                            Property="Background"
-                                            Value="#C9C6C6" />
-                                    <Setter TargetName="btn"
-                                            Property="Foreground"
-                                            Value="Gray" />
+
                                 </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -636,7 +784,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <!--待选择歌曲DataGrid行样式-->
             <Style x:Key="ToAddMusicRowStyle"
                    TargetType="DataGridRow">
@@ -685,9 +833,88 @@
                 </Style.Triggers>
             </Style>
 
+            <!--DataGrid样式-->
+            <Style x:Key="MusicGrid"
+                   TargetType="{x:Type DataGrid}">
+                <Setter Property="Background"
+                        Value="{DynamicResource DefaultBackground}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
+                <Setter Property="RowDetailsVisibilityMode"
+                        Value="VisibleWhenSelected" />
+                <Setter Property="ScrollViewer.CanContentScroll"
+                        Value="False" />
+                <Setter Property="ScrollViewer.PanningMode"
+                        Value="Both" />
+                <Setter Property="Stylus.IsFlicksEnabled"
+                        Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGrid}">
+                            <extension:SmoothScrollViewer x:Name="DG_ScrollViewer"
+                                                          Focusable="false">
+                                <extension:SmoothScrollViewer.Template>
+                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <DataGridColumnHeadersPresenter x:Name="PART_ColumnHeadersPresenter"
+                                                                                VerticalAlignment="Top"
+                                                                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Column}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                         Grid.Row="1"/>
+                                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                                           HorizontalAlignment="Right"
+                                                           Maximum="{TemplateBinding ScrollableHeight}"
+                                                           Orientation="Vertical"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           ViewportSize="{TemplateBinding ViewportHeight}"
+                                                           Value="{TemplateBinding VerticalOffset}"
+                                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                                           Grid.Row="1" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                           Grid.Row="1" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </extension:SmoothScrollViewer.Template>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </extension:SmoothScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsGrouping"
+                                       Value="true" />
+                            <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping"
+                                       Value="false" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="ScrollViewer.CanContentScroll"
+                                Value="false" />
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
             <!-- DataGrid 行样式 -->
             <Style x:Key="DataGridRowStyle"
                    TargetType="DataGridRow">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGridRow}">
@@ -731,10 +958,9 @@
                                     <Setter Property="Fill"
                                             TargetName="borderHeader"
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver"
-                                         Value="True">
-
+                                    <Setter Property="Background"
+                                            TargetName="border"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
                                 </Trigger>
 
                             </ControlTemplate.Triggers>
@@ -783,15 +1009,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected"
-                             Value="True">
-                        <!--<Setter Property="Background" Value="White"/>
-                <Setter Property="BorderThickness" Value="0"/>-->
-                        <Setter Property="Foreground"
-                                Value="#FF464646" />
-                    </Trigger>
-                </Style.Triggers>
             </Style>
             <!--DataGrid标题样式-->
             <Style x:Key="DataGridColumnHeaderStyle"
@@ -1169,12 +1386,12 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                                          VerticalScrollBarVisibility="Hidden">
+                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
                                 <WrapPanel Orientation="Horizontal"
                                            IsItemsHost="True"
-                                           ScrollViewer.CanContentScroll="True" />
-                            </ScrollViewer>
+                                           ScrollViewer.CanContentScroll="True"
+                                           Margin="0,0,10,0" />
+                            </extension:SmoothScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1249,7 +1466,7 @@
                                                 HorizontalAlignment="Left"
                                                 Visibility="Hidden"
                                                 Margin="20,10,10,10"
-                                                Command="{Binding DataContext.PlayAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}" />
                                         <Button x:Name="infoButton"
                                                 Style="{StaticResource CornerRadiusButton}"
@@ -1345,6 +1562,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

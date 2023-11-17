@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Mypple_Music.Events;
+using Mypple_Music.Extensions;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +23,15 @@ namespace Mypple_Music.Views
     /// </summary>
     public partial class MusicWithAlbumView : UserControl
     {
-        public MusicWithAlbumView()
+        private readonly IEventAggregator eventAggregator;
+
+        public MusicWithAlbumView(IEventAggregator eventAggregator)
         {
+            this.eventAggregator = eventAggregator;
             InitializeComponent();
+
+
+            this.eventAggregator = eventAggregator;
         }
     }
 }

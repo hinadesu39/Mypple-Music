@@ -14,7 +14,7 @@
         mc:Ignorable="d"
         Title="MainView"
         Height="720"
-        Width="1400"
+        Width="1260"
         WindowStartupLocation="CenterScreen"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -25,7 +25,7 @@
         FontFamily="微软雅黑">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="1"
-                      GlassFrameThickness="1" />
+                      GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
     <Window.Resources>
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
@@ -97,7 +97,9 @@
                                 <StackPanel Orientation="Horizontal"
                                             Background="Transparent">
                                     <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                             Margin="10,8" />
+                                                             Margin="10,8"
+                                                             Width="20"
+                                                             Height="20" />
                                     <TextBlock Text="{Binding Title}"
                                                Margin="5,8" />
                                 </StackPanel>
@@ -118,7 +120,9 @@
 
                                 <materialDesign:PackIcon Kind="MusicBoxMultipleOutline"
                                                          VerticalAlignment="Center"
-                                                         Margin="10,8" />
+                                                         Margin="10,8"
+                                                         Width="20"
+                                                         Height="20" />
                                 <TextBlock Text="资料库"
                                            Margin="5,8"
                                            VerticalAlignment="Center" />
@@ -142,7 +146,9 @@
                                         <StackPanel Orientation="Horizontal"
                                                     Background="Transparent">
                                             <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                                     Margin="35,8,5,8" />
+                                                                     Margin="35,8,5,8" 
+                                                                     Width="20"
+                                                                     Height="20"/>
                                             <TextBlock Text="{Binding Title}"
                                                        Margin="5,8" />
                                         </StackPanel>
@@ -164,11 +170,12 @@
 
                                 <materialDesign:PackIcon Kind="PlaylistMusic"
                                                          VerticalAlignment="Center"
-                                                         Margin="10,8" />
+                                                         Margin="10,8" 
+                                                         Width="20"
+                                                         Height="20"/>
                                 <TextBlock Text="播放列表"
                                            Margin="5,8"
-                                           VerticalAlignment="Center"
-                                           />
+                                           VerticalAlignment="Center" />
 
                             </StackPanel>
                         </Expander.Header>
@@ -190,7 +197,9 @@
                                         <StackPanel Orientation="Horizontal"
                                                     Background="Transparent">
                                             <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                                     Margin="35,8,5,8" />
+                                                                     Margin="35,8,5,8"
+                                                                     Width="20"
+                                                                     Height="20"/>
                                             <TextBlock Text="{Binding Title}"
                                                        Margin="5,8" />
                                         </StackPanel>
@@ -263,6 +272,7 @@
                                           Mode="PrimaryMid"
                                           VerticalAlignment="Center"
                                           materialDesign:ElevationAssist.Elevation="Dp4">
+                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="296*" />
@@ -271,15 +281,16 @@
                             <ColumnDefinition Width="172*" />
                             <ColumnDefinition Width="172*" />
                         </Grid.ColumnDefinitions>
-
+                        
                         <!--#region 播放功能按钮-->
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Grid.ColumnSpan="2"
-                                    Margin="47,0,0,0">
+                                    Margin="40,0,0,0">
                             <ToggleButton x:Name="ShuffleButton"
-                                          Width="50">
+                                          Width="40"
+                                          ToolTip="随机播放">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
                                         <i:InvokeCommandAction Command="{Binding PlayModeChangedCommand}"
@@ -330,14 +341,15 @@
                                     FontSize="20"
                                     Foreground="#242424"
                                     Style="{StaticResource MaterialDesignFlatLightButton}"
-                                    ToolTip="MaterialDesignFlatLightButton"
+                                    ToolTip="上一首"
                                     Command="{Binding ChangeMusicCommand}"
                                     CommandParameter="Pre" />
                             <ToggleButton x:Name="PlayOrPauseButton"
                                           IsChecked="{Binding Player.Music.Status,Converter={StaticResource StatusToBool}}"
-                                          Width="50"
+                                          Width="40"
                                           Content="&#xea82;"
-                                          Tag="&#xea81;">
+                                          Tag="&#xea81;"
+                                          ToolTip="播放/暂停">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border x:Name="borderIn"
@@ -377,11 +389,13 @@
                                     FontSize="20"
                                     Foreground="#242424"
                                     Style="{StaticResource MaterialDesignFlatLightButton}"
-                                    ToolTip="MaterialDesignFlatLightButton"
+                                    ToolTip="下一首"
                                     Command="{Binding ChangeMusicCommand}"
-                                    CommandParameter="Next" />
+                                    CommandParameter="Next"
+                                   />
                             <ToggleButton x:Name="LoopButton"
-                                          Width="50">
+                                          Width="40"
+                                          ToolTip="循环播放">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
                                         <i:InvokeCommandAction Command="{Binding PlayModeChangedCommand}"
@@ -708,6 +722,10 @@
                         <!--#endregion 最大最小化-->
                     </Grid>
                 </materialDesign:ColorZone>
+                <md:Snackbar x:Name="Snackbar"
+                             Grid.Row="2"
+                             MessageQueue="{md:MessageQueue}"
+                             Panel.ZIndex="1" />
                 <!--内容展示框-->
                 <ContentControl Grid.Row="1"
                                 prism:RegionManager.RegionName="{x:Static extension:PrismManager.MainViewRegionName}"

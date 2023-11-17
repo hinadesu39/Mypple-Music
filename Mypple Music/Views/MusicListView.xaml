@@ -57,11 +57,12 @@
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
                   ScrollViewer.CanContentScroll="False"
-                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   RowStyle="{StaticResource DataGridRowStyle}"
                   MinRowHeight="45"
                   CellStyle="{StaticResource DataGridCellStyle}"
-                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                  Style="{StaticResource MusicGrid}"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                               Command="{Binding SelectedMusicChangedCommand}"

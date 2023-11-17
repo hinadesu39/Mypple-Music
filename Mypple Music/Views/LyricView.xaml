@@ -117,7 +117,7 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1"
-                  Margin="50">
+                  >
                 <extension:ScrollingListBox ItemContainerStyle="{StaticResource LyricListBoxStyle}"
                                             ItemsSource="{Binding Lyrics}"
                                             Background="Transparent"

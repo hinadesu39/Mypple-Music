@@ -1,28 +1,45 @@
 ﻿using MaterialDesignColors;
+using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using Mypple_Music.Service;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Mypple_Music.ViewModels
 {
     public class MusicWithAlbumViewModel : NavigationViewModel
     {
-        private bool isUpdating;
+        private bool isUpdating;     
         private string whichAlbum;
         private IMusicService musicService;
         private readonly IDialogHostService dialog;
+        private readonly IEventAggregator eventAggregator;
         private ObservableCollection<Music> tempMusic;
+
+        /// <summary>
+        /// 下载是否进行
+        /// </summary>
+        private bool isDownloading;
+
+        public bool IsDownloading
+        {
+            get { return isDownloading; }
+            set { isDownloading = value; RaisePropertyChanged(); }
+        }
 
         /// <summary>
         /// PopUpButton弹起状态
@@ -143,27 +160,55 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
+        public DelegateCommand DownloadAllCommand { set; get; }
 
         public MusicWithAlbumViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
-            IDialogHostService dialog
+            IDialogHostService dialog,
+            IEventAggregator eventAggregator
+
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
+            this.eventAggregator = eventAggregator;
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
+            DownloadAllCommand = new DelegateCommand(DownloadAll);
             var menu = new List<string>();
             menu.Add("下载全部歌曲");
             menu.Add("更多");
             menu.Add("属性");
             PopUpList = new ObservableCollection<string>(menu);
+        }
+
+        private async void DownloadAll()
+        {
+            IsDownloading = true;
+            foreach (var m in MusicList)
+            {
+                try
+                {
+                    var res = await DownloadHelper.GetMusicAsync(m.AudioUrl);
+                    if (res != null)
+                    {
+                        eventAggregator.SendMessage($"{m.Title} 下载成功！");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    eventAggregator.SendMessage($"{m.Title} 下载失败,请稍后再试！");
+                }
+            }
+            IsDownloading = false;
         }
 
         private async void Navigation(string obj)
@@ -271,12 +316,12 @@ namespace Mypple_Music.ViewModels
         {
             if (navigationContext.Parameters.ContainsKey("Album"))
             {
+                Album = navigationContext.Parameters.GetValue<Album>("Album");
                 //发现打开的是已加载的播放列表，则直接退出不必重新加载
                 if (whichAlbum != null && Album.Title == whichAlbum)
                 {
                     return;
                 }
-                Album = navigationContext.Parameters.GetValue<Album>("Album");
                 AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
                 MusicList = new ObservableCollection<Music>(
                     await musicService.GetMusicsByAlbumIdAsync(Album.Id)

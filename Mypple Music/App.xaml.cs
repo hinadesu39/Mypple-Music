@@ -13,8 +13,8 @@ using Mypple_Music.ViewModels.Dialogs;
 using Mypple_Music.Views.Dialogs;
 using Mypple_Music.Extensions;
 using DryIoc;
-using MediatR;
 using Mypple_Music.Events;
+using Serilog;
 
 namespace Mypple_Music
 {
@@ -22,10 +22,11 @@ namespace Mypple_Music
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : PrismApplication
-    {      
-        public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                  
-        
+    {
+        public static Configuration config = ConfigurationManager.OpenExeConfiguration(
+            ConfigurationUserLevel.None
+        );
+
         protected override Window CreateShell()
         {
             return Container.Resolve<MainView>();
@@ -36,11 +37,13 @@ namespace Mypple_Music
             var paletteHelper = new PaletteHelper();
             ITheme theme = paletteHelper.GetTheme();
 
-            AppSession.IsDarkTheme = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsDarkTheme"));
+            AppSession.IsDarkTheme = Convert.ToBoolean(
+                ConfigurationManager.AppSettings.Get("IsDarkTheme")
+            );
             theme.SetBaseTheme(AppSession.IsDarkTheme ? Theme.Dark : Theme.Light);
 
-
-            var color = (Color)ColorConverter.ConvertFromString(ConfigurationManager.AppSettings.Get("Color"));
+            var color = (Color)
+                ColorConverter.ConvertFromString(ConfigurationManager.AppSettings.Get("Color"));
 
             theme.PrimaryLight = new ColorPair(color);
             theme.PrimaryMid = new ColorPair(color);
@@ -51,11 +54,15 @@ namespace Mypple_Music
             ResourceDictionary resourceDictionary = new ResourceDictionary();
             if (AppSession.IsDarkTheme)
             {
-                resourceDictionary.Source = new Uri("pack://application:,,,/Resource/DarkTheme.xaml");
+                resourceDictionary.Source = new Uri(
+                    "pack://application:,,,/Resource/DarkTheme.xaml"
+                );
             }
             else
             {
-                resourceDictionary.Source = new Uri("pack://application:,,,/Resource/LightTheme.xaml");
+                resourceDictionary.Source = new Uri(
+                    "pack://application:,,,/Resource/LightTheme.xaml"
+                );
             }
             Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
 
@@ -79,19 +86,24 @@ namespace Mypple_Music
             //    }
 
             //});
-
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //var factory = new NLogLoggerFactory();
-            //_logger = factory.CreateLogger("NLog.config");
-            //containerRegistry.RegisterInstance<ILogger>(_logger);
             var container = containerRegistry.GetContainer();
-            container.RegisterMany(new[] { typeof(IMediator).GetAssembly() }, Registrator.Interfaces);
 
-            containerRegistry.GetContainer().Register<HttpRestClient>(made: Parameters.Of.Type<string>(serviceKey: "webUrl"));
-            containerRegistry.GetContainer().RegisterInstance(@"http://localhost", serviceKey: "webUrl");
+            var log = new LoggerConfiguration().WriteTo
+                            .File("log/Mypple Music.log")
+                            .CreateLogger();
+            containerRegistry.RegisterInstance<ILogger>(log);
+            log.Information("Log_Loaded");
+            
+            containerRegistry
+                .GetContainer()
+                .Register<HttpRestClient>(made: Parameters.Of.Type<string>(serviceKey: "webUrl"));
+            containerRegistry
+                .GetContainer()
+                .RegisterInstance(@"http://localhost", serviceKey: "webUrl");
 
             containerRegistry.Register<IDialogHostService, DialogHostService>();
             containerRegistry.Register<ILyricService, LyricService>();
@@ -100,14 +112,13 @@ namespace Mypple_Music
             containerRegistry.Register<IAlbumService, AlbumService>();
             containerRegistry.Register<IPlayListService, PlayListService>();
 
-
             containerRegistry.RegisterForNavigation<NowToListenView, NowToListenViewModel>();
             containerRegistry.RegisterForNavigation<BroadcastView, BroadcastViewModel>();
             containerRegistry.RegisterForNavigation<BrowserView, BrowserViewModel>();
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<MusicListView, MusicListViewModel>();
             containerRegistry.RegisterForNavigation<LyricView, LyricViewModel>();
-            containerRegistry.RegisterForNavigation<AlbumView, AlbumViewModel>();            
+            containerRegistry.RegisterForNavigation<AlbumView, AlbumViewModel>();
             containerRegistry.RegisterForNavigation<RecentPostsView, RecentPostsViewModel>();
             containerRegistry.RegisterForNavigation<PlayListView, PlayListViewModel>();
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
@@ -118,21 +129,6 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<MusicWithArtistView, MusicWithArtistViewModel>();
             containerRegistry.RegisterForNavigation<AddMusicView, AddMusicViewModel>();
             containerRegistry.RegisterForNavigation<MusicWithAlbumView, MusicWithAlbumViewModel>();
-
         }
-        //注册外部服务方法如下
-        //protected override IContainerExtension CreateContainerExtension()
-        //{
-        //    var serviceCollection = new ServiceCollection();
-        //    serviceCollection.AddLogging(configure =>
-        //    {
-        //        configure.ClearProviders();
-        //        configure.SetMinimumLevel(LogLevel.Trace);
-        //        configure.AddNLog();
-        //    });
-
-        //    return new DryIocContainerExtension(new Container(CreateContainerRules())
-        //        .WithDependencyInjectionAdapter(serviceCollection));
-        //}
     }
 }
