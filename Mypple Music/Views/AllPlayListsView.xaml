@@ -52,14 +52,15 @@
                  Style="{StaticResource AlbumListStyle}"
                  ItemContainerStyle="{StaticResource AlbumListItemStyle}"
                  SelectedIndex="{Binding SelectedIndex}"
-                 ScrollViewer.CanContentScroll="False">
+                 ScrollViewer.CanContentScroll="False"
+                 VirtualizingPanel.ScrollUnit="Pixel"
+                 VirtualizingPanel.VirtualizationMode="Recycling">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ConfirmPlayListCommand}"
                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-
             <d:ListBox.Items>
                 <model:Album Artist="稲葉曇"
                              Title="ポストシェルタ"

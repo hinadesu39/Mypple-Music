@@ -142,37 +142,8 @@
                                   Height="30"
                                   Margin="0,0,30,0"
                                   DockPanel.Dock="Right"
-                                  IsChecked="{Binding IsChecked}">
-                        <ToggleButton.Template>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Border x:Name="borderIn"
-                                        Background="Transparent"
-                                        CornerRadius="2">
-                                    <StackPanel VerticalAlignment="Center"
-                                                HorizontalAlignment="Center">
-                                        <TextBlock HorizontalAlignment="Center"
-                                                   FontFamily="{StaticResource IconFont}"
-                                                   Text="&#xe719;"
-                                                   FontSize="20"
-                                                   FontWeight="Bold"
-                                                   Foreground="{DynamicResource PrimaryHueLightBrush}">
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver"
-                                             Value="True">
-
-                                        <Setter TargetName="borderIn"
-                                                Property="Background"
-                                                Value="#22000000" />
-                                    </Trigger>
-
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-
+                                  IsChecked="{Binding IsChecked}"
+                                  Style="{StaticResource InfoButtonStyle}" />
                     <Grid DockPanel.Dock="Right">
 
                         <Button Content="&#xe665;"
@@ -192,28 +163,19 @@
                                      Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
                         </ProgressBar>
                     </Grid>
-
-
-
                     <!--信息弹出-->
                     <Popup x:Name="InfoPopupContrainer"
-                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
+                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked,Mode=OneWay}"
                            StaysOpen="False"
                            Placement="Bottom"
                            AllowsTransparency="True"
                            PlacementTarget="{Binding ElementName=InfoBtn}"
                            HorizontalOffset="-100">
-                        <!--<StackPanel HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Background=""
-                                    Width="120">-->
-
                         <Border CornerRadius="5"
                                 Background="{DynamicResource DefaultBackground}"
                                 Width="120"
                                 BorderThickness="0.5"
                                 BorderBrush="#66000000">
-
                             <ListBox x:Name="dataBar"
                                      Margin="0,0,0,5"
                                      ItemContainerStyle="{StaticResource PopUpListBoxItemStyle}"
@@ -237,10 +199,8 @@
 
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
-
                             </ListBox>
                         </Border>
-                        <!--</StackPanel>-->
                     </Popup>
 
                 </DockPanel>

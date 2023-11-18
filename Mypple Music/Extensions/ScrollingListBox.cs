@@ -11,14 +11,14 @@ using System.Windows.Media;
 
 namespace Mypple_Music.Extensions
 {
-    public class ScrollingListBox : ListBox
+    public class LyricScrollingListBox : ListBox
     {
         private static ScrollViewer scrollViewer;
 
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            ScrollingListBox listBox = e.Source as ScrollingListBox;
+            LyricScrollingListBox listBox = e.Source as LyricScrollingListBox;
 
             // var item = FindVisualChild<ListBoxItem>(listBox);
             if (scrollViewer == null)

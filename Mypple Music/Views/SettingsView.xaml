@@ -38,7 +38,7 @@
                     BorderThickness="0 0 1 0">
                 <ListBox x:Name="menuBar"
                          Margin="0,10,0,0"
-                         ItemContainerStyle="{StaticResource MyListBoxItemStyle}"
+                         ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
                          ItemsSource="{Binding MenuBars}"
                          SelectedIndex="{Binding MenuBarsIndex}"
                          DockPanel.Dock="Top">

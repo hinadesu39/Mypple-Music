@@ -34,8 +34,8 @@
                  HorizontalAlignment="Right"
                  Margin="0,0,80,0"
                  extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}">
-
         </TextBox>
+        
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
@@ -53,9 +53,10 @@
                  ItemContainerStyle="{StaticResource AlbumListItemStyle}"
                  SelectedIndex="{Binding SelectedIndex}"
                  ScrollViewer.CanContentScroll="False"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
                  VirtualizingPanel.ScrollUnit="Pixel"
                  VirtualizingPanel.VirtualizationMode="Recycling"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+                 >
             <ListBox.Resources>
                 <Style TargetType="extension:SmoothScrollViewer"
                        BasedOn="{StaticResource ScrollViewerStyle}" />

@@ -18,6 +18,7 @@
         <converter:StatusToStringConverter x:Key="StatusToString" />
         <converter:MinutesToHoursMinutesConverter x:Key="MinutesToHoursMinutes" />
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
+        <converter:ReverseVisibilityConverter x:Key="ReverseVisibility" />
     </UserControl.Resources>
     <Grid x:Name="Contanier"
           Background="{DynamicResource DefaultBackground}">
@@ -139,35 +140,8 @@
                                   Height="30"
                                   Margin="0,0,30,0"
                                   DockPanel.Dock="Right"
+                                  Style="{StaticResource InfoButtonStyle}"
                                   IsChecked="{Binding IsMainChecked}">
-                        <ToggleButton.Template>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Border x:Name="borderIn"
-                                        Background="Transparent"
-                                        CornerRadius="2">
-                                    <StackPanel VerticalAlignment="Center"
-                                                HorizontalAlignment="Center">
-                                        <TextBlock HorizontalAlignment="Center"
-                                                   FontFamily="{StaticResource IconFont}"
-                                                   Text="&#xe719;"
-                                                   FontSize="20"
-                                                   FontWeight="Bold"
-                                                   Foreground="{DynamicResource PrimaryHueLightBrush}">
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver"
-                                             Value="True">
-
-                                        <Setter TargetName="borderIn"
-                                                Property="Background"
-                                                Value="#22000000" />
-                                    </Trigger>
-
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
                     </ToggleButton>
                     <Grid DockPanel.Dock="Right">
 
@@ -191,17 +165,12 @@
 
                     <!--主信息弹出-->
                     <Popup x:Name="InfoPopupContrainer"
-                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
+                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked,Mode=OneWay}"
                            StaysOpen="False"
                            Placement="Bottom"
                            AllowsTransparency="True"
                            PlacementTarget="{Binding ElementName=InfoBtn}"
                            HorizontalOffset="-100">
-                        <!--<StackPanel HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Background=""
-                                    Width="120">-->
-
                         <Border CornerRadius="5"
                                 Background="{DynamicResource DefaultBackground}"
                                 Width="120"
@@ -228,15 +197,11 @@
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center" />
                                         </StackPanel>
-
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
-
                             </ListBox>
                         </Border>
-                        <!--</StackPanel>-->
                     </Popup>
-
                 </DockPanel>
             </Grid>
         </Grid>

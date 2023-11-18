@@ -10,11 +10,8 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              FontFamily="微软雅黑">
-    <Grid ClipToBounds="True" >
+    <Grid ClipToBounds="True">
         <Grid>
-            <!--<Grid.Effect>
-                <BlurEffect Radius="50" />
-            </Grid.Effect>-->
             <Image Source="{Binding BlurBackground}"
                    d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
                    Stretch="Fill"
@@ -116,9 +113,8 @@
                                Foreground="Snow" />
                 </StackPanel>
             </Grid>
-            <Grid Grid.Column="1"
-                  >
-                <extension:ScrollingListBox ItemContainerStyle="{StaticResource LyricListBoxStyle}"
+            <Grid Grid.Column="1">
+                <extension:LyricScrollingListBox ItemContainerStyle="{StaticResource LyricListBoxStyle}"
                                             ItemsSource="{Binding Lyrics}"
                                             Background="Transparent"
                                             FontSize="25"
@@ -133,7 +129,7 @@
                             <i:InvokeCommandAction Command="{Binding ClickSentenceCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </extension:ScrollingListBox>
+                </extension:LyricScrollingListBox>
 
             </Grid>
         </Grid>

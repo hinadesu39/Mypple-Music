@@ -4,11 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Mypple_Music.Views"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:model="clr-namespace:Mypple_Music.Models"
              xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -63,20 +60,20 @@
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <ListBox Margin="10,10,30,10"
-                 ItemsSource="{Binding Albums}"
+        <ListBox ItemsSource="{Binding Albums}"
                  DockPanel.Dock="Top"
                  Grid.Row="2"
-                 ItemContainerStyle="{StaticResource ListBoxItemForDisplayStyle}"
+                 Style="{StaticResource ArtistWithAlbumStyle}"
+                 ItemContainerStyle="{StaticResource ArtistWithAlbumItemStyle}"
                  Height="{Binding ElementName=MusicWithArtistViewControl,Path=ActualHeight,Converter={StaticResource Value},ConverterParameter=100}"
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 ScrollViewer.CanContentScroll="False">
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectedAlbumChangedCommand}"
-                                           CommandParameter="{Binding SelectedItem}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>-->
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 ScrollViewer.CanContentScroll="False"
+                 VirtualizingPanel.ScrollUnit="Pixel"
+                 VirtualizingPanel.VirtualizationMode="Recycling">
+            <ListBox.Resources>
+                <Style TargetType="extension:SmoothScrollViewer"
+                       BasedOn="{StaticResource ScrollViewerStyle}" />
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0,0,30">
@@ -129,7 +126,8 @@
                                     Margin="30,0,0,0">
                             <TextBlock Text="{Binding Title}"
                                        FontWeight="Bold"
-                                       FontSize="20" />
+                                       FontSize="20"
+                                       Foreground="{DynamicResource DefaultForgeground}" />
                             <DockPanel LastChildFill="False">
                                 <TextBlock Foreground="Gray"
                                            FontWeight="Bold"
@@ -162,7 +160,9 @@
                                       GridLinesVisibility="None"
                                       RowStyle="{StaticResource DataGridRowStyle}"
                                       MinRowHeight="45"
+                                      Margin="0,0,10,0"
                                       CellStyle="{StaticResource DataGridCellStyle}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                       PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                 <i:Interaction.Triggers>

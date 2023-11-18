@@ -97,7 +97,7 @@ namespace Mypple_Music
                             .CreateLogger();
             containerRegistry.RegisterInstance<ILogger>(log);
             log.Information("Log_Loaded");
-            
+
             containerRegistry
                 .GetContainer()
                 .Register<HttpRestClient>(made: Parameters.Of.Type<string>(serviceKey: "webUrl"));
@@ -129,6 +129,7 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<MusicWithArtistView, MusicWithArtistViewModel>();
             containerRegistry.RegisterForNavigation<AddMusicView, AddMusicViewModel>();
             containerRegistry.RegisterForNavigation<MusicWithAlbumView, MusicWithAlbumViewModel>();
+
         }
     }
 }
