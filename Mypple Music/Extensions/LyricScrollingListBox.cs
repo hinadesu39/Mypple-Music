@@ -11,26 +11,27 @@ using System.Windows.Media;
 
 namespace Mypple_Music.Extensions
 {
-    public class ScrollingListBox : ListBox
+    public class LyricScrollingListBox : ListBox
     {
         private static ScrollViewer scrollViewer;
 
+
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            ScrollingListBox listBox = e.Source as ScrollingListBox;
+            LyricScrollingListBox listBox = e.Source as LyricScrollingListBox;
 
             // var item = FindVisualChild<ListBoxItem>(listBox);
             if (scrollViewer == null)
             {
                 scrollViewer = FindVisualChild<ScrollViewer>(listBox);
-
+                return;
             }
 
             if (scrollViewer != null)
             {
                 // 获取 ListBoxItem 的引用
                 ListBoxItem firstItem =
-                    listBox.ItemContainerGenerator.ContainerFromIndex(0) as ListBoxItem;
+                    listBox.ItemContainerGenerator.ContainerFromIndex(listBox.SelectedIndex) as ListBoxItem;
                 if (firstItem != null)
                 {
                     // 获取 ListBoxItem 的 RenderSize 属性
@@ -39,13 +40,14 @@ namespace Mypple_Music.Extensions
                     double firstItemHeight = firstItemSize.Height;
                     Debug.WriteLine(firstItemHeight);
                     scrollViewer.ScrollToVerticalOffsetWithAnimation(
-                        firstItemHeight * (listBox.SelectedIndex - 1),
+                        firstItemHeight * (listBox.SelectedIndex - 2),
                         TimeSpan.FromSeconds(1),
-                        new CircleEase()
+                        new ElasticEase() { Oscillations = 1, Springiness = 6}
                     );
                 }
 
             }
+            //告诉viewmodel点击事件后播放进度需要发生改变(待做)
         }
 
         /// <summary>
@@ -77,4 +79,3 @@ namespace Mypple_Music.Extensions
         }
     }
 }
-

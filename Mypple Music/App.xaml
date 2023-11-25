@@ -10,6 +10,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+
                 <ResourceDictionary Source="pack://application:,,,/Resource/LightTheme.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/Resource/DarkTheme.xaml" />-->
                 <materialDesign:BundledTheme BaseTheme="Dark"
@@ -17,6 +18,8 @@
                                              SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converter:VolumeValueConverter x:Key="VolumeValue" />
+            <converter:StatusToBoolConverter x:Key="StatusToBool" />
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
             <!--滚动条样式-->
             <Style x:Key="ScrollThumbStyle"
@@ -391,7 +394,7 @@
                 </Setter>
             </Style>
 
-            <!--导航列表样式-->
+            <!--导航/歌曲列表ListBoxItme样式-->
             <Style x:Key="NavigateListBoxItemStyle"
                    TargetType="ListBoxItem">
                 <Setter Property="MinHeight"
@@ -411,7 +414,7 @@
                                            HorizontalAlignment="Left"
                                            Margin="5,0,0,0">
                                 </Rectangle>
-                                <Border x:Name="border"></Border>
+                                <Border x:Name="border" />
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                                   VerticalAlignment="{TemplateBinding VerticalAlignment}" />
 
@@ -451,7 +454,103 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            <Style x:Key="MusicListBoxItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="30" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Grid>
+                                <Rectangle x:Name="borderHeader"
+                                           Width="4"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Height="20"
+                                           HorizontalAlignment="Left"
+                                           Margin="5,0,0,0">
+                                </Rectangle>
+                                <Border x:Name="border" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Fill"
+                                            TargetName="borderHeader"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--歌曲列表ListBox样式-->
+            <Style x:Key="MusicListStyle"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <extension:SmoothScrollViewer.Template>
+                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                                           HorizontalAlignment="Right"
+                                                           Maximum="{TemplateBinding ScrollableHeight}"
+                                                           Orientation="Vertical"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           ViewportSize="{TemplateBinding ViewportHeight}"
+                                                           Value="{TemplateBinding VerticalOffset}"
+                                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </extension:SmoothScrollViewer.Template>
+                                <StackPanel IsItemsHost="True"
+                                            ScrollViewer.CanContentScroll="True"
+                                            Margin="0,0,10,0" />
+                            </extension:SmoothScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <!--歌曲展示列表样式,无选中效果-->
             <Style x:Key="ArtistWithAlbumItemStyle"
                    TargetType="ListBoxItem">
@@ -515,16 +614,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-            <!--待播清单歌曲列表-->
-            <!--<Style x:Key="ToPlayMusicListStyle"
-                   TargetType="ListBox">
-                <Setter Property="Template">
-                    <Setter.Value>
-                       
-                    </Setter.Value>
-                </Setter>
-            </Style>-->
 
             <!--ToggleButton按钮样式-->
             <Style x:Key="ToggleButtonStyle"
@@ -617,9 +706,6 @@
                                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                                 SnapsToDevicePixels="True">
-                                                            <!--<TextBlock Text="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
-                                                                       VerticalAlignment="Center"
-                                                                       HorizontalAlignment="Center"></TextBlock>-->
                                                             <Grid>
                                                                 <TextBlock />
                                                                 <materialDesign:PackIcon Kind="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
@@ -753,15 +839,8 @@
             </Style>
 
             <!--下拉框内容样式-->
-            <Style x:Key="RadioMiniButtonStyle"
+            <!--<Style x:Key="RadioMiniButtonStyle"
                    TargetType="{x:Type RadioButton}">
-
-                <Setter Property="Foreground"
-                        Value="#4B8EC4" />
-                <!--<Setter Property="VerticalContentAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Center" />-->
                 <Setter Property="BorderBrush"
                         Value="Transparent" />
                 <Setter Property="BorderThickness"
@@ -840,7 +919,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-            </Style>
+            </Style>-->
 
             <!--待选择歌曲DataGrid行样式-->
             <Style x:Key="ToAddMusicRowStyle"
@@ -971,6 +1050,7 @@
             <!-- DataGrid 行样式 -->
             <Style x:Key="DataGridRowStyle"
                    TargetType="DataGridRow">
+
                 <Setter Property="Foreground"
                         Value="{DynamicResource DefaultForgeground}" />
                 <Setter Property="Template">
@@ -997,20 +1077,10 @@
                                                HorizontalAlignment="Left"
                                                Margin="5,0,0,0">
                                     </Rectangle>
-
                                     <DataGridCellsPresenter Height="40" />
                                 </Grid>
                             </materialDesign:TransitioningContent>
                             <ControlTemplate.Triggers>
-                                <EventTrigger RoutedEvent="MouseDoubleClick">
-                                    <BeginStoryboard>
-                                        <Storyboard Timeline.DesiredFrameRate="24">
-                                            <ColorAnimation Storyboard.TargetProperty="(DataGridRow.Background).(SolidColorBrush.Color)"
-                                                            To="#33000000"
-                                                            Duration="0:0:0.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
                                 <Trigger Property="IsSelected"
                                          Value="True">
                                     <Setter Property="Fill"
@@ -1020,7 +1090,6 @@
                                             TargetName="border"
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
                                 </Trigger>
-
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -1043,8 +1112,6 @@
                         <Setter Property="Background"
                                 Value="{DynamicResource PrimaryHueLightBrush}" />
                     </Trigger>
-
-
                 </Style.Triggers>
             </Style>
             <!-- DataGrid 单元格样式 -->
@@ -1089,6 +1156,64 @@
                             <Rectangle Fill="{TemplateBinding Background}"
                                        Height="{TemplateBinding Height}"
                                        Width="{TemplateBinding Width}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--音量按钮样式-->
+            <Style x:Key="VolumeButtonStyle"
+                   TargetType="ToggleButton">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border x:Name="borderIn"
+                                    Background="Transparent"
+                                    CornerRadius="2">
+                                <StackPanel VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock x:Name="Content"
+                                               HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource IconFont}"
+                                               Text="&#xea0d;"
+                                               FontSize="21"
+                                               FontWeight="Light"
+                                               Foreground="#242424">
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="borderIn"
+                                            Property="Background"
+                                            Value="#22000000" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Player.VolumeValue,Converter={StaticResource VolumeValue}}"
+                                             Value="0">
+                                    <Setter TargetName="Content"
+                                            Property="Text"
+                                            Value="&#xea0c;" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Player.VolumeValue,Converter={StaticResource VolumeValue}}"
+                                             Value="1">
+                                    <Setter TargetName="Content"
+                                            Property="Text"
+                                            Value="&#xea0e;" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Player.VolumeValue,Converter={StaticResource VolumeValue}}"
+                                             Value="2">
+                                    <Setter TargetName="Content"
+                                            Property="Text"
+                                            Value="&#xea0f;" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Player.VolumeValue,Converter={StaticResource VolumeValue}}"
+                                             Value="3">
+                                    <Setter TargetName="Content"
+                                            Property="Text"
+                                            Value="&#xea0d;" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1368,7 +1493,46 @@
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
+            <!--透明按钮WithMouseOver颜色样式-->
+            <Style x:Key="TransParentWithMouseOverButton"
+                   TargetType="Button">
+                <Setter Property="Width"
+                        Value="40" />
+                <Setter Property="Height"
+                        Value="35" />
+                <Setter Property="FontWeight"
+                        Value="Light" />
+                <Setter Property="FontSize"
+                        Value="12" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <Border x:Name="border"
+                                        CornerRadius="3" />
+                                <TextBlock FontFamily="微软雅黑" />
+                                <ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -1517,23 +1681,32 @@
 
                                             </Grid>
                                         </Border>
-                                        <Image x:Name="albumImg"
+                                        <!--<Image x:Name="albumImg"
                                                Source="{Binding LocalPicUrl}"
                                                Width="200"
                                                Height="200"
-                                               Margin="5,5,5,0">
-
+                                               Margin="5,5,5,0"
+                                               RenderOptions.BitmapScalingMode="LowQuality">
                                             <Image.OpacityMask>
                                                 <VisualBrush>
                                                     <VisualBrush.Visual>
-                                                        <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                                                Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
+                                                        <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Width}"
+                                                                Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Height}"
                                                                 CornerRadius="8"
                                                                 Background="White" />
                                                     </VisualBrush.Visual>
                                                 </VisualBrush>
                                             </Image.OpacityMask>
-                                        </Image>
+                                        </Image>-->
+                                        <Border CornerRadius="8"
+                                                Margin="5,5,5,0"
+                                                Width="200"
+                                                Height="200">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                            RenderOptions.BitmapScalingMode="LowQuality" />
+                                            </Border.Background>
+                                        </Border>
 
                                         <Rectangle x:Name="background"
                                                    Fill="#88000000"
@@ -1651,8 +1824,8 @@
                 </Setter>
             </Style>
 
-            <!--更多信息选择框样式-->
-            <Style x:Key="InfoButtonStyle"
+            <!--PopUp按钮样式-->
+            <Style x:Key="ToPopUpButtonStyle"
                    TargetType="ToggleButton">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -1684,6 +1857,95 @@
                 </Setter>
             </Style>
 
+            <!--RadioButtonWithText样式-->
+            <Style x:Key="RadioButtonWithTextStyle"
+                   TargetType="RadioButton">
+                <Setter Property="Height"
+                        Value="30" />
+                <Setter Property="Foreground"
+                        Value="Snow" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border x:Name="borderOut"
+                                    CornerRadius="3"
+                                    BorderThickness="0.5"
+                                    BorderBrush="{DynamicResource PrimaryHueLightBrush}">
+                                <Border x:Name="borderIn"
+                                        CornerRadius="3">
+                                    <TextBlock Text="{Binding Path=Content,RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center" />
+                                </Border>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter TargetName="borderOut"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsChecked"
+                                         Value="False">
+                                    <Setter TargetName="borderOut"
+                                            Property="Background"
+                                            Value="Transparent" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="borderIn"
+                                            Property="Background"
+                                            Value="#22000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--RadioButtonWithIcon样式-->
+            <Style x:Key="RadioButtonWithIconStyle"
+                   TargetType="RadioButton">
+                <Setter Property="FontWeight"
+                        Value="Bold" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border x:Name="borderIn"
+                                    Background="Transparent"
+                                    CornerRadius="2">
+                                <StackPanel VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock x:Name="btnContent"
+                                               HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource IconFont}"
+                                               Text="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},Path=Content}"
+                                               FontWeight="{TemplateBinding FontWeight}"
+                                               Foreground="#242424">
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="borderIn"
+                                            Property="Background"
+                                            Value="#22000000" />
+                                </Trigger>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter TargetName="borderIn"
+                                            Property="Background"
+                                            Value="#33000000" />
+                                    <Setter TargetName="btnContent"
+                                            Property="Text"
+                                            Value="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},Path=Tag}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

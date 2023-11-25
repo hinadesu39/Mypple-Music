@@ -103,15 +103,7 @@ namespace Mypple_Music.ViewModels
 
         private void SelectedMusicChanged(Music Music)
         {
-            //设置播放状态
-            //var playingMusic = MusicList.FirstOrDefault(
-            //    m => m.Status == Music.PlayStatus.StartPlay
-            //);
-            //if (playingMusic != null)
-            //    playingMusic.Status = Music.PlayStatus.StopPlay;
             SelectedMusic = Music;
-            //SelectedMusic.Status = Music.PlayStatus.StartPlay;
-
             //把当前播放列表发送给播放器待播放
             eventAggregator
                 .GetEvent<PlayListCreatedEvent>()
@@ -139,19 +131,7 @@ namespace Mypple_Music.ViewModels
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //try
-            //{
-            //    //设置播放状态
-            //    var playingMusic = MusicList.FirstOrDefault(
-            //        m => m.Status == Music.PlayStatus.StartPlay
-            //    );
-            //    if (playingMusic != null)
-            //        playingMusic.Status = Music.PlayStatus.StopPlay;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine(ex);
-            //}
+
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext) { }

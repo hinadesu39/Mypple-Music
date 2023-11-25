@@ -35,7 +35,7 @@
                  Margin="0,0,80,0"
                  extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}">
         </TextBox>
-        
+
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
@@ -55,12 +55,7 @@
                  ScrollViewer.CanContentScroll="False"
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  VirtualizingPanel.ScrollUnit="Pixel"
-                 VirtualizingPanel.VirtualizationMode="Recycling"
-                 >
-            <ListBox.Resources>
-                <Style TargetType="extension:SmoothScrollViewer"
-                       BasedOn="{StaticResource ScrollViewerStyle}" />
-            </ListBox.Resources>
+                 VirtualizingPanel.VirtualizationMode="Recycling">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"

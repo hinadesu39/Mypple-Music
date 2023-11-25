@@ -13,13 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace Mypple_Music.ViewModels
 {
@@ -36,8 +32,6 @@ namespace Mypple_Music.ViewModels
         private IRegionNavigationJournal journal;
         private ObservableCollection<MenuBar> AllBars;
 
-        //private readonly IDialogHostService dialog;
-
         #region 属性
 
         private int playIndex;
@@ -48,6 +42,9 @@ namespace Mypple_Music.ViewModels
             set { playIndex = value; }
         }
 
+
+
+        //原始清单
         private ObservableCollection<Music> playList;
 
         public ObservableCollection<Music> PlayList
@@ -60,26 +57,41 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private Visibility volumeHigh = Visibility.Visible;
+        //待播清单
+        private ObservableCollection<Music> toPlayList;
 
-        public Visibility VolumeHigh
+        public ObservableCollection<Music> ToPlayList
         {
-            get { return volumeHigh; }
+            get { return toPlayList; }
             set
             {
-                volumeHigh = value;
+                toPlayList = value;
                 RaisePropertyChanged();
             }
         }
 
-        private Visibility volumeMute = Visibility.Collapsed;
+        //随机播放清单
+        private ObservableCollection<Music> shufflePlayList;
 
-        public Visibility VolumeMute
+        public ObservableCollection<Music> ShufflePlayList
         {
-            get { return volumeMute; }
+            get { return shufflePlayList; }
             set
             {
-                volumeMute = value;
+                shufflePlayList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        //历史播放清单
+        private ObservableCollection<Music> historyPlayList;
+
+        public ObservableCollection<Music> HistoryPlayList
+        {
+            get { return historyPlayList; }
+            set
+            {
+                historyPlayList = value;
                 RaisePropertyChanged();
             }
         }
@@ -167,42 +179,6 @@ namespace Mypple_Music.ViewModels
                 RaisePropertyChanged();
             }
         }
-
-        private int menuBarsIndex = -1;
-
-        public int MenuBarsIndex
-        {
-            get { return menuBarsIndex; }
-            set
-            {
-                menuBarsIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int musicinfoIndex = -1;
-
-        public int MusicInfoIndex
-        {
-            get { return musicinfoIndex; }
-            set
-            {
-                musicinfoIndex = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private int playListIndex = -1;
-
-        public int PlayListIndex
-        {
-            get { return playListIndex; }
-            set
-            {
-                playListIndex = value;
-                RaisePropertyChanged();
-            }
-        }
         #endregion 属性
 
 
@@ -220,6 +196,8 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand MusicProgressChangedCommand { get; set; }
         public DelegateCommand<string> PlayModeChangedCommand { get; set; }
         public DelegateCommand<string> ChangeMusicCommand { get; set; }
+        public DelegateCommand<Music> RemoveMusicCommand { set; get; }
+        public DelegateCommand<object> ToPlayMusicCommand { get; set; }
         #endregion 命令
 
         #region 构造函数
@@ -241,12 +219,15 @@ namespace Mypple_Music.ViewModels
             MenuBars = new ObservableCollection<MenuBar>();
             MusicInfoBars = new ObservableCollection<MenuBar>();
             PlayListBars = new ObservableCollection<MenuBar>();
+            HistoryPlayList = new ObservableCollection<Music>();
 
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             ConfigCommand = new DelegateCommand(Config);
             GoBackCommand = new DelegateCommand(GoBack);
             UserCenterCommand = new DelegateCommand(goUserCenterAsync);
             ExecuteCommand = new DelegateCommand<string>(Execute);
+            RemoveMusicCommand = new DelegateCommand<Music>(RemoveMusic);
+            ToPlayMusicCommand = new DelegateCommand<object>(ToPlayMusic);
 
             //创建播放器
             //PlayCommand = new DelegateCommand(Play);
@@ -272,8 +253,21 @@ namespace Mypple_Music.ViewModels
                         if (Player.Music != null)
                             Player.Music.Status = Music.PlayStatus.StopPlay;
                         PlayList = arg.Musics;
-                        PlayIndex = arg.id;
-                        InitPlay(PlayList[PlayIndex]);
+
+                        //如果提前点击了随机播放按钮，那么收到播放列表时应当及时生成随机列表
+                        if (Player.Mode == PlayerModel.PlayMode.ShufflePlay)
+                        {
+                            ShufflePlayList = new ObservableCollection<Music>(PlayList);
+                            Shuffle(ShufflePlayList);
+                            PlayIndex = ShufflePlayList.IndexOf(Player.Music);
+                            ToPlayList = ShufflePlayList;
+                        }
+                        else
+                        {
+                            ToPlayList = new ObservableCollection<Music>(arg.Musics);
+                            PlayIndex = arg.id;
+                        }
+                        InitPlay(ToPlayList[PlayIndex]);
                         MediaElement.Play();
                     },
                     m =>
@@ -303,6 +297,33 @@ namespace Mypple_Music.ViewModels
                 );
         }
 
+        /// <summary>
+        /// 双击待播列表播放音乐
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ToPlayMusic(object obj)
+        {
+            PlayIndex = (int)obj;
+            //改变歌曲播放状态
+            if (Player.Music != null)
+                Player.Music.Status = Music.PlayStatus.StopPlay;
+            InitPlay(ToPlayList[PlayIndex]);
+            Player.Music.Status = Music.PlayStatus.StartPlay;
+
+            eventAggregator
+                .GetEvent<MusicPlayedEvent>()
+                .Publish(new MusicPlayedModel(Player.Music, "LyricView"));
+        }
+
+        /// <summary>
+        /// 在待播列表中移除歌曲
+        /// </summary>
+        /// <param name="music"></param>
+        private void RemoveMusic(Music music)
+        {
+            ToPlayList.Remove(music);
+        }
+
         #endregion 构造函数
 
         /// <summary>
@@ -329,28 +350,52 @@ namespace Mypple_Music.ViewModels
             {
                 case "ShufflePlay":
                     Player.Mode = PlayerModel.PlayMode.ShufflePlay;
+                    if (PlayList != null)
+                    {
+                        ShufflePlayList = new ObservableCollection<Music>(PlayList);
+                        Shuffle(ShufflePlayList);
+                        PlayIndex = ShufflePlayList.IndexOf(Player.Music);
+                        ToPlayList = ShufflePlayList;
+                    }
                     break;
                 case "RepeatOne":
                     Player.Mode = PlayerModel.PlayMode.RepeatOne;
                     break;
                 case "PlayInOrder":
                     Player.Mode = PlayerModel.PlayMode.PlayInOrder;
+                    if (PlayList != null)
+                    {
+                        PlayIndex = PlayList.IndexOf(Player.Music);
+                        ToPlayList = PlayList;
+                    }
                     break;
                 case "True":
                     Player.Mode = PlayerModel.PlayMode.RepeatOne;
                     break;
                 case "False":
                     Player.Mode = PlayerModel.PlayMode.PlayInOrder;
+                    if (PlayList != null)
+                    {
+                        PlayIndex = PlayList.IndexOf(Player.Music);
+                        ToPlayList = PlayList;
+                    }
                     break;
             }
         }
 
+        /// <summary>
+        /// 播放进度改变
+        /// </summary>
         private void MusicProgressChanged()
         {
             Debug.WriteLine(Player.PlayProgress);
             MediaElement.Position = TimeSpan.FromSeconds(Player.PlayProgress);
         }
 
+        /// <summary>
+        /// 音量改变
+        /// </summary>
+        /// <param name="value"></param>
         private void VolumeValueChanged(object value)
         {
             Player.VolumeValue = Convert.ToDouble(value);
@@ -359,13 +404,6 @@ namespace Mypple_Music.ViewModels
             if (Player.VolumeValue < 0.03)
             {
                 Player.VolumeValue = 0;
-                VolumeHigh = Visibility.Collapsed;
-                VolumeMute = Visibility.Visible;
-            }
-            else
-            {
-                VolumeMute = Visibility.Collapsed;
-                VolumeHigh = Visibility.Visible;
             }
         }
 
@@ -376,24 +414,10 @@ namespace Mypple_Music.ViewModels
         {
             switch (Player.Mode)
             {
-                //随机播放
-                case PlayerModel.PlayMode.ShufflePlay:
-                    if (Player.Music != null)
-                        Player.Music.Status = Music.PlayStatus.StopPlay;
-                    //创建一个随机数种子提高随机数不重复概率
-                    byte[] buffer = Guid.NewGuid().ToByteArray();
-                    int seed = BitConverter.ToInt32(buffer, 0);
-                    Random random = new Random(seed);
-                    int randomIndex = random.Next(0, PlayList.Count);
-                    while (randomIndex == PlayIndex)
-                    {
-                        randomIndex = random.Next(0, PlayList.Count);
-                    }
-                    InitPlay(PlayList[randomIndex]);
-                    Player.Music.Status = Music.PlayStatus.StartPlay;
-                    break;
-                //顺序播放
-                case PlayerModel.PlayMode.PlayInOrder:
+                //随机or顺序播放
+                case PlayerModel.PlayMode.ShufflePlay
+                or PlayerModel.PlayMode.PlayInOrder:
+
                     if (obj == "Pre")
                     {
                         PlayIndex = PlayIndex == 0 ? PlayList.Count - 1 : PlayIndex - 1;
@@ -405,8 +429,9 @@ namespace Mypple_Music.ViewModels
                     //改变歌曲播放状态
                     if (Player.Music != null)
                         Player.Music.Status = Music.PlayStatus.StopPlay;
-                    InitPlay(PlayList[PlayIndex]);
+                    InitPlay(ToPlayList[PlayIndex]);
                     Player.Music.Status = Music.PlayStatus.StartPlay;
+
                     break;
                 case PlayerModel.PlayMode.RepeatOne:
                     MediaElement.Position = TimeSpan.Zero;
@@ -455,12 +480,18 @@ namespace Mypple_Music.ViewModels
             //初始化控件数据
             Player.Music = music;
             Player.Music.Status = Music.PlayStatus.StartPlay;
-            PlayIndex = PlayList.IndexOf(music);
+            PlayIndex = ToPlayList.IndexOf(music);
             Player.PlayProgress = 0;
             MediaElement.Source = DownloadHelper.GetMusicPath(music.AudioUrl);
             Player.PlayProgressLength = music.Duration;
+
+            //添加到历史播放列表
+            HistoryPlayList.Add(music);
         }
 
+        /// <summary>
+        /// 用户中心
+        /// </summary>
         private void goUserCenterAsync()
         {
             DialogParameters parameter = new DialogParameters();
@@ -499,38 +530,6 @@ namespace Mypple_Music.ViewModels
                     if (curNavi != null)
                         curNavi.IsSelected = true;
                     isUpdating = false;
-                    //if (preNavi != null)
-                    //{
-                    //    MenuBarsIndex = MenuBars.IndexOf(preNavi);
-                    //    PlayListIndex = -1;
-                    //    MusicInfoIndex = -1;
-                    //    isUpdating = false;
-                    //    return;
-                    //}
-                    //preNavi = MusicInfoBars.FirstOrDefault(
-                    //    m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
-                    //);
-                    //if (preNavi != null)
-                    //{
-                    //    MusicInfoIndex = MusicInfoBars.IndexOf(preNavi);
-                    //    PlayListIndex = -1;
-                    //    MenuBarsIndex = -1;
-                    //    isUpdating = false;
-                    //    return;
-                    //}
-                    //preNavi = PlayListBars.FirstOrDefault(
-                    //    m => m.NameSpace == journal.CurrentEntry.Uri.ToString()
-                    //);
-                    //if (preNavi != null)
-                    //{
-                    //    PlayListIndex = PlayListBars.IndexOf(preNavi);
-                    //    MenuBarsIndex = -1;
-                    //    MusicInfoIndex = -1;
-                    //    isUpdating = false;
-                    //    return;
-                    //}
-
-                    isUpdating = false;
                 }
         }
 
@@ -542,7 +541,7 @@ namespace Mypple_Music.ViewModels
         {
             if (menu == null || isUpdating)
                 return;
-            var preNavi = AllBars.FirstOrDefault(m => m.IsSelected == true && m != menu);
+            var preNavi = AllBars?.FirstOrDefault(m => m.IsSelected == true && m != menu);
             if (preNavi != null)
                 preNavi.IsSelected = false;
 
@@ -561,7 +560,6 @@ namespace Mypple_Music.ViewModels
                 },
                 para
             );
-
         }
 
         /// <summary>
@@ -620,7 +618,6 @@ namespace Mypple_Music.ViewModels
                         Icon = "PlaylistMusicOutline",
                         Title = res.Title,
                         NameSpace = "PlayListView"
-
                     }
                 );
             }
@@ -668,7 +665,8 @@ namespace Mypple_Music.ViewModels
                 {
                     Icon = "ClockTimeNineOutline",
                     Title = "最近添加",
-                    NameSpace = "RecentPostsView"
+                    NameSpace = "RecentPostsView",
+                    IsSelected = true
                 }
             );
             MusicInfoBars.Add(
@@ -693,7 +691,6 @@ namespace Mypple_Music.ViewModels
                     Icon = "MusicNoteOutline",
                     Title = "歌曲",
                     NameSpace = "MusicListView"
-            
                 }
             );
 
@@ -716,7 +713,6 @@ namespace Mypple_Music.ViewModels
                         Icon = "PlaylistMusicOutline",
                         Title = item.Title,
                         NameSpace = "PlayListView"
-                        
                     }
                 );
             }
@@ -726,7 +722,6 @@ namespace Mypple_Music.ViewModels
                     Icon = "CardsHeartOutline",
                     Title = "我的最爱",
                     NameSpace = "PlayListView"
-                  
                 }
             );
             //将所有导航菜单归并到一个集合当中
@@ -753,6 +748,29 @@ namespace Mypple_Music.ViewModels
                     journal = Callback.Context.NavigationService.Journal;
                 }
             );
+        }
+
+        /// <summary>
+        /// 洗牌，用于生成随机播放列表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        static void Shuffle<T>(IList<T> list)
+        {
+            // 创建一个随机数生成器
+            Random random = new Random();
+
+            // 从列表的最后一个元素开始，向前遍历
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                // 随机选择一个索引，范围是[0, i]
+                int j = random.Next(i + 1);
+
+                // 交换索引为i和j的元素
+                T temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
         }
     }
 }

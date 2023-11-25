@@ -38,7 +38,7 @@ namespace Mypple_Music.Common
                 string localPath = Path.Combine("music", title);
                 if (File.Exists(Path.GetFullPath(localPath)))
                 {
-                    return Path.GetFullPath(localPath);
+                    return "File Exist";
                 }
                 else
                 {
@@ -57,7 +57,7 @@ namespace Mypple_Music.Common
                         // 将这个流复制到文件流中
                         await stream.CopyToAsync(fileStream);
                     }
-                    return Path.GetFullPath(localPath);
+                    return "Download Successful";
                 }
             }
             catch (Exception ex)

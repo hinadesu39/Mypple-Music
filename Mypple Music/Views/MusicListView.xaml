@@ -118,15 +118,14 @@
                                     Width="1*"
                                     Binding="{Binding Artist}" />
                 <DataGridTextColumn Header="专辑"
-                                    Width="1*"
+                                    Width="2*"
                                     Binding="{Binding Album}" />
                 <DataGridTextColumn Header="类型"
-                                    Width="1*"
+                                    Width="2*"
                                     Binding="{Binding Type}" />
                 <DataGridTextColumn Header="播放次数"
                                     Binding="{Binding PlayTimes}"
-                                    Width="2*" />
-
+                                    Width="0.8*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

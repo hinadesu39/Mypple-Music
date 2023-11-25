@@ -95,7 +95,8 @@
                 </Image.OpacityMask>
             </Image>
             <Grid Grid.Column="1"
-                  Margin="30,0,0,0">
+                  Margin="30,0,0,0"
+                  Focusable="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100" />
                     <RowDefinition />
@@ -135,16 +136,44 @@
                             Width="100"
                             Height="35" />
 
-                    <ToggleButton x:Name="InfoBtn"
-                                  Width="40"
-                                  Height="30"
-                                  Margin="0,0,30,0"
-                                  DockPanel.Dock="Right"
-                                  Style="{StaticResource InfoButtonStyle}"
-                                  IsChecked="{Binding IsMainChecked}">
-                    </ToggleButton>
-                    <Grid DockPanel.Dock="Right">
+                    <md:PopupBox DockPanel.Dock="Right"
+                                 Margin="0,0,30,0">
+                        <md:PopupBox.ToggleContent>
+                            <StackPanel Orientation="Horizontal">
+                                <md:PackIcon Kind="DotsHorizontal"
+                                             Foreground="{DynamicResource PrimaryHueLightBrush}" />
 
+                            </StackPanel>
+                        </md:PopupBox.ToggleContent>
+                        <StackPanel Margin="5,0,5,0">
+                            <Button Content="添加歌曲"
+                                    Width="120"
+                                    Height="30"
+                                    Style="{StaticResource TransParentWithMouseOverButton}"
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}"/>
+                            <Button Content="删除播放列表"
+                                    Width="120"
+                                    Height="30"
+                                    Style="{StaticResource TransParentWithMouseOverButton}"
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                            <Button Content="更多"
+                                    Width="120"
+                                    Height="30"
+                                    Style="{StaticResource TransParentWithMouseOverButton}"
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                            <Button Content="属性"
+                                    Width="120"
+                                    Height="30"
+                                    Style="{StaticResource TransParentWithMouseOverButton}"
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                        </StackPanel>
+
+                    </md:PopupBox>
+                    <Grid DockPanel.Dock="Right">
                         <Button Content="&#xe665;"
                                 Width="40"
                                 Height="30"
@@ -162,87 +191,9 @@
                                      Visibility="{Binding IsDownloading,Converter={StaticResource BooleanToVisibilityConverter}}">
                         </ProgressBar>
                     </Grid>
-
-                    <!--主信息弹出-->
-                    <Popup x:Name="InfoPopupContrainer"
-                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked,Mode=OneWay}"
-                           StaysOpen="False"
-                           Placement="Bottom"
-                           AllowsTransparency="True"
-                           PlacementTarget="{Binding ElementName=InfoBtn}"
-                           HorizontalOffset="-100">
-                        <Border CornerRadius="5"
-                                Background="{DynamicResource DefaultBackground}"
-                                Width="120"
-                                BorderThickness="0.5"
-                                BorderBrush="#66000000">
-
-                            <ListBox x:Name="dataBar"
-                                     Margin="0,0,0,5"
-                                     ItemContainerStyle="{StaticResource PopUpListBoxItemStyle}"
-                                     ItemsSource="{Binding MainPopUpList}"
-                                     DockPanel.Dock="Top"
-                                     SelectedIndex="{Binding PopUpSelectedIndex}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.NavigateCommand,RelativeSource={RelativeSource AncestorType=Popup}}"
-                                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Background="Transparent"
-                                                    VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding}"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Border>
-                    </Popup>
                 </DockPanel>
             </Grid>
         </Grid>
-        <!--子信息弹出-->
-        <Popup IsOpen="{Binding IsSubChecked}"
-               StaysOpen="False"
-               Placement="Bottom"
-               AllowsTransparency="True"
-               PlacementTarget="{Binding ElementName=InfoBtn}"
-               VerticalOffset="100"
-               HorizontalOffset="-100">
-            <Border CornerRadius="5"
-                    Background="{DynamicResource DefaultBackground}"
-                    Width="120"
-                    BorderThickness="0.5"
-                    BorderBrush="#66000000">
-                <ListBox Margin="0,0,0,5"
-                         ItemContainerStyle="{StaticResource PopUpListBoxItemStyle}"
-                         ItemsSource="{Binding SubPopUpList}"
-                         DockPanel.Dock="Top">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding DataContext.NavigateCommand,RelativeSource={RelativeSource AncestorType=Popup}}"
-                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Background="Transparent"
-                                        VerticalAlignment="Center">
-                                <TextBlock Text="{Binding}"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-
-                </ListBox>
-            </Border>
-        </Popup>
         <DataGrid x:Name="MusicDataGrid"
                   Grid.Row="2"
                   AutoGenerateColumns="False"
@@ -293,12 +244,12 @@
                              PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
             </d:DataGrid.Items>
             <DataGrid.Columns>
-                <DataGridTemplateColumn  Width="0.5*">
+                <DataGridTemplateColumn  Width="0.6*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Border Width="40"
-                                        Height="40"
+                                <Border Width="45"
+                                        Height="45"
                                         CornerRadius="5"
                                         Background="LightGray"
                                         Margin="10,0,0,0">
@@ -308,16 +259,14 @@
                                                           Color="Black"
                                                           Opacity="0.4" />
                                     </Border.Effect>
-                                    <Grid>
-                                        <TextBlock FontFamily="{StaticResource IconFont}"
-                                                   FontSize="30"
-                                                   FontWeight="ExtraBold"
-                                                   Text="&#xe64b;"
-                                                   Foreground="#33000000"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center" />
+                                    <TextBlock FontFamily="{StaticResource IconFont}"
+                                               FontSize="30"
+                                               FontWeight="ExtraBold"
+                                               Text="&#xe64b;"
+                                               Foreground="#33000000"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
 
-                                    </Grid>
                                 </Border>
                                 <Image x:Name="albumImg"
                                        Source="{Binding LocalPicUrl}"
@@ -358,7 +307,6 @@
                                             <Border x:Name="borderIn"
                                                     Background="Transparent"
                                                     CornerRadius="2">
-
                                                 <StackPanel VerticalAlignment="Center"
                                                             HorizontalAlignment="Center">
                                                     <TextBlock x:Name="btnContent"
@@ -411,52 +359,39 @@
                 <DataGridTemplateColumn  Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <ToggleButton x:Name="MusicInfoBtn"
-                                              Width="40"
-                                              Height="30"
-                                              DockPanel.Dock="Right"
-                                              IsChecked="{Binding DataContext.IsSubChecked,RelativeSource={RelativeSource AncestorType=DataGrid}}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <i:InvokeCommandAction Command="{Binding DataContext.MusicToFocusCommand,RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                                   CommandParameter="{Binding}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                    <ToggleButton.Template>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <Border x:Name="borderIn"
-                                                    Background="Transparent"
-                                                    CornerRadius="2">
-                                                <StackPanel VerticalAlignment="Center"
-                                                            HorizontalAlignment="Center">
-                                                    <TextBlock HorizontalAlignment="Center"
-                                                               FontFamily="{StaticResource IconFont}"
-                                                               Text="&#xe719;"
-                                                               FontSize="20"
-                                                               FontWeight="Bold"
-                                                               Foreground="{DynamicResource PrimaryHueLightBrush}">
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver"
-                                                         Value="True">
+                            <md:PopupBox DockPanel.Dock="Right">
+                                <md:PopupBox.ToggleContent>
+                                    <StackPanel Orientation="Horizontal">
+                                        <md:PackIcon Kind="DotsHorizontal"
+                                                     Foreground="{DynamicResource PrimaryHueLightBrush}">
+                                        </md:PackIcon>
+                                    </StackPanel>
+                                </md:PopupBox.ToggleContent>
+                                <StackPanel Margin="5,0,5,0">
+                                    <Button Content="下载该歌曲"
+                                            Width="120"
+                                            Height="30"
+                                            Style="{StaticResource TransParentWithMouseOverButton}"
+                                            Command="{Binding NavigateCommand}"
+                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                                    <Button Content="从播放列表中移除"
+                                            Width="120"
+                                            Height="30"
+                                            Style="{StaticResource TransParentWithMouseOverButton}"
+                                            Command="{Binding NavigateCommand}"
+                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                                    <Button Content="属性"
+                                            Width="120"
+                                            Height="30"
+                                            Style="{StaticResource TransParentWithMouseOverButton}"
+                                            Command="{Binding NavigateCommand}"
+                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                                </StackPanel>
 
-                                                    <Setter TargetName="borderIn"
-                                                            Property="Background"
-                                                            Value="#22000000" />
-                                                </Trigger>
-
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </ToggleButton.Template>
-                                </ToggleButton>
-                            </Grid>
+                            </md:PopupBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

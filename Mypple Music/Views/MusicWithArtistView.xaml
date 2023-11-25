@@ -70,10 +70,6 @@
                  ScrollViewer.CanContentScroll="False"
                  VirtualizingPanel.ScrollUnit="Pixel"
                  VirtualizingPanel.VirtualizationMode="Recycling">
-            <ListBox.Resources>
-                <Style TargetType="extension:SmoothScrollViewer"
-                       BasedOn="{StaticResource ScrollViewerStyle}" />
-            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0,0,30">
@@ -105,7 +101,7 @@
 
                             </Grid>
                         </Border>
-                        <Image Grid.Column="0"
+                        <!--<Image Grid.Column="0"
                                Height="200"
                                Width="200"
                                Source="{Binding LocalPicUrl}"
@@ -121,13 +117,24 @@
                                     </VisualBrush.Visual>
                                 </VisualBrush>
                             </Image.OpacityMask>
-                        </Image>
+                        </Image>-->
+                        <Border CornerRadius="8"
+                                Margin="20,0,0,0"
+                                Width="200"
+                                Height="200"
+                                VerticalAlignment="Top">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                            RenderOptions.BitmapScalingMode="LowQuality" />
+                            </Border.Background>
+                        </Border>
                         <StackPanel Grid.Column="1"
                                     Margin="30,0,0,0">
                             <TextBlock Text="{Binding Title}"
                                        FontWeight="Bold"
                                        FontSize="20"
-                                       Foreground="{DynamicResource DefaultForgeground}" />
+                                       Foreground="{DynamicResource DefaultForgeground}" 
+                                       TextWrapping="WrapWithOverFlow"/>
                             <DockPanel LastChildFill="False">
                                 <TextBlock Foreground="Gray"
                                            FontWeight="Bold"

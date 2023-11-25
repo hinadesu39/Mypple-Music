@@ -143,7 +143,7 @@
                                   Margin="0,0,30,0"
                                   DockPanel.Dock="Right"
                                   IsChecked="{Binding IsChecked}"
-                                  Style="{StaticResource InfoButtonStyle}" />
+                                  Style="{StaticResource ToPopUpButtonStyle}" />
                     <Grid DockPanel.Dock="Right">
 
                         <Button Content="&#xe665;"

@@ -1,5 +1,4 @@
-﻿using MaterialDesignColors;
-using Mypple_Music.Common;
+﻿using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
@@ -11,14 +10,10 @@ using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using TagLib.Id3v2;
 
 namespace Mypple_Music.ViewModels
 {
@@ -34,7 +29,6 @@ namespace Mypple_Music.ViewModels
         private Guid playListId;
         private Music musicToEdit;
 
-
         /// <summary>
         /// 下载是否进行
         /// </summary>
@@ -43,47 +37,9 @@ namespace Mypple_Music.ViewModels
         public bool IsDownloading
         {
             get { return isDownloading; }
-            set { isDownloading = value; RaisePropertyChanged(); }
-        }
-
-        /// <summary>
-        /// PopUpButton弹起状态
-        /// </summary>
-        private bool isMainChecked;
-
-        public bool IsMainChecked
-        {
-            get { return isMainChecked; }
             set
             {
-                isMainChecked = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isSubChecked;
-
-        public bool IsSubChecked
-        {
-            get { return isSubChecked; }
-            set
-            {
-                isSubChecked = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// PopUpButton内容选中下标
-        /// </summary>
-        private int popUpSelectedIndex = -1;
-
-        public int PopUpSelectedIndex
-        {
-            get { return popUpSelectedIndex; }
-            set
-            {
-                popUpSelectedIndex = value;
+                isDownloading = value;
                 RaisePropertyChanged();
             }
         }
@@ -160,36 +116,12 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private ObservableCollection<string> mainPopUpList;
-
-        public ObservableCollection<string> MainPopUpList
-        {
-            get { return mainPopUpList; }
-            set
-            {
-                mainPopUpList = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> subPopUpList;
-
-        public ObservableCollection<string> SubPopUpList
-        {
-            get { return subPopUpList; }
-            set
-            {
-                subPopUpList = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
-        public DelegateCommand<Music> MusicToFocusCommand { get; set; }
+        public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
 
         public PlayListViewModel(
@@ -211,9 +143,24 @@ namespace Mypple_Music.ViewModels
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
-            MusicToFocusCommand = new DelegateCommand<Music>(MusicToFocus);
+            ExecuteCommand = new DelegateCommand<string>(Execute);
             DownloadAllCommand = new DelegateCommand(DownloadAllAsync);
-            Config();
+        }
+
+        //子弹出框命令
+        private void Execute(string obj)
+        {
+            switch (obj)
+            {
+                case "下载该歌曲":
+                    break;
+                case "从播放列表中移除":
+                    break;
+                case "更多":
+                    break;
+                case "属性":
+                    break;
+            }
         }
 
         private async void DownloadAllAsync()
@@ -224,11 +171,18 @@ namespace Mypple_Music.ViewModels
                 try
                 {
                     var res = await DownloadHelper.GetMusicAsync(m.AudioUrl);
-                    if (res != null)
+                    if (res == "Download Successful")
                     {
                         eventAggregator.SendMessage($"{m.Title} 下载成功！");
                     }
-
+                    else if (res == "File Exist")
+                    {
+                        eventAggregator.SendMessage($"{m.Title} 已存在！");
+                    }
+                    else
+                    {
+                        eventAggregator.SendMessage($"{m.Title} 下载失败,请稍后再试！");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -239,32 +193,11 @@ namespace Mypple_Music.ViewModels
             IsDownloading = false;
         }
 
-        private void MusicToFocus(Music music)
-        {
-            musicToEdit = music;
-        }
-
-        private void Config()
-        {
-            var mainMenu = new List<string>();
-            mainMenu.Add("添加歌曲");
-            mainMenu.Add("更多");
-            mainMenu.Add("属性");
-            MainPopUpList = new ObservableCollection<string>(mainMenu);
-
-            var subMenu = new List<string>();
-            subMenu.Add("下载该歌曲");
-            subMenu.Add("从播放列表中移除");
-            subMenu.Add("属性");
-            SubPopUpList = new ObservableCollection<string>(subMenu);
-
-        }
-
+        //主弹出框命令
         private async void Navigation(string obj)
         {
             if (isUpdating)
                 return;
-            IsMainChecked = false;
             DialogParameters parameter = new DialogParameters();
             switch (obj)
             {
@@ -289,10 +222,6 @@ namespace Mypple_Music.ViewModels
                 case "属性":
                     break;
             }
-
-            isUpdating = true;
-            PopUpSelectedIndex = -1;
-            isUpdating = false;
         }
 
         private void PauseOrPlay(Music music)
@@ -378,8 +307,6 @@ namespace Mypple_Music.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
-
-
             if (navigationContext.Parameters.ContainsKey("Id"))
             {
                 playListId = navigationContext.Parameters.GetValue<Guid>("Id");

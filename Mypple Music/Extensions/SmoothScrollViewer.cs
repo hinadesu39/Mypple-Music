@@ -38,7 +38,7 @@ namespace Mypple_Music.Extensions
             //为了避免重复，先结束掉上一个动画
             BeginAnimation(ScrollViewerExtension.VerticalOffsetProperty, null);
             DoubleAnimation Animation = new DoubleAnimation();
-            Animation.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
+            Animation.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut };
             Animation.From = VerticalOffset;
             Animation.To = ToValue;
             //动画速度

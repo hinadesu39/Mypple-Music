@@ -1,5 +1,6 @@
 ﻿using Mypple_Music.Events;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace Mypple_Music.Service
             {
                 request.AddFile("File",baseRequest.Parameter.ToString());
             }
+            //request.AddHeader("Authorization", "Bearer " + token);//增加的 JWT 认证
             RestResponse response = await client.ExecuteAsync(request);          
             return JsonConvert.DeserializeObject<Uri>(response.Content);
         }
