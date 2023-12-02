@@ -1,4 +1,5 @@
 # Mypple Music
+基于Prism,Material Design等组件在.Net6.0环境下开发
 ## 界面部分展示
 ![屏幕截图 2023-12-02 203007](https://github.com/hinadesu39/Mypple-Music/assets/131540418/0a58cee4-5a8d-4625-a791-bcfd5070853b)
 ![屏幕截图 2023-12-02 203109](https://github.com/hinadesu39/Mypple-Music/assets/131540418/54fc7a95-c756-421e-9354-c67fcde65de1)
