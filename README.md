@@ -9,3 +9,6 @@
 ![屏幕截图 2023-12-02 203202](https://github.com/hinadesu39/Mypple-Music/assets/131540418/981c5354-23f6-4f59-8b30-ff1efb0b9117)
 ![屏幕截图 2023-12-02 203209](https://github.com/hinadesu39/Mypple-Music/assets/131540418/ec710ec0-f5b7-4170-a895-48621bca7862)
 ![屏幕截图 2023-12-02 203238](https://github.com/hinadesu39/Mypple-Music/assets/131540418/f6329ae6-de9a-4b83-be64-58dd8888cbb8)
+
+##ToDo
+现在就听,浏览,广播，以及用户登录等功能暂无开发计划
