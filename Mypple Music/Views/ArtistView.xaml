@@ -20,9 +20,8 @@
             <RowDefinition Height="50" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Border BorderBrush="#22000000"
-                Margin="0,0.5,0,0"
-                BorderThickness="0,0,0,1"></Border>
+        <Border BorderBrush="#616161"
+                BorderThickness="0,0,0,0.3" />
 
         <TextBlock Text="艺人"
                    VerticalAlignment="Center"
@@ -37,9 +36,7 @@
                  Height="30"
                  HorizontalAlignment="Right"
                  Margin="0,0,80,0"
-                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}">
-
-        </TextBox>
+                 extension:TextBoxExtension.TextEmptyCommand="{Binding TextEmptyCommand}" />
         <Button HorizontalAlignment="Right"
                 Content="&#xe600;"
                 FontFamily="{StaticResource IconFont}"
@@ -53,8 +50,8 @@
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Border BorderBrush="#22000000"
-                    BorderThickness="0 0 1 0">
+            <Border BorderBrush="#616161"
+                    BorderThickness="0 0 0.3 0">
                 <StackPanel Margin="5,0,5,0">
                     <ListBox x:Name="menuBar"
                              Margin="0,10,0,0"
@@ -77,23 +74,6 @@
                                 <StackPanel Orientation="Horizontal"
                                             Background="Transparent"
                                             Height="50">
-                                    <!--<Image Height="40"
-                                           Width="40"
-                                           Source="{Binding LocalPicUrl}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="12,0,0,0">
-                                        <Image.OpacityMask>
-                                            <VisualBrush>
-                                                <VisualBrush.Visual>
-                                                    <Border Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                            Width="{Binding RelativeSource={RelativeSource AncestorType=Image},Path=ActualWidth}"
-                                                            CornerRadius="100"
-                                                            Background="White" />
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Image.OpacityMask>
-                                    </Image>-->
                                     <Border CornerRadius="50"
                                             Width="40"
                                             Height="40"

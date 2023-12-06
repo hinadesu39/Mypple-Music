@@ -1050,7 +1050,6 @@
             <!-- DataGrid 行样式 -->
             <Style x:Key="DataGridRowStyle"
                    TargetType="DataGridRow">
-
                 <Setter Property="Foreground"
                         Value="{DynamicResource DefaultForgeground}" />
                 <Setter Property="Template">
@@ -1140,25 +1139,11 @@
                    TargetType="DataGridColumnHeader"
                    BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                 <Setter Property="BorderThickness"
-                        Value="0,1,1,1" />
+                        Value="0,0,0.5,0.5" />
                 <Setter Property="BorderBrush"
-                        Value="#33000000" />
+                        Value="#616161" />
                 <Setter Property="MinHeight"
                         Value="40" />
-            </Style>
-
-            <!--RepeatButton样式-->
-            <Style x:Key="RepeatButtonTransparent"
-                   TargetType="{x:Type RepeatButton}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type RepeatButton}">
-                            <Rectangle Fill="{TemplateBinding Background}"
-                                       Height="{TemplateBinding Height}"
-                                       Width="{TemplateBinding Width}" />
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
             </Style>
 
             <!--音量按钮样式-->
@@ -1218,7 +1203,20 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+                       
+            <!--RepeatButton样式-->
+            <Style x:Key="RepeatButtonTransparent"
+                   TargetType="{x:Type RepeatButton}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Rectangle Fill="{TemplateBinding Background}"
+                                       Height="{TemplateBinding Height}"
+                                       Width="{TemplateBinding Width}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <!--音乐进度条-->
             <Style x:Key="MusicSliderStyle"
                    TargetType="{x:Type Slider}">
@@ -1282,7 +1280,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-
             </Style>
 
             <!--音量条样式-->
@@ -1539,7 +1536,6 @@
             <!--圆形按钮-->
             <Style x:Key="CornerRadiusButton"
                    TargetType="Button">
-
                 <Setter Property="Width"
                         Value="30" />
                 <Setter Property="Height"
@@ -1560,8 +1556,6 @@
                                     <Setter TargetName="border"
                                             Property="Background"
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
-
-
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1572,7 +1566,6 @@
             <!--圆形按钮WithFillColor-->
             <Style x:Key="CornerRadiusButtonWithFillColor"
                    TargetType="Button">
-
                 <Setter Property="Width"
                         Value="30" />
                 <Setter Property="Height"
@@ -1593,8 +1586,6 @@
                                     <Setter TargetName="border"
                                             Property="Background"
                                             Value="#33000000" />
-
-
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1681,23 +1672,6 @@
 
                                             </Grid>
                                         </Border>
-                                        <!--<Image x:Name="albumImg"
-                                               Source="{Binding LocalPicUrl}"
-                                               Width="200"
-                                               Height="200"
-                                               Margin="5,5,5,0"
-                                               RenderOptions.BitmapScalingMode="LowQuality">
-                                            <Image.OpacityMask>
-                                                <VisualBrush>
-                                                    <VisualBrush.Visual>
-                                                        <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Width}"
-                                                                Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=Height}"
-                                                                CornerRadius="8"
-                                                                Background="White" />
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Image.OpacityMask>
-                                        </Image>-->
                                         <Border CornerRadius="8"
                                                 Margin="5,5,5,0"
                                                 Width="200"
@@ -1941,6 +1915,164 @@
                                             Property="Text"
                                             Value="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},Path=Tag}" />
                                 </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!--精选推荐列表样式-->
+            <Style x:Key="RecommendListStyle"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <extension:SmoothScrollViewer.Template>
+                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                                           HorizontalAlignment="Right"
+                                                           Maximum="{TemplateBinding ScrollableHeight}"
+                                                           Orientation="Vertical"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           ViewportSize="{TemplateBinding ViewportHeight}"
+                                                           Value="{TemplateBinding VerticalOffset}"
+                                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </extension:SmoothScrollViewer.Template>
+                                <StackPanel Orientation="Horizontal"
+                                           IsItemsHost="True"
+                                           ScrollViewer.CanContentScroll="True"
+                                           Margin="0,0,10,0" />
+                            </extension:SmoothScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="RecommendListItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
+                                <StackPanel Width="450"
+                                            Height="600"
+                                            Margin="0,20,0,0">
+                                    <Grid>
+                                        <!--图片不存在时默认展示-->
+                                        <Border Width="45"
+                                                Height="60"
+                                                CornerRadius="8"
+                                                Background="LightGray"
+                                                Margin="5,5,5,0">
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="20"
+                                                                  ShadowDepth="0"
+                                                                  Color="Black"
+                                                                  Opacity="0.4" />
+                                            </Border.Effect>
+                                            <Grid>
+                                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                                           FontSize="80"
+                                                           FontWeight="ExtraBold"
+                                                           Text="&#xe64b;"
+                                                           Foreground="#33000000"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+
+                                            </Grid>
+                                        </Border>
+                                        <Border CornerRadius="8"
+                                                Margin="5,5,5,0"
+                                                Width="450"
+                                                Height="600">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Img}"
+                                                            RenderOptions.BitmapScalingMode="LowQuality" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <Rectangle x:Name="background"
+                                                   Fill="#88000000"
+                                                   Width="450"
+                                                   Height="600"
+                                                   RadiusX="8"
+                                                   Margin="5,5,5,0"
+                                                   RadiusY="8"
+                                                   Visibility="Hidden">
+                                        </Rectangle>
+                                        <Button x:Name="playButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xea82;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Visibility="Hidden"
+                                                Margin="20,10,10,10"
+                                                Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
+                                        <Button x:Name="infoButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xe719;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Right"
+                                                Margin="10,10,20,10"
+                                                Visibility="Hidden"
+                                                Command="{Binding DataContext.SettingAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
+                                    </Grid>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="15"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0"
+                                               Foreground="{DynamicResource DefaultForgeground}" />
+                                    <TextBlock Text="{Binding Artist}"
+                                               FontSize="12"
+                                               Foreground="#7E7E7E"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0" />
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="background"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="infoButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="playButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <!--<Setter Property="Tag"
+                                 Value="{Binding RelativeSource={RelativeSource Self},Path=}" />-->
+
+                                </Trigger>
+
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>

@@ -182,7 +182,7 @@ namespace Mypple_Music.ViewModels
         #endregion 属性
 
 
-        #region 命令
+        #region Command声明
         public DelegateCommand<MenuBar> NavigateCommand { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand ConfigCommand { get; set; }
@@ -198,7 +198,8 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> ChangeMusicCommand { get; set; }
         public DelegateCommand<Music> RemoveMusicCommand { set; get; }
         public DelegateCommand<object> ToPlayMusicCommand { get; set; }
-        #endregion 命令
+        public DelegateCommand ClearToPlayListCommand { set; get; }
+        #endregion Command声明
 
         #region 构造函数
         public MainViewModel(
@@ -228,6 +229,7 @@ namespace Mypple_Music.ViewModels
             ExecuteCommand = new DelegateCommand<string>(Execute);
             RemoveMusicCommand = new DelegateCommand<Music>(RemoveMusic);
             ToPlayMusicCommand = new DelegateCommand<object>(ToPlayMusic);
+            ClearToPlayListCommand = new DelegateCommand(ClearToPlayList);
 
             //创建播放器
             //PlayCommand = new DelegateCommand(Play);
@@ -296,6 +298,15 @@ namespace Mypple_Music.ViewModels
                     }
                 );
         }
+        #endregion 构造函数
+
+        /// <summary>
+        /// 清空待播列表
+        /// </summary>
+        private void ClearToPlayList()
+        {
+            ToPlayList.Clear();
+        }
 
         /// <summary>
         /// 双击待播列表播放音乐
@@ -324,7 +335,7 @@ namespace Mypple_Music.ViewModels
             ToPlayList.Remove(music);
         }
 
-        #endregion 构造函数
+        
 
         /// <summary>
         /// 上一首或下一首
@@ -429,9 +440,9 @@ namespace Mypple_Music.ViewModels
                     //改变歌曲播放状态
                     if (Player.Music != null)
                         Player.Music.Status = Music.PlayStatus.StopPlay;
-                    InitPlay(ToPlayList[PlayIndex]);
+                    if(ToPlayList.Count != 0)
+                        InitPlay(ToPlayList[PlayIndex]);
                     Player.Music.Status = Music.PlayStatus.StartPlay;
-
                     break;
                 case PlayerModel.PlayMode.RepeatOne:
                     MediaElement.Position = TimeSpan.Zero;

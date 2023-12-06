@@ -43,8 +43,8 @@
             <ColumnDefinition Width="280" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border  BorderBrush="#22000000"
-                 BorderThickness="0 0 1 0">
+        <Border  BorderBrush="#616161"
+                 BorderThickness="0 0 0.3 0">
             <!--#region 左侧导航栏-->
             <Grid>
                 <Grid.RowDefinitions>
@@ -52,8 +52,8 @@
                     <RowDefinition />
                     <RowDefinition Height="50" />
                 </Grid.RowDefinitions>
-                <Border  BorderBrush="#22000000"
-                         BorderThickness="0 0 0 1" />
+                <Border  BorderBrush="#616161"
+                         BorderThickness="0 0 0 0.3" />
                 <!--logo-->
                 <StackPanel Orientation="Horizontal"
                             Margin="10,0,0,0">
@@ -62,7 +62,7 @@
                             FontWeight="Bold"
                             FontSize="20"
                             Style="{StaticResource MaterialDesignFlatLightButton}"
-                            ToolTip="MaterialDesignFlatLightButton"
+                            ToolTip="上一步"
                             Command="{Binding GoBackCommand}" />
                     <TextBlock FontFamily="{StaticResource IconFont}"
                                Text="&#xe64b;"
@@ -74,7 +74,6 @@
                                VerticalAlignment="Center"
                                Margin="10,0,0,0" />
                 </StackPanel>
-
                 <StackPanel Grid.Row="1"
                             Margin="10">
                     <!--搜索框-->
@@ -106,7 +105,6 @@
 
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-
                     </ListBox>
                     <!--#endregion 界面列表栏-->
                     <!--#region 资料库-->
@@ -152,10 +150,8 @@
                                             <TextBlock Text="{Binding Title}"
                                                        Margin="5,8" />
                                         </StackPanel>
-
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
-
                             </ListBox>
                         </StackPanel>
                     </Expander>
@@ -167,7 +163,6 @@
                         <Expander.Header>
                             <StackPanel Orientation="Horizontal"
                                         Background="Transparent">
-
                                 <materialDesign:PackIcon Kind="PlaylistMusic"
                                                          VerticalAlignment="Center"
                                                          Margin="10,8"
@@ -176,7 +171,6 @@
                                 <TextBlock Text="播放列表"
                                            Margin="5,8"
                                            VerticalAlignment="Center" />
-
                             </StackPanel>
                         </Expander.Header>
                         <StackPanel>
@@ -202,7 +196,6 @@
                                             <TextBlock Text="{Binding Title}"
                                                        Margin="5,8" />
                                         </StackPanel>
-
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
@@ -210,12 +203,11 @@
                     </Expander>
                     <!--#endregion 播放列表-->
                 </StackPanel>
-
                 <!--#region 用户信息-->
                 <Grid Grid.Row="2"
                       Margin="0,0,0,0">
-                    <Border BorderBrush="#22000000"
-                            BorderThickness="0 0.5 0 0"></Border>
+                    <Border BorderBrush="#616161"
+                            BorderThickness="0 0.3 0 0"></Border>
                     <StackPanel Orientation="Horizontal">
                         <Image Width="40"
                                Height="40"
@@ -233,7 +225,7 @@
                 </Grid>
                 <!--#endregion 用户信息-->
             </Grid>
-            <!--#endregion-->
+            <!--#endregion 左侧导航栏-->
         </Border>
 
         <!--#region 右侧主界面-->
@@ -244,13 +236,9 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-
                     <RowDefinition Height="145*" />
                 </Grid.RowDefinitions>
-                <Border  BorderBrush="#22000000"
-                         BorderThickness="0 0 0 0.5" />
-
-                <!--#region 顶部工具栏-->
+                <!--#region 播放器-->
                 <MediaElement x:Name="PlayMedia"
                               Visibility="Hidden"
                               LoadedBehavior="Manual">
@@ -264,12 +252,14 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MediaElement>
-                <!--#endregion 顶部工具栏-->
+                <!--#endregion 播放器-->
+
+                <!--#region 顶部菜单栏-->
                 <materialDesign:ColorZone x:Name="ColorZone"
                                           Mode="PrimaryMid"
                                           VerticalAlignment="Center"
+                                          Panel.ZIndex="1"
                                           materialDesign:ElevationAssist.Elevation="Dp4">
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="300*" />
@@ -278,7 +268,6 @@
                             <ColumnDefinition Width="180*" />
                             <ColumnDefinition Width="150*" />
                         </Grid.ColumnDefinitions>
-
                         <!--#region 播放功能按钮-->
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Left"
@@ -303,7 +292,6 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </ToggleButton>
-
                             <Button FontFamily="{StaticResource IconFont}"
                                     Content="&#xe800;"
                                     FontSize="20"
@@ -312,7 +300,6 @@
                                     ToolTip="上一首"
                                     Command="{Binding ChangeMusicCommand}"
                                     CommandParameter="Pre" />
-
                             <ToggleButton x:Name="PlayOrPauseButton"
                                           IsChecked="{Binding Player.Music.Status,Converter={StaticResource StatusToBool}}"
                                           Width="40"
@@ -341,7 +328,6 @@
                                     <i:EventTrigger EventName="Checked">
                                         <i:InvokeCommandAction Command="{Binding PlayModeChangedCommand}"
                                                                CommandParameter="RepeatOne" />
-
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="Unchecked">
                                         <i:InvokeCommandAction Command="{Binding PlayModeChangedCommand}"
@@ -349,13 +335,11 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </ToggleButton>
-
                         </StackPanel>
                         <!--#endregion 播放功能按钮-->
-
                         <!--#region 中间播放信息以及进度条-->
                         <Border Grid.Column="2"
-                                BorderBrush="#22000000"
+                                BorderBrush="#33000000"
                                 BorderThickness="3,2.5,3,2.5"
                                 CornerRadius="3">
                             <Grid>
@@ -363,31 +347,8 @@
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-
                                 <!--歌曲图片-->
                                 <Grid>
-                                    <Border x:Name="iconBorder"
-                                            CornerRadius="4,0,0,4"
-                                            Panel.ZIndex="1"
-                                            Background="Transparent">
-                                        <Image Grid.Column="0"
-                                               Source="{Binding Player.Music.LocalPicUrl}"
-                                               Height="55"
-                                               Width="55"
-                                               HorizontalAlignment="Left">
-                                            <!--切掉图片多余的角-->
-                                            <Image.OpacityMask>
-                                                <VisualBrush>
-                                                    <VisualBrush.Visual>
-                                                        <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                                                Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                                CornerRadius="4,0,0,4"
-                                                                Background="White" />
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Image.OpacityMask>
-                                        </Image>
-                                    </Border>
                                     <!--默认专辑图片-->
                                     <TextBlock FontFamily="{StaticResource IconFont}"
                                                Text="&#xe64b;"
@@ -396,8 +357,15 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center">
                                     </TextBlock>
+                                    <Border CornerRadius="4,0,0,4"
+                                            Width="55"
+                                            Height="55">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Player.Music.LocalPicUrl}"
+                                                        RenderOptions.BitmapScalingMode="LowQuality" />
+                                        </Border.Background>
+                                    </Border>
                                 </Grid>
-
                                 <!--歌曲信息-->
                                 <StackPanel Grid.Column="1">
                                     <TextBlock  d:Text="靴の花火"
@@ -572,6 +540,7 @@
                         <!--#endregion 最大最小化-->
                     </Grid>
                 </materialDesign:ColorZone>
+                <!--#endregion 顶部菜单栏-->
                 <md:Snackbar x:Name="Snackbar"
                              Grid.Row="2"
                              MessageQueue="{md:MessageQueue}"
@@ -630,7 +599,8 @@
                                         <Button Content="清空"
                                                 Style="{StaticResource TransParentButton}"
                                                 DockPanel.Dock="Right"
-                                                Margin="0,0,10,0" />
+                                                Margin="0,0,10,0"
+                                                Command="{Binding ClearToPlayListCommand}" />
 
                                     </DockPanel>
                                     <Border BorderBrush="#757575"
@@ -638,14 +608,15 @@
                                     <extension:ScrollingListBox x:Name="ToPlayList"
                                                                 Grid.Row="1"
                                                                 Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=80}"
-                                                                Margin="5,0,5,0"
+                                                                Margin="5,0,0,0"
                                                                 Style="{StaticResource MusicListStyle}"
                                                                 ItemsSource="{Binding ToPlayList}"
                                                                 ItemContainerStyle="{StaticResource MusicListBoxItemStyle}"
                                                                 ScrollViewer.VerticalScrollBarVisibility="Visible"
                                                                 VirtualizingPanel.ScrollUnit="Pixel"
                                                                 VirtualizingPanel.VirtualizationMode="Recycling"
-                                                                SelectedItem="{Binding Player.Music,Mode=OneWay}">
+                                                                SelectedItem="{Binding Player.Music,Mode=OneWay}"
+                                                                Foreground="{DynamicResource DefaultForgeground}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseDoubleClick">
                                                 <i:InvokeCommandAction Command="{Binding ToPlayMusicCommand}"
@@ -700,7 +671,6 @@
                                                                     CommandParameter="{Binding}"
                                                                     Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}" />
                                                         </Grid>
-
                                                         <StackPanel Margin="10,0,0,0"
                                                                     VerticalAlignment="Center">
                                                             <TextBlock Text="{Binding Title}"
@@ -725,13 +695,14 @@
                                     <ListBox x:Name="PlayHistory"
                                              Grid.Row="1"
                                              Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=80}"
-                                             Margin="5,0,5,0"
+                                             Margin="5,0,0,0"
                                              Style="{StaticResource MusicListStyle}"
                                              ItemsSource="{Binding HistoryPlayList}"
                                              ItemContainerStyle="{StaticResource MusicListBoxItemStyle}"
                                              ScrollViewer.VerticalScrollBarVisibility="Visible"
                                              VirtualizingPanel.ScrollUnit="Pixel"
-                                             VirtualizingPanel.VirtualizationMode="Recycling">
+                                             VirtualizingPanel.VirtualizationMode="Recycling"
+                                             Foreground="{DynamicResource DefaultForgeground}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectionChanged">
                                                 <i:InvokeCommandAction Command="{Binding NavigateCommand}"
@@ -763,9 +734,7 @@
                                                                            Foreground="#33000000"
                                                                            HorizontalAlignment="Center"
                                                                            VerticalAlignment="Center" />
-
                                                             </Border>
-                   
                                                             <Border CornerRadius="5"
                                                                     Width="45"
                                                                     Height="45">
@@ -775,7 +744,6 @@
                                                                 </Border.Background>
                                                             </Border>
                                                         </Grid>
-
                                                         <StackPanel Margin="10,0,0,0"
                                                                     VerticalAlignment="Center">
                                                             <TextBlock Text="{Binding Title}"

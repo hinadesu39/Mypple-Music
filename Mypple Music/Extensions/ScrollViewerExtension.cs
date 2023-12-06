@@ -45,7 +45,7 @@ namespace Mypple_Music.Extensions
 
         // 定义一个扩展方法 ScrollToVerticalOffsetWithAnimation
         public static void ScrollToVerticalOffsetWithAnimation(this ScrollViewer viewer, double offset, TimeSpan duration, IEasingFunction easingFunction)
-        {
+        {           
             // 创建一个 DoubleAnimation 对象
             var animation = new DoubleAnimation();
             animation.To = offset; // 设置目标的垂直偏移量

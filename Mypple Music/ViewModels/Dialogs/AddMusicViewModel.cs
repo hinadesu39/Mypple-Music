@@ -69,7 +69,6 @@ namespace Mypple_Music.ViewModels.Dialogs
             CancelCommand = new DelegateCommand(Cancel);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             Config();
-
         }
 
         private void TextEmpty()

@@ -27,9 +27,9 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Border BorderBrush="#22000000"
+        <Border BorderBrush="#616161"
                 Margin="0,0.5,0,0"
-                BorderThickness="0,0,0,1"></Border>
+                BorderThickness="0,0,0,0.3"></Border>
         <TextBox x:Name="SearchBox"
                  md:HintAssist.Hint="过滤"
                  md:TextFieldAssist.HasClearButton="True"
@@ -202,12 +202,13 @@
                   IsReadOnly="True"
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
+                  Style="{StaticResource MusicGrid}"
                   RowStyle="{StaticResource DataGridRowStyle}"
                   MinRowHeight="55"
                   CellStyle="{StaticResource DataGridCellStyle}"
                   VerticalAlignment="Top"
                   ScrollViewer.CanContentScroll="False"
-                  ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                               Command="{Binding SelectedMusicChangedCommand}"

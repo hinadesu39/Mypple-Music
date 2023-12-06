@@ -44,7 +44,6 @@ namespace Mypple_Music.Extensions
                         new CircleEase()
                     );
                 }
-
             }
         }
 

@@ -20,7 +20,6 @@ namespace Mypple_Music.ViewModels
         public static bool IsAlive;
         private static PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private MediaElement mediaElement;
-
         private ILyricService lyricService;
         private int musicIndex;
 

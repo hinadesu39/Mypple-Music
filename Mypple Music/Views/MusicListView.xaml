@@ -22,9 +22,9 @@
             <RowDefinition Height="50" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Border BorderBrush="#22000000"
+        <Border BorderBrush="#616161"
                 Margin="0,0.5,0,0"
-                BorderThickness="0,1,0,1"></Border>
+                BorderThickness="0,0,0,0.3"></Border>
 
         <TextBlock Text="歌曲"
                    VerticalAlignment="Center"

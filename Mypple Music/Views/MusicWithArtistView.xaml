@@ -21,8 +21,8 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Border BorderBrush="#22000000"
-                BorderThickness="0 0 0 1">
+        <Border BorderBrush="#616161"
+                BorderThickness="0 0 0 0.3">
             <DockPanel LastChildFill="False"
                        VerticalAlignment="Bottom">
                 <TextBlock d:Text="Aimer"

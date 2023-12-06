@@ -166,13 +166,15 @@ namespace Mypple_Music.ViewModels
                     await albumService.GetAlbumsByArtistIdAsync(Artist.Id)
                 );
                 CountOfAlbum = Albums.Count;
+                var count = 0;
                 foreach (var album in Albums)
                 {
                     album.MusicList = new ObservableCollection<Music>(
                         await musicService.GetMusicsByAlbumIdAsync(album.Id)
                     );
-                    CountOfMusic += album.MusicList.Count;
+                    count += album.MusicList.Count;
                 }
+                CountOfMusic = count;
                 AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
             }
         }
