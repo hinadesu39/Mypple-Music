@@ -13,5 +13,6 @@ namespace Mypple_Music.Service
         public string Route { set; get; }
         public string ContentType { set; get; } = "application/json";
         public object Parameter { set; get; }
+        public string Authorization { set; get; }
     }
 }

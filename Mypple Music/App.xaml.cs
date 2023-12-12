@@ -111,6 +111,7 @@ namespace Mypple_Music
             containerRegistry.Register<IArtistService, ArtistService>();
             containerRegistry.Register<IAlbumService, AlbumService>();
             containerRegistry.Register<IPlayListService, PlayListService>();
+            containerRegistry.Register<ILoginService, LoginService>();
 
             containerRegistry.RegisterForNavigation<NowToListenView, NowToListenViewModel>();
             containerRegistry.RegisterForNavigation<BroadcastView, BroadcastViewModel>();
@@ -129,6 +130,8 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<MusicWithArtistView, MusicWithArtistViewModel>();
             containerRegistry.RegisterForNavigation<AddMusicView, AddMusicViewModel>();
             containerRegistry.RegisterForNavigation<MusicWithAlbumView, MusicWithAlbumViewModel>();
+            containerRegistry.RegisterForNavigation<LoginView, LoginViewModel>();
+            containerRegistry.RegisterForNavigation<UserCenterView, UserCenterViewModel>();
 
         }
     }

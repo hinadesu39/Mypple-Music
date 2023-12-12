@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
+using System.Diagnostics;
 
 namespace Mypple_Music.Extensions
 {
@@ -45,7 +46,8 @@ namespace Mypple_Music.Extensions
 
         // 定义一个扩展方法 ScrollToVerticalOffsetWithAnimation
         public static void ScrollToVerticalOffsetWithAnimation(this ScrollViewer viewer, double offset, TimeSpan duration, IEasingFunction easingFunction)
-        {           
+        {
+            //viewer.BeginAnimation(VerticalOffsetProperty, null);
             // 创建一个 DoubleAnimation 对象
             var animation = new DoubleAnimation();
             animation.To = offset; // 设置目标的垂直偏移量
@@ -53,6 +55,7 @@ namespace Mypple_Music.Extensions
             animation.EasingFunction = easingFunction; // 设置缓动函数
                                                        // 将动画应用到 VerticalOffsetProperty 上
             viewer.BeginAnimation(VerticalOffsetProperty, animation);
+            
         }
     }
 }

@@ -42,8 +42,6 @@ namespace Mypple_Music.ViewModels
             set { playIndex = value; }
         }
 
-
-
         //原始清单
         private ObservableCollection<Music> playList;
 
@@ -108,9 +106,9 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private UserDto userDto;
+        private SimpleUser userDto;
 
-        public UserDto UserDto
+        public SimpleUser UserDto
         {
             get { return userDto; }
             set
@@ -335,8 +333,6 @@ namespace Mypple_Music.ViewModels
             ToPlayList.Remove(music);
         }
 
-        
-
         /// <summary>
         /// 上一首或下一首
         /// </summary>
@@ -440,7 +436,7 @@ namespace Mypple_Music.ViewModels
                     //改变歌曲播放状态
                     if (Player.Music != null)
                         Player.Music.Status = Music.PlayStatus.StopPlay;
-                    if(ToPlayList.Count != 0)
+                    if (ToPlayList.Count != 0)
                         InitPlay(ToPlayList[PlayIndex]);
                     Player.Music.Status = Music.PlayStatus.StartPlay;
                     break;
@@ -580,31 +576,45 @@ namespace Mypple_Music.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void Execute(string obj)
         {
-            switch (obj)
+            if (obj == "LyricView" && MediaElement.Source != null)
             {
-                case "LyricView":
-                    if (MediaElement.Source != null)
-                    {
-                        NavigationParameters para = new NavigationParameters
-                        {
-                            { "LyricInfo", new LyricCreatedModel(Player.Music, MediaElement) }
-                        };
-                        RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
-                            obj.ToString(),
-                            para
-                        );
-                    }
-                    break;
-                case "Plus": //弹出添加播放列表对话框
-                    AddPlayList();
-                    break;
-                case "TurnOffLyricview":
-                    if (!IsLyricViewAlive && !isUpdating)
-                    {
-                        GoBack();
-                    }
-                    break;
+                NavigationParameters para = new NavigationParameters
+                {
+                    { "LyricInfo", new LyricCreatedModel(Player.Music, MediaElement) }
+                };
+                RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
+                    obj.ToString(),
+                    para
+                );
             }
+            else if (obj == "Plus") //弹出添加播放列表对话框
+            {
+                AddPlayList();
+            }
+            else if (obj == "TurnOffLyricview" && !IsLyricViewAlive && !isUpdating)
+            {
+                GoBack();
+            }
+            else if (obj == "登录/切换用户")
+            {
+                OpenLoginView();
+            }
+            else if (obj == "UserCenterView")
+            {
+                RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
+                    obj.ToString()
+                );
+            }
+        }
+
+        /// <summary>
+        /// 打开登录界面
+        /// </summary>
+        private async void OpenLoginView()
+        {
+            DialogParameters para = new DialogParameters();
+            var dialogRes = await dialog.ShowDialog("LoginView", para);
+            if (dialogRes.Result == ButtonResult.OK) { }
         }
 
         /// <summary>

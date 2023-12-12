@@ -132,7 +132,7 @@ namespace Mypple_Music.ViewModels.Dialogs
             }
         }
 
-        public async void OnDialogOpend(IDialogParameters parameters)
+        public async Task OnDialogOpendAsync(IDialogParameters parameters)
         {
             if (parameters.ContainsKey("Id"))
             {

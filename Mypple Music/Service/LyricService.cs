@@ -6,9 +6,7 @@ using System.Text.RegularExpressions;
 namespace Mypple_Music.Service
 {
     public class LyricService : ILyricService
-    {
-       
-
+    {      
         public ObservableCollection<Lyric> LyricSplitter(string lyric)
         {
             ObservableCollection<Lyric> Lyrics = new();

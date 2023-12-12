@@ -204,25 +204,49 @@
                     <!--#endregion 播放列表-->
                 </StackPanel>
                 <!--#region 用户信息-->
-                <Grid Grid.Row="2"
-                      Margin="0,0,0,0">
-                    <Border BorderBrush="#616161"
-                            BorderThickness="0 0.3 0 0"></Border>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="40"
-                               Height="40"
-                               Source="/Resource/myAvatar.PNG"
-                               Margin="20,0">
-                            <Image.Clip>
-                                <EllipseGeometry Center="20,20"
-                                                 RadiusX="20"
-                                                 RadiusY="20" />
-                            </Image.Clip>
-                        </Image>
-                        <TextBlock Text="小雏菊"
-                                   VerticalAlignment="Center" />
+                <Border BorderBrush="#616161"
+                        BorderThickness="0 0.3 0 0"
+                        Grid.Row="2" />
+                <md:PopupBox PlacementMode="TopAndAlignCentres"
+                             Grid.Row="2">
+                    <md:PopupBox.ToggleContent>
+                        <StackPanel Orientation="Horizontal"
+                                    Width="280">
+                            <Image Width="40"
+                                   Height="40"
+                                   Source="/Resource/myAvatar.PNG"
+                                   Margin="20,0">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="20,20"
+                                                     RadiusX="20"
+                                                     RadiusY="20" />
+                                </Image.Clip>
+                            </Image>
+                            <TextBlock Text="小雏菊"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </md:PopupBox.ToggleContent>
+                    <StackPanel Margin="5,0,5,0">
+                        <Button Content="登录/切换用户"
+                                Width="120"
+                                Height="30"
+                                Style="{StaticResource TransParentWithMouseOverButton}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
+                        <Button Content="注销"
+                                Width="120"
+                                Height="30"
+                                Style="{StaticResource TransParentWithMouseOverButton}" />
+                        <Button Content="用户中心"
+                                Width="120"
+                                Height="30"
+                                Style="{StaticResource TransParentWithMouseOverButton}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="UserCenterView" />
                     </StackPanel>
-                </Grid>
+
+                </md:PopupBox>
+
                 <!--#endregion 用户信息-->
             </Grid>
             <!--#endregion 左侧导航栏-->

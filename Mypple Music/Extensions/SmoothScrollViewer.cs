@@ -17,6 +17,7 @@ namespace Mypple_Music.Extensions
         //重写鼠标滚动事件
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
+            //this.ScrollToVerticalOffset(LastLocation);
             double WheelChange = e.Delta;
             //可以更改一次滚动的距离倍数 (WheelChange可能为正负数!)
             double newOffset = LastLocation - (WheelChange * 1.5);          
@@ -25,11 +26,12 @@ namespace Mypple_Music.Extensions
                 newOffset = 0;
             if (newOffset > ScrollableHeight)
                 newOffset = ScrollableHeight;
+
             this.ScrollToVerticalOffsetWithAnimation(
                 newOffset,
-                TimeSpan.FromSeconds(1),
+                TimeSpan.FromMilliseconds(800),
                 new CubicEase { EasingMode = EasingMode.EaseOut }
-            );
+            );                 
             LastLocation = newOffset;
             //告诉ScrollViewer我们已经完成了滚动
             e.Handled = true;

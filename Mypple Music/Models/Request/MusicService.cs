@@ -10,7 +10,7 @@ namespace Mypple_Music.Service
     public class MusicService : BaseService<Music>, IMusicService
     {
         private readonly HttpRestClient client;
-
+        private readonly string ServiceName = "/Music.Main/api/Musics";
         public MusicService(HttpRestClient client)
             : base(client, "/Music.Main/api/Musics")
         {
@@ -21,7 +21,7 @@ namespace Mypple_Music.Service
         {
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
-            request.Route = $"/Music.Main/api/Musics/GetByAlbumId?albumId={AlbumId}";
+            request.Route = $"{ServiceName}/GetByAlbumId?albumId={AlbumId}";
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }
@@ -30,7 +30,7 @@ namespace Mypple_Music.Service
         {
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
-            request.Route = $"/Music.Main/api/Musics/GetByArtistId?artistId={ArtistId}";
+            request.Route = $"{ServiceName}/GetByArtistId?artistId={ArtistId}";
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }
@@ -39,7 +39,7 @@ namespace Mypple_Music.Service
         {
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
-            request.Route = $"/Music.Main/api/Musics/GetByPlayListId?playListId={PlayListId}";
+            request.Route = $"{ServiceName}/GetByPlayListId?playListId={PlayListId}";
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }

@@ -1203,7 +1203,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-                       
+
             <!--RepeatButton样式-->
             <Style x:Key="RepeatButtonTransparent"
                    TargetType="{x:Type RepeatButton}">
@@ -1669,7 +1669,6 @@
                                                            Foreground="#33000000"
                                                            HorizontalAlignment="Center"
                                                            VerticalAlignment="Center" />
-
                                             </Grid>
                                         </Border>
                                         <Border CornerRadius="8"
@@ -1920,7 +1919,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <!--精选推荐列表样式-->
             <Style x:Key="RecommendListStyle"
                    TargetType="ListBox">
@@ -1958,9 +1957,9 @@
                                     </ControlTemplate>
                                 </extension:SmoothScrollViewer.Template>
                                 <StackPanel Orientation="Horizontal"
-                                           IsItemsHost="True"
-                                           ScrollViewer.CanContentScroll="True"
-                                           Margin="0,0,10,0" />
+                                            IsItemsHost="True"
+                                            ScrollViewer.CanContentScroll="True"
+                                            Margin="0,0,10,0" />
                             </extension:SmoothScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>

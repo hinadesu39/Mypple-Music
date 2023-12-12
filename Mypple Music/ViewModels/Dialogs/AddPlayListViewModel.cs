@@ -113,9 +113,9 @@ namespace Mypple_Music.ViewModels.Dialogs
             }
         }
 
-        public void OnDialogOpend(IDialogParameters parameters)
+        public Task OnDialogOpendAsync(IDialogParameters parameters)
         {
-            return;
+           return Task.CompletedTask;
         }
     }
 }

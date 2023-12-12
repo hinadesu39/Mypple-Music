@@ -47,7 +47,7 @@ namespace Mypple_Music.Extensions
             {
                 if (viewModel is IDialogHostAware aware)
                 {
-                    aware.OnDialogOpend(parameters);
+                    aware.OnDialogOpendAsync(parameters);
                 }
                 eventArgs.Session.UpdateContent(content);
             };

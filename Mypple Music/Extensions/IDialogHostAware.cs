@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Services.Dialogs;
+using System.Threading.Tasks;
 
 namespace Mypple_Music.Extensions
 {
@@ -14,7 +15,7 @@ namespace Mypple_Music.Extensions
         /// 打开过程中执行
         /// </summary>
         /// <param name="parameters"></param>
-        void OnDialogOpend(IDialogParameters parameters);
+        Task OnDialogOpendAsync(IDialogParameters parameters);
 
         /// <summary>
         /// 确定

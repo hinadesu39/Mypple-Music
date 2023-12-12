@@ -11,7 +11,9 @@
 
   <ItemGroup>
     <None Remove="Resource\iconfont.ttf" />
+    <None Remove="Resource\Login.png" />
     <None Remove="Resource\myAvatar.PNG" />
+    <None Remove="Resource\音乐.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +38,13 @@
     <Resource Include="Resource\iconfont.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\Login.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\myAvatar.PNG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\音乐.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

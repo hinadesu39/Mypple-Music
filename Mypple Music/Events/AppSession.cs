@@ -13,5 +13,7 @@ namespace Mypple_Music.Events
 
         public static bool IsDarkTheme;
 
+        public static string JWTToken;
+
     }
 }

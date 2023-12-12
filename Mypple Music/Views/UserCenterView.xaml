@@ -1,0 +1,344 @@
+﻿<UserControl x:Class="Mypple_Music.Views.Dialogs.UserCenterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Views.Dialogs"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             FontFamily="微软雅黑"
+             FontWeight="Bold">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <!--#region title-->
+        <StackPanel Orientation="Horizontal"
+                    Margin="0 10 0 10">
+            <Rectangle Width="4"
+                       RadiusX="2"
+                       RadiusY="2"
+                       Height="24"
+                       HorizontalAlignment="Left"
+                       Margin="5,0,0,0"
+                       Fill="{DynamicResource PrimaryHueLightBrush}" />
+            <TextBlock Text="我的信息"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="5,0,0,0" />
+        </StackPanel>
+        <!--#endregion-->
+        <Border BorderBrush="#616161"
+                BorderThickness="0 0 0 0.3" />
+        <!--#region 用户基本信息-->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Margin="0 10 0 0">
+            <!--#region 头像-->
+            <Grid Margin="20 0 20 0">
+                <!--图片不存在时默认展示-->
+                <Border Width="200"
+                        Height="200"
+                        CornerRadius="8"
+                        Background="LightGray"
+                        Margin="5,5,5,0">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="20"
+                                          ShadowDepth="0"
+                                          Color="Black"
+                                          Opacity="0.4" />
+                    </Border.Effect>
+                    <Grid>
+                        <TextBlock FontFamily="{StaticResource IconFont}"
+                                   FontSize="80"
+                                   FontWeight="ExtraBold"
+                                   Text="&#xe6a5;"
+                                   Foreground="#33000000"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+
+                    </Grid>
+                </Border>
+                <Border CornerRadius="8"
+                        Margin="5,5,5,0"
+                        Width="200"
+                        Height="200">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                    RenderOptions.BitmapScalingMode="LowQuality" />
+                    </Border.Background>
+                </Border>
+                <Button Content="&#xe67e;"
+                        Style="{StaticResource CornerRadiusButton}"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="28"
+                        FontWeight="Bold"
+                        Width="50"
+                        Height="50" />
+            </Grid>
+            <!--#endregion-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="用户名："
+                               HorizontalAlignment="Right"
+                               Margin="0 0 0 30" />
+                    <TextBlock Text="出生日期："
+                               HorizontalAlignment="Right"
+                               Margin="0 0 0 50" />
+                    <TextBlock Text="性别："
+                               HorizontalAlignment="Right"
+                               Margin="0 0 0 30" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBox Width="200"
+                             md:TextFieldAssist.HasClearButton="True" />
+                    <DatePicker Width="200"
+                                md:HintAssist.Hint="Pick Date"
+                                md:TextFieldAssist.HasClearButton="True"
+                                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                Margin="0 0 0 40" />
+                    <ListBox SelectedIndex="0"
+                             Style="{StaticResource MaterialDesignToolToggleListBox}"
+                             >
+                        <ListBox.ToolTip>
+                            <StackPanel>
+                                <md:PackIcon Kind="FaceManShimmer" />
+                                <md:PackIcon Kind="FaceWomanShimmer" />
+                                <md:PackIcon Kind="Helicopter" />
+                            </StackPanel>
+                        </ListBox.ToolTip>
+                        <ListBoxItem Content="男" />
+                        <ListBoxItem Content="女" />
+                        <ListBoxItem Content="武装直升机" />
+                    </ListBox>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <!--#endregion-->
+
+        <!--#region 敏感信息操作-->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2">
+            <StackPanel Orientation="Horizontal"
+                        Margin="30 0 0 0">
+                <Grid VerticalAlignment="Center"
+                      HorizontalAlignment="Center">
+                    <Grid RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <RotateTransform Angle="-45" />
+                        </Grid.RenderTransform>
+                        <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                              Fill="{DynamicResource PrimaryHueDarkBrush}">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0,80">
+                                        <ArcSegment Point="60,80"
+                                                    Size="30,30"
+                                                    SweepDirection="Clockwise"
+                                                    IsLargeArc="True" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                        <Border Opacity="0.4">
+                            <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                                  Fill="{DynamicResource PrimaryHueLightBrush}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0,80">
+                                            <ArcSegment Point="60,80"
+                                                        Size="30,30"
+                                                        SweepDirection="Counterclockwise"
+                                                        IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                        </Border>
+
+                    </Grid>
+                    <TextBlock Text="&#xe672;"
+                               FontFamily="{StaticResource IconFont}"
+                               FontSize="38"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="30 38 0 0" />
+                </Grid>
+                <StackPanel VerticalAlignment="Center"
+                            Margin="30 20 0 0">
+                    <TextBlock Text="我的邮箱"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0 0 0 10" />
+                    <TextBlock Text="绑定邮箱后即可使用邮箱登录"
+                               Foreground="#616161"
+                               Margin="0 0 0 10" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="绑定" />
+                        <TextBlock Text="更改邮箱 >"
+                                   VerticalAlignment="Center"
+                                   Foreground="#2196f3"
+                                   Margin="10 0 0 0" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="30 0 0 0">
+                <Grid VerticalAlignment="Center"
+                      HorizontalAlignment="Center">
+                    <Grid RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <RotateTransform Angle="-45" />
+                        </Grid.RenderTransform>
+                        <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                              Fill="{DynamicResource PrimaryHueDarkBrush}">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0,80">
+                                        <ArcSegment Point="60,80"
+                                                    Size="30,30"
+                                                    SweepDirection="Clockwise"
+                                                    IsLargeArc="True" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                        <Border Opacity="0.4">
+                            <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                                  Fill="{DynamicResource PrimaryHueLightBrush}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0,80">
+                                            <ArcSegment Point="60,80"
+                                                        Size="30,30"
+                                                        SweepDirection="Counterclockwise"
+                                                        IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                        </Border>
+
+                    </Grid>
+                    <TextBlock Text="&#xe61a;"
+                               FontFamily="{StaticResource IconFont}"
+                               FontSize="38"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="30 38 0 0" />
+                </Grid>
+                <StackPanel VerticalAlignment="Center"
+                            Margin="30 20 0 0">
+                    <TextBlock Text="我的手机"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0 0 0 10" />
+                    <TextBlock Text="绑定手机后即可使用手机登录"
+                               Foreground="#616161"
+                               Margin="0 0 0 10" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="绑定" />
+                        <TextBlock Text="更改手机 >"
+                                   VerticalAlignment="Center"
+                                   Foreground="#2196f3"
+                                   Margin="10 0 0 0" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="30 0 0 0">
+                <Grid VerticalAlignment="Center"
+                      HorizontalAlignment="Center">
+                    <Grid RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <RotateTransform Angle="-45" />
+                        </Grid.RenderTransform>
+                        <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                              Fill="{DynamicResource PrimaryHueDarkBrush}">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0,80">
+                                        <ArcSegment Point="60,80"
+                                                    Size="30,30"
+                                                    SweepDirection="Clockwise"
+                                                    IsLargeArc="True" />
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                        <Border Opacity="0.4">
+                            <Path Stroke="{DynamicResource PrimaryHueLightBrush}"
+                                  Fill="{DynamicResource PrimaryHueLightBrush}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0,80">
+                                            <ArcSegment Point="60,80"
+                                                        Size="30,30"
+                                                        SweepDirection="Counterclockwise"
+                                                        IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                        </Border>
+
+                    </Grid>
+                    <TextBlock Text="&#xe657;"
+                               FontFamily="{StaticResource IconFont}"
+                               FontSize="38"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="30 38 0 0" />
+                </Grid>
+                <StackPanel VerticalAlignment="Center"
+                            Margin="30 20 0 0">
+                    <TextBlock Text="我的密码"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Margin="0 0 0 10" />
+                    <TextBlock Text="绑定手机后即可使用手机登录"
+                               Foreground="#616161"
+                               Margin="0 0 0 10" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="绑定" />
+                        <TextBlock Text="更改手机 >"
+                                   VerticalAlignment="Center"
+                                   Foreground="#2196f3"
+                                   Margin="10 0 0 0" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+
+        </StackPanel>
+        <!--#endregion-->
+
+        <!--#region 操作按钮-->
+        <DockPanel LastChildFill="False"
+                   Grid.Row="3"
+                   Margin="0 0 0 10">
+            <Button Content="返回"
+                    DockPanel.Dock="Right"
+                    Width="150"
+                    Margin="0 0 30 0" />
+            <Button Content="保存"
+                    DockPanel.Dock="Right"
+                    Width="150"
+                    Margin="0 0 30 0" />
+        </DockPanel>
+        <!--#endregion-->
+    </Grid>
+</UserControl>

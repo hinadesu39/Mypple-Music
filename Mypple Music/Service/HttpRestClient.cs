@@ -43,6 +43,10 @@ namespace Mypple_Music.Service
             {
                 request.AddJsonBody(baseRequest.Parameter);
             }
+            if(baseRequest.Authorization != null)
+            {
+                request.AddHeader("Authorization", $"Bearer {baseRequest.Authorization}");
+            }
             RestResponse response = await client.ExecuteAsync(request);          
             return JsonConvert.DeserializeObject<T>(response.Content);
 

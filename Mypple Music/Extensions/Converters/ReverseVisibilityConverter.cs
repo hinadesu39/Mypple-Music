@@ -15,7 +15,7 @@ namespace Mypple_Music.Extensions.Converters
         {
             if((Visibility)value == Visibility.Visible)
             {
-                return Visibility.Hidden;
+                return Visibility.Collapsed;
             }
             else
             {
