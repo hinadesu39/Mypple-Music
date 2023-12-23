@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Service
 {
-    public interface ILoginService
+    public interface ILoginService:IBaseService<SimpleUser>
     {
         Task<ApiResponse<string?>> LoginByEmailAndPwd(LoginByEmailAndPwdRequest req);
         Task<ApiResponse<string?>> LoginByPhoneAndPwd(LoginByPhoneAndPwdRequest req);
@@ -21,5 +21,10 @@ namespace Mypple_Music.Service
         Task<ApiResponse<string?>> SendCodeByEmail(SendCodeRequest req);
         Task<ApiResponse<string?>> ChangePasswordWithCode(ChangePasswordWithCodeRequest req);
         Task<SimpleUser> GetUserInfo();
+        Task<ApiResponse<SimpleUser?>> UpdateUserInfo(UpdateUserInfoRequest req);
+        Task<ApiResponse<string?>> ConfirmPhone(string phoneNumber);
+        Task<ApiResponse<string?>> ConfirmEmail(string email);
+        Task<ApiResponse<string?>> ChangeEmail(ChangePhoneOrEmailRequest req);
+        Task<ApiResponse<string?>> ChangePhoneNum(ChangePhoneOrEmailRequest req);
     }
 }

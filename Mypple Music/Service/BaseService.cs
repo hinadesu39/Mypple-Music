@@ -53,9 +53,14 @@ namespace Mypple_Music.Service
             return res;
         }
 
-        public Task UploadAsync(string url)
+        public async Task<string?> UploadAsync(string url)
         {
-            throw new NotImplementedException();
+            var client = new RestClient();
+            var request = new RestRequest("http://localhost/FileService/api/UpLoader/Upload", Method.Post);
+            request.AlwaysMultipartFormData = true;
+            request.AddFile("file", url);
+            RestResponse response = await client.ExecuteAsync(request);
+            return response.Content.Replace("\"", "");
         }
     }
 }

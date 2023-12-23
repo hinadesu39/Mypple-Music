@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Service
 {
-    public class LoginService : ILoginService
+    public class LoginService : BaseService<SimpleUser>, ILoginService
     {
         private readonly HttpRestClient client;
         private readonly string ServiceName = "/IdentityService/api/Login";
 
-        public LoginService(HttpRestClient client)
+        public LoginService(HttpRestClient client):base(client,"")
         {
             this.client = client;
         }
@@ -119,6 +119,60 @@ namespace Mypple_Music.Service
             request.Method = RestSharp.Method.Post;
             request.Route = $"{ServiceName}/ChangePasswordWithCode";
             request.Parameter = req;
+            var res = await client.ExecuteAsync<ApiResponse<string?>>(request);
+            return res;
+        }
+
+        public async Task<ApiResponse<SimpleUser?>> UpdateUserInfo(UpdateUserInfoRequest req)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Post;
+            request.Route = $"{ServiceName}/UpdateUserInfo";
+            request.Parameter = req;
+            request.Authorization = AppSession.JWTToken;
+            var res = await client.ExecuteAsync<ApiResponse<SimpleUser?>>(request);
+            return res;
+        }
+
+        public async Task<ApiResponse<string?>> ConfirmPhone(string phoneNumber)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Post;
+            request.Route = $"{ServiceName}/ConfirmPhone/?phoneNumber={phoneNumber}";
+            request.Parameter = phoneNumber;
+            request.Authorization = AppSession.JWTToken;
+            var res = await client.ExecuteAsync<ApiResponse<string?>>(request);
+            return res;
+        }
+
+        public async Task<ApiResponse<string?>> ConfirmEmail(string email)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Post;
+            request.Route = $"{ServiceName}/ConfirmEmail/?email={email}";
+            request.Authorization = AppSession.JWTToken;
+            var res = await client.ExecuteAsync<ApiResponse<string?>>(request);
+            return res;
+        }
+
+        public async Task<ApiResponse<string?>> ChangeEmail(ChangePhoneOrEmailRequest req)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Post;
+            request.Route = $"{ServiceName}/ChangeEmail";
+            request.Parameter = req;
+            request.Authorization = AppSession.JWTToken;
+            var res = await client.ExecuteAsync<ApiResponse<string?>>(request);
+            return res;
+        }
+
+        public async Task<ApiResponse<string?>> ChangePhoneNum(ChangePhoneOrEmailRequest req)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Post;
+            request.Route = $"{ServiceName}/ChangePhoneNum";
+            request.Parameter = req;
+            request.Authorization = AppSession.JWTToken;
             var res = await client.ExecuteAsync<ApiResponse<string?>>(request);
             return res;
         }

@@ -118,18 +118,6 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private string userAvatar;
-
-        public string UserAvatar
-        {
-            get { return userAvatar; }
-            set
-            {
-                userAvatar = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private bool isLyricViewAlive;
 
         public bool IsLyricViewAlive
@@ -578,10 +566,8 @@ namespace Mypple_Music.ViewModels
         {
             if (obj == "LyricView" && MediaElement.Source != null)
             {
-                NavigationParameters para = new NavigationParameters
-                {
-                    { "LyricInfo", new LyricCreatedModel(Player.Music, MediaElement) }
-                };
+                NavigationParameters para = new NavigationParameters();
+                para.Add("LyricInfo", new LyricCreatedModel(Player.Music, MediaElement));
                 RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                     obj.ToString(),
                     para
@@ -601,9 +587,21 @@ namespace Mypple_Music.ViewModels
             }
             else if (obj == "UserCenterView")
             {
+                NavigationParameters para = new NavigationParameters();
+                para.Add("User", UserDto);
+                para.Add("journal", journal);
                 RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
-                    obj.ToString()
+                    obj.ToString(),
+                    Callback =>
+                    {
+                        journal = Callback.Context.NavigationService.Journal;
+                    }, para
                 );
+            }
+            else if (obj == "注销")
+            {
+                AppSession.JWTToken = "";
+                UserDto = null;
             }
         }
 
@@ -614,7 +612,13 @@ namespace Mypple_Music.ViewModels
         {
             DialogParameters para = new DialogParameters();
             var dialogRes = await dialog.ShowDialog("LoginView", para);
-            if (dialogRes.Result == ButtonResult.OK) { }
+            if (dialogRes.Result == ButtonResult.OK)
+            {
+                if (dialogRes.Parameters.ContainsKey("User"))
+                {
+                    UserDto = dialogRes.Parameters.GetValue<SimpleUser>("User");
+                }
+            }
         }
 
         /// <summary>

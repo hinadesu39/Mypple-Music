@@ -11,6 +11,7 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Emit;
@@ -24,11 +25,13 @@ namespace Mypple_Music.ViewModels.Dialogs
 {
     public class LoginViewModel : BindableBase, IDialogHostAware
     {
-        private Regex regex = new Regex(@"^\d{11}$");
-        private ILoginService loginService { get; set; }
+        public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        private Regex regex = new Regex(@"^\d{11}$");    
         private readonly IEventAggregator aggregator;
-        private static PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
+        private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private DateTime autoStartingActionCountdownStart;
+
+        private ILoginService loginService { get; set; }
         public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
@@ -40,9 +43,48 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
             this.loginService = loginService;
             this.aggregator = aggregator;
+
+            SaveCommand = new DelegateCommand(Save);
+            CancelCommand = new DelegateCommand(Cancel);
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            ChangeTransitionerSlideCommand = new DelegateCommand<string>(ChangeTransitionerSlide);
+            SendCodeCommand = new DelegateCommand<string>(SendCode);
+
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsRemember")))
+            {
+                Account = ConfigurationManager.AppSettings.Get("Account");
+                Password = ConfigurationManager.AppSettings.Get("Password");
+            }
         }
 
         #region 绑定的属性
+
+        private bool isRemember = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsRemember"));
+        public bool IsRemember
+        {
+            get { return isRemember; }
+            set
+            {
+                isRemember = value;
+                RaisePropertyChanged();
+                config.AppSettings.Settings["IsRemember"].Value = isRemember.ToString();
+                config.Save();
+            }
+        }
+
+        private bool isAutoLogin = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsAutoLogin"));
+        public bool IsAutoLogin
+        {
+            get { return isAutoLogin; }
+            set
+            {
+                isAutoLogin = value;
+                RaisePropertyChanged();
+                config.AppSettings.Settings["IsAutoLogin"].Value = IsAutoLogin.ToString();
+                config.Save();
+            }
+        }
+
         private bool isLoginEnable = true;
 
         public bool IsLoginEnable
@@ -142,13 +184,6 @@ namespace Mypple_Music.ViewModels.Dialogs
 
         public async Task OnDialogOpendAsync(IDialogParameters parameters)
         {
-            SaveCommand = new DelegateCommand(Save);
-            CancelCommand = new DelegateCommand(Cancel);
-            ExecuteCommand = new DelegateCommand<string>(Execute);
-            ChangeTransitionerSlideCommand = new DelegateCommand<string>(ChangeTransitionerSlide);
-            SendCodeCommand = new DelegateCommand<string>(SendCode);
-
-
             while (await Timer.WaitForNextTickAsync())
             {
                 if (!ShowSendButton)
@@ -160,12 +195,13 @@ namespace Mypple_Music.ViewModels.Dialogs
                         ShowSendButton = true;
                     Debug.WriteLine(span.Seconds);
                 }
-
             }
         }
 
         private async void SendCode(string obj)
         {
+            if (obj == string.Empty)
+                return;
             autoStartingActionCountdownStart = DateTime.Now;
             ShowSendButton = false;
 
@@ -223,7 +259,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                 }
                 else
                 {
-                    aggregator.SendMessage(res.Result.ToString(), "Login");
+                    aggregator.SendMessage(res.Message, "Login");
                 }
                 IsRegisterEnable = true;
             }
@@ -247,7 +283,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                     if (user != null)
                     {
                         DialogParameters parameters = new DialogParameters();
-                        parameters.Add("Value", user);
+                        parameters.Add("User", user);
                         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, parameters));
                     }
                 }
@@ -284,6 +320,12 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+            Timer.Dispose();
+            if (IsRemember)
+            {
+                config.AppSettings.Settings["Account"].Value = Account ?? "".ToString();
+                config.AppSettings.Settings["Password"].Value = Password ?? "".ToString();
+            }
         }
 
         /// <summary>
@@ -317,16 +359,24 @@ namespace Mypple_Music.ViewModels.Dialogs
                 if (user != null)
                 {
                     DialogParameters parameters = new DialogParameters();
-                    parameters.Add("Value", user);
+                    parameters.Add("User", user);
                     DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, parameters));
                 }
             }
             else
             {
                 aggregator.SendMessage(res.Message, "Login");
+                AppSession.JWTToken = "";
             }
 
             IsLoginEnable = true;
+            if (IsRemember)
+            {
+                config.AppSettings.Settings["Account"].Value = Account.ToString();
+                config.AppSettings.Settings["Password"].Value = Password.ToString();
+                config.AppSettings.Settings["JWTToken"].Value = AppSession.JWTToken;
+                config.Save();
+            }
         }
     }
 }

@@ -173,7 +173,7 @@
                                     Content="发送验证码"
                                     Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
+                           
                             <Button Style="{StaticResource MaterialDesignPaperLightButton}"
                                     Content="{Binding RestartCountdownText,Mode=OneWay}"
                                     Visibility="{Binding ElementName=SendButton,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
@@ -200,6 +200,7 @@
                                 Command="{Binding ChangeTransitionerSlideCommand}"
                                 CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
+                    <TextBlock Text="{Binding RestartCountdownText}" />
                 </StackPanel>
             </md:TransitionerSlide>
             <!--#endregion-->

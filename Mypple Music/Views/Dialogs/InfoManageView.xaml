@@ -1,0 +1,308 @@
+﻿<UserControl x:Class="Mypple_Music.Views.Dialogs.InfoManageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Views.Dialogs"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
+             xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:validate="clr-namespace:Mypple_Music.Extensions.Validators"
+             mc:Ignorable="d"
+             d:DesignHeight="350"
+             d:DesignWidth="600"
+             Width="600"
+             Height="350">
+    <UserControl.Resources>
+        <converter:ReverseVisibilityConverter x:Key="ReverseVisibility" />
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <md:Snackbar x:Name="InfoManageSnackBar"
+                     Panel.ZIndex="1"
+                     MessageQueue="{md:MessageQueue}"
+                     Grid.ColumnSpan="2" />
+        <Image Source="/Resource/Info.png"
+               Width="200"
+               Height="200"
+               HorizontalAlignment="Left"
+               Margin="30" />
+        <Button Grid.Column="1"
+                FontFamily="{StaticResource IconFont}"
+                Content="&#xeca0;"
+                Foreground="#242424"
+                FontSize="15"
+                FontWeight="Light"
+                Style="{StaticResource TransParentButton}"
+                ToolTip="关闭"
+                Margin="10"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Command="{Binding CancelCommand}" />
+        <md:Transitioner Grid.Column="1"
+                         SelectedIndex="{Binding SelectedIndex}">
+            <!--#region 绑定邮箱-->
+            <md:TransitionerSlide>
+                <StackPanel Margin="20 0 30 0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="邮箱绑定"
+                               FontSize="25"
+                               FontWeight="ExtraBold" />
+                    <TextBox x:Name="BingdingEmail"
+                             md:HintAssist.Hint="请输入邮箱号"
+                             md:TextFieldAssist.HasClearButton="True"
+                             Margin="10" 
+                             Text="{Binding Account}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox md:HintAssist.Hint="请输入验证码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 Width="120"
+                                 Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}" />
+                        <Grid Width="120">
+                            <!--raised button with progress, useful to auto dismiss/accept something-->
+                            <Button x:Name="SendButton"
+                                    Command="{Binding ConfirmCommand}"
+                                    CommandParameter="{Binding ElementName=BingdingEmail,Path=Text}"
+                                    Content="发送验证码"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <Button Style="{StaticResource MaterialDesignPaperLightButton}"
+                                    Content="{Binding RestartCountdownText,Mode=OneWay}"
+                                    Visibility="{Binding ElementName=SendButton,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
+                                    IsEnabled="False" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="绑定"
+                                Width="120"
+                                Margin="10,0,30,0"
+                                IsEnabled="{Binding IsButtonEnable}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                        <Button Content="返回"
+                                Width="120"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+            <!--#endregion-->
+
+            <!--#region 绑定手机-->
+            <md:TransitionerSlide>
+                <StackPanel Margin="20 0 30 0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="手机绑定"
+                               FontSize="25"
+                               FontWeight="ExtraBold" />
+                    <TextBox x:Name="BingdingPhone"
+                             md:HintAssist.Hint="请输入手机号"
+                             md:TextFieldAssist.HasClearButton="True"
+                             Margin="10"
+                             Text="{Binding Account}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox md:HintAssist.Hint="请输入验证码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 Width="120"
+                                 Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}" />
+                        <Grid Width="120">
+                            <!--raised button with progress, useful to auto dismiss/accept something-->
+                            <Button x:Name="SendButton2"
+                                    Command="{Binding ConfirmCommand}"
+                                    CommandParameter="{Binding ElementName=BingdingPhone,Path=Text}"
+                                    Content="发送验证码"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <Button Style="{StaticResource MaterialDesignPaperLightButton}"
+                                    Content="{Binding RestartCountdownText,Mode=OneWay}"
+                                    Visibility="{Binding ElementName=SendButton2,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
+                                    IsEnabled="False" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="绑定"
+                                Width="120"
+                                Margin="10,0,30,0"
+                                IsEnabled="{Binding IsButtonEnable}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                        <Button Content="返回"
+                                Width="120"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+            <!--#endregion-->
+
+            <!--#region 更改邮箱-->
+            <md:TransitionerSlide>
+                <StackPanel Margin="20 0 30 0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="邮箱验证"
+                               FontSize="25"
+                               FontWeight="ExtraBold" />
+                    <TextBox x:Name="confirmEmail"
+                             md:HintAssist.Hint="请输入邮箱号"
+                             md:TextFieldAssist.HasClearButton="True"
+                             Text="{Binding UserDTO.Email}"
+                             Margin="10"
+                             IsEnabled="False" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox md:HintAssist.Hint="请输入验证码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 Width="120"
+                                 Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}" />
+                        <Grid Width="120">
+                            <!--raised button with progress, useful to auto dismiss/accept something-->
+                            <Button x:Name="SendButton1"
+                                    Command="{Binding SendCodeCommand}"
+                                    CommandParameter="{Binding ElementName=confirmEmail,Path=Text}"
+                                    Content="发送验证码"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <Button Style="{StaticResource MaterialDesignPaperLightButton}"
+                                    Content="{Binding RestartCountdownText,Mode=OneWay}"
+                                    Visibility="{Binding ElementName=SendButton,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
+                                    IsEnabled="False" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="验证"
+                                Width="120"
+                                Margin="10,0,30,0"
+                                IsEnabled="{Binding IsButtonEnable}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                        <Button Content="返回"
+                                Width="120"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+            <!--#endregion-->
+
+            <!--#region 更改手机-->
+            <md:TransitionerSlide>
+                <StackPanel Margin="20 0 30 0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="手机验证"
+                               FontSize="25"
+                               FontWeight="ExtraBold" />
+                    <TextBox x:Name="confirmPhone"
+                             md:HintAssist.Hint="请输入手机号"
+                             Margin="10"
+                             Text="{Binding UserDTO.PhoneNumber}"
+                             IsEnabled="False" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox md:HintAssist.Hint="请输入验证码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 Width="120"
+                                 Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}" />
+                        <Grid Width="120">
+                            <!--raised button with progress, useful to auto dismiss/accept something-->
+                            <Button x:Name="SendButton3"
+                                    Command="{Binding SendCodeCommand}"
+                                    CommandParameter="{Binding ElementName=confirmPhone,Path=Text}"
+                                    Content="发送验证码"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <Button Style="{StaticResource MaterialDesignPaperLightButton}"
+                                    Content="{Binding RestartCountdownText,Mode=OneWay}"
+                                    Visibility="{Binding ElementName=SendButton3,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
+                                    IsEnabled="False" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="验证"
+                                Width="120"
+                                Margin="10,0,30,0"
+                                IsEnabled="{Binding IsButtonEnable}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                        <Button Content="返回"
+                                Width="120"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+            <!--#endregion-->
+
+            <!--#region 修改密码-->
+            <md:TransitionerSlide>
+                <StackPanel Margin="20,0,30,0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="修改密码"
+                               FontSize="25"
+                               FontWeight="ExtraBold"
+                               Margin="0 0 0 20" />
+                    <TextBox x:Name="forgetAccount"
+                             md:HintAssist.Hint="请输入绑定的手机号/邮箱..."
+                             md:TextFieldAssist.HasClearButton="True"
+                             Margin="10">
+                        <TextBox.Text>
+                            <Binding Path="Account"
+                                     Mode="TwoWay"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <!--<Binding.ValidationRules>
+                                    <validate:NotEmptyValidate ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>-->
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox md:HintAssist.Hint="请输入验证码..."
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 Width="120"
+                                 Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}" />
+                        <Grid Width="120">
+                            <!--raised button with progress, useful to auto dismiss/accept something-->
+                            <Button x:Name="Send4Button"
+                                    Command="{Binding SendCodeCommand}"
+                                    Content="发送验证码"
+                                    CommandParameter="{Binding ElementName=forgetAccount,Path=Text}"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Visibility="{Binding ShowSendButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <Button Style="{StaticResource MaterialDesignPaperLightButton}"
+                                    Content="{Binding RestartCountdownText,Mode=OneWay}"
+                                    Visibility="{Binding ElementName=Send4Button,Path=Visibility, Converter={StaticResource ReverseVisibility}}"
+                                    IsEnabled="False" />
+                        </Grid>
+                    </StackPanel>
+                    <PasswordBox md:HintAssist.Hint="请输入新的密码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 extension:PasswordExtension.PasswordContent="{Binding Password,Mode=TwoWay}" />
+                    <PasswordBox md:HintAssist.Hint="再输入一次密码"
+                                 md:TextFieldAssist.HasClearButton="True"
+                                 Margin="10"
+                                 extension:PasswordExtension.PasswordContent="{Binding PasswordConfirm,Mode=TwoWay}" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0 10 0 0">
+                        <Button Content="修改密码"
+                                Width="120"
+                                Margin="10,0,30,0"
+                                IsEnabled="{Binding IsButtonEnable}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" />
+                        <Button Content="返回"
+                                Width="120"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+            <!--#endregion-->
+        </md:Transitioner>
+    </Grid>
+</UserControl>

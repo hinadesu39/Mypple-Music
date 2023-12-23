@@ -4,12 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Mypple_Music.Views.Dialogs"
+             xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignWidth="900"
              FontFamily="微软雅黑"
              FontWeight="Bold">
+    <UserControl.Resources>
+        <converter:GenderToListBoxIndexConverter x:Key="GenderToListBoxIndex" />
+        <converter:HasContentConverter x:Key="HasContent" />
+        <!--<converter:ReverseVisibilityConverter x:Key="ReverseVisi"-->
+    </UserControl.Resources>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -70,7 +76,7 @@
                         Width="200"
                         Height="200">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                        <ImageBrush ImageSource="{Binding UserDto.LocalPicUrl}"
                                     RenderOptions.BitmapScalingMode="LowQuality" />
                     </Border.Background>
                 </Border>
@@ -80,10 +86,11 @@
                         FontSize="28"
                         FontWeight="Bold"
                         Width="50"
-                        Height="50" />
+                        Height="50"
+                        Command="{Binding ChangeAvatarCommand}"/>
             </Grid>
             <!--#endregion-->
-            <Grid>
+            <Grid Margin="0 30 0 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition />
@@ -91,25 +98,27 @@
                 <StackPanel>
                     <TextBlock Text="用户名："
                                HorizontalAlignment="Right"
-                               Margin="0 0 0 30" />
+                               Margin="0 5 0 30" />
                     <TextBlock Text="出生日期："
                                HorizontalAlignment="Right"
-                               Margin="0 0 0 50" />
+                               Margin="0 -5 0 50" />
                     <TextBlock Text="性别："
                                HorizontalAlignment="Right"
-                               Margin="0 0 0 30" />
+                               Margin="0 -5 0 30" />
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <TextBox Width="200"
-                             md:TextFieldAssist.HasClearButton="True" />
+                             md:TextFieldAssist.HasClearButton="True"
+                             Text="{Binding UserDto.UserName}" />
                     <DatePicker Width="200"
                                 md:HintAssist.Hint="Pick Date"
                                 md:TextFieldAssist.HasClearButton="True"
                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                Margin="0 0 0 40" />
-                    <ListBox SelectedIndex="0"
-                             Style="{StaticResource MaterialDesignToolToggleListBox}"
-                             >
+                                Margin="0 0 0 40"
+                                
+                                SelectedDate="{Binding UserDto.BirthDay}" />
+                    <ListBox SelectedIndex="{Binding UserDto.Gender,Converter={StaticResource GenderToListBoxIndex}}"
+                             Style="{StaticResource MaterialDesignToolToggleListBox}">
                         <ListBox.ToolTip>
                             <StackPanel>
                                 <md:PackIcon Kind="FaceManShimmer" />
@@ -185,11 +194,19 @@
                                Foreground="#616161"
                                Margin="0 0 0 10" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="绑定" />
-                        <TextBlock Text="更改邮箱 >"
-                                   VerticalAlignment="Center"
-                                   Foreground="#2196f3"
-                                   Margin="10 0 0 0" />
+                        <Button x:Name="BingdingEmail"
+                                Content="绑定"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="BingdingEmail"
+                                IsEnabled="{Binding UserDto.Email,Converter={StaticResource HasContent}}" />
+                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                                Content="更改邮箱 >"
+                                Foreground="#2196f3"
+                                FontWeight="Bold"
+                                FontSize="12"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ChangeEmail"
+                                IsEnabled="{Binding ElementName=BingdingEmail,Path=IsEnabled,Converter={StaticResource InvertBooleanConverter}}" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -249,11 +266,19 @@
                                Foreground="#616161"
                                Margin="0 0 0 10" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="绑定" />
-                        <TextBlock Text="更改手机 >"
-                                   VerticalAlignment="Center"
-                                   Foreground="#2196f3"
-                                   Margin="10 0 0 0" />
+                        <Button x:Name="BingdingPhone"
+                                Content="绑定"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="BingdingPhone"
+                                IsEnabled="{Binding UserDto.PhoneNumber,Converter={StaticResource HasContent}}" />
+                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                                Content="更改手机 >"
+                                Foreground="#2196f3"
+                                FontWeight="Bold"
+                                FontSize="12"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ChangePhone"
+                                IsEnabled="{Binding ElementName=BingdingPhone,Path=IsEnabled,Converter={StaticResource InvertBooleanConverter}}" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -309,15 +334,13 @@
                                FontSize="18"
                                FontWeight="Bold"
                                Margin="0 0 0 10" />
-                    <TextBlock Text="绑定手机后即可使用手机登录"
+                    <TextBlock Text="验证以修改密码"
                                Foreground="#616161"
                                Margin="0 0 0 10" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="绑定" />
-                        <TextBlock Text="更改手机 >"
-                                   VerticalAlignment="Center"
-                                   Foreground="#2196f3"
-                                   Margin="10 0 0 0" />
+                        <Button Content="修改"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ChangePassword" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -333,11 +356,13 @@
             <Button Content="返回"
                     DockPanel.Dock="Right"
                     Width="150"
-                    Margin="0 0 30 0" />
+                    Margin="0 0 30 0" 
+                    Command="{Binding GoBackCommand}"/>
             <Button Content="保存"
                     DockPanel.Dock="Right"
                     Width="150"
-                    Margin="0 0 30 0" />
+                    Margin="0 0 30 0"
+                    Command="{Binding SaveCommand}"/>
         </DockPanel>
         <!--#endregion-->
     </Grid>

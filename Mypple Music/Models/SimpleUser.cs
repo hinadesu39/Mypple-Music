@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Mypple_Music.Common;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Models
 {
-    public class SimpleUser: BindableBase
+    public class SimpleUser : BindableBase
     {
         private string userName;
 
@@ -33,11 +34,36 @@ namespace Mypple_Music.Models
             set { password = value; RaisePropertyChanged(); }
         }
 
-        private string userAvatar;
-        public string UserAvatar
+        private Uri? userAvatar;
+        public Uri? UserAvatar
         {
             get { return userAvatar; }
-            set { userAvatar = value; RaisePropertyChanged(); }
+            set
+            {
+                userAvatar = value;
+                CreateLocalPicAsync(userAvatar);
+                RaisePropertyChanged();
+            }
+        }
+
+        private DateTime birthDay;
+
+        public DateTime BirthDay
+        {
+            get { return birthDay; }
+            set { birthDay = value; RaisePropertyChanged(); }
+        }
+
+
+        private string localPicUrl;
+        public string LocalPicUrl
+        {
+            get { return localPicUrl; }
+            set
+            {
+                localPicUrl = value;
+                RaisePropertyChanged();
+            }
         }
 
         private string email;
@@ -56,6 +82,9 @@ namespace Mypple_Music.Models
             set { phoneNumber = value; RaisePropertyChanged(); }
         }
 
-
+        async void CreateLocalPicAsync(Uri picUrl)
+        {
+            LocalPicUrl = await DownloadHelper.GetImageAsync(picUrl);
+        }
     }
 }

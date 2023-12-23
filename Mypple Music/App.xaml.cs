@@ -15,6 +15,7 @@ using Mypple_Music.Extensions;
 using DryIoc;
 using Mypple_Music.Events;
 using Serilog;
+using Mypple_Music.Common;
 
 namespace Mypple_Music
 {
@@ -30,6 +31,12 @@ namespace Mypple_Music
         protected override Window CreateShell()
         {
             return Container.Resolve<MainView>();
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            config.Save();
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         protected override void OnInitialized()
@@ -66,26 +73,12 @@ namespace Mypple_Music
             }
             Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
 
-            base.OnInitialized();
-            //var dialog = Container.Resolve<IDialogService>();
-            //dialog.ShowDialog("LoginView", callBack =>
-            //{
-            //    if (callBack.Result == ButtonResult.OK)
-            //    {
-            //        var service = App.Current.MainWindow.DataContext as IConfigureService;
-            //        if (service != null)
-            //        {
-            //            service.Configure();
-            //        }
-            //        base.OnInitialized();
-            //    }
-            //    else
-            //    {
-            //        Environment.Exit(0);
-            //        return;
-            //    }
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsAutoLogin")))
+            {
+                AppSession.JWTToken = ConfigurationManager.AppSettings.Get("JWTToken")!;
+            }
 
-            //});
+            base.OnInitialized();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -132,6 +125,7 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<MusicWithAlbumView, MusicWithAlbumViewModel>();
             containerRegistry.RegisterForNavigation<LoginView, LoginViewModel>();
             containerRegistry.RegisterForNavigation<UserCenterView, UserCenterViewModel>();
+            containerRegistry.RegisterForNavigation<InfoManageView, InfoManageViewModel>();
 
         }
     }

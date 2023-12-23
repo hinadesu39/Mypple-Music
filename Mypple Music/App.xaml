@@ -6,7 +6,8 @@
                         xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                        xmlns:prism="http://prismlibrary.com/">
+                        xmlns:prism="http://prismlibrary.com/"
+                        Exit="Application_Exit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

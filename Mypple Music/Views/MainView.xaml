@@ -31,6 +31,7 @@
         <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
         <converter:BoolToStringConverter x:Key="BoolToString" />
         <converter:StatusToBoolConverter x:Key="StatusToBool" />
+        <converter:EmptyStringConverter x:Key="EmptyString" />
         <converter:ValueConverter x:Key="value" />
     </Window.Resources>
     <i:Interaction.Triggers>
@@ -212,18 +213,32 @@
                     <md:PopupBox.ToggleContent>
                         <StackPanel Orientation="Horizontal"
                                     Width="280">
-                            <Image Width="40"
-                                   Height="40"
-                                   Source="/Resource/myAvatar.PNG"
-                                   Margin="20,0">
-                                <Image.Clip>
-                                    <EllipseGeometry Center="20,20"
-                                                     RadiusX="20"
-                                                     RadiusY="20" />
-                                </Image.Clip>
-                            </Image>
-                            <TextBlock Text="小雏菊"
-                                       VerticalAlignment="Center" />
+                            <Grid>
+                                <Ellipse  Width="40"
+                                          Height="40"
+                                          Fill="#bdbdbd" />
+                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                           Text="&#xe6a5;"
+                                           FontSize="20"
+                                           Foreground="#242424"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                                <Image Width="40"
+                                       Height="40"
+                                       Source="{Binding UserDto.LocalPicUrl}"
+                                       Margin="20,0">
+                                    <Image.Clip>
+                                        <EllipseGeometry Center="20,20"
+                                                         RadiusX="20"
+                                                         RadiusY="20" />
+                                    </Image.Clip>
+                                </Image>
+                            </Grid>
+                            <TextBlock Text="{Binding UserDto.UserName,Converter={StaticResource EmptyString},ConverterParameter=未登录,FallbackValue=未登录}"
+                                       FontSize="15"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource DefaultForgeground}"/>
+
                         </StackPanel>
                     </md:PopupBox.ToggleContent>
                     <StackPanel Margin="5,0,5,0">
@@ -236,7 +251,9 @@
                         <Button Content="注销"
                                 Width="120"
                                 Height="30"
-                                Style="{StaticResource TransParentWithMouseOverButton}" />
+                                Style="{StaticResource TransParentWithMouseOverButton}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
                         <Button Content="用户中心"
                                 Width="120"
                                 Height="30"
