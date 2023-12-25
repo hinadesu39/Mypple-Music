@@ -34,14 +34,5 @@ namespace Mypple_Music.Service
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }
-
-        public async Task<Music[]> GetMusicsByPlayListIdAsync(Guid PlayListId)
-        {
-            BaseRequest request = new BaseRequest();
-            request.Method = RestSharp.Method.Get;
-            request.Route = $"{ServiceName}/GetByPlayListId?playListId={PlayListId}";
-            var res = await client.ExecuteAsync<Music[]>(request);
-            return res;
-        }
     }
 }

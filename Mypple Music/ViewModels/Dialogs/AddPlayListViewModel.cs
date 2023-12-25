@@ -22,6 +22,7 @@ namespace Mypple_Music.ViewModels.Dialogs
 {
     public class AddPlayListViewModel : BindableBase, IDialogHostAware
     {
+        #region Property
         public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
@@ -62,14 +63,18 @@ namespace Mypple_Music.ViewModels.Dialogs
                 RaisePropertyChanged();
             }
         }
+        #endregion
 
+        #region Ctor
         public AddPlayListViewModel()
         {
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             SetPicCommand = new DelegateCommand(SetPic);
         }
+        #endregion
 
+        #region Command
         private void SetPic()
         {
             // 创建一个 OpenFileDialog 的实例
@@ -117,5 +122,6 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
            return Task.CompletedTask;
         }
+        #endregion
     }
 }

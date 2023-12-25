@@ -19,15 +19,17 @@ namespace Mypple_Music.ViewModels
 {
     public class UserCenterViewModel : NavigationViewModel
     {
+        #region Field
         private ILoginService loginService;
         private IRegionNavigationJournal journal;
         private readonly IDialogHostService dialog;
+        #endregion
 
+        #region Property
         public DelegateCommand ChangeAvatarCommand { set; get; }
         public DelegateCommand GoBackCommand { set; get; }
         public DelegateCommand SaveCommand { set; get; }
         public DelegateCommand<string> ExecuteCommand { set; get; }
-
 
         private SimpleUser userDto;
 
@@ -36,7 +38,9 @@ namespace Mypple_Music.ViewModels
             get { return userDto; }
             set { userDto = value; RaisePropertyChanged(); }
         }
+        #endregion
 
+        #region Ctor
         public UserCenterViewModel(IContainerProvider containerProvider, ILoginService loginService, IDialogHostService dialog) : base(containerProvider)
         {
             ChangeAvatarCommand = new DelegateCommand(ChangeAvatar);
@@ -46,7 +50,9 @@ namespace Mypple_Music.ViewModels
             this.loginService = loginService;
             this.dialog = dialog;
         }
+        #endregion
 
+        #region Command
         private async void Execute(string obj)
         {
             var selectedIndex = 0;
@@ -76,7 +82,6 @@ namespace Mypple_Music.ViewModels
             para.Add("User", UserDto);
             var dialogRes = await dialog.ShowDialog("InfoManageView", para);
         }
-
 
         private async void Save()
         {
@@ -134,5 +139,6 @@ namespace Mypple_Music.ViewModels
                 journal = navigationContext.Parameters.GetValue<IRegionNavigationJournal>("journal");
             }
         }
+        #endregion
     }
 }

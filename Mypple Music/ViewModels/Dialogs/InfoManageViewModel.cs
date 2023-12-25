@@ -24,14 +24,16 @@ namespace Mypple_Music.ViewModels.Dialogs
 {
     public class InfoManageViewModel : BindableBase, IDialogHostAware
     {
+        #region Field
         public string DialogHostName { get; set; } = "InfoManageView";
         private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private DateTime autoStartingActionCountdownStart;
         private readonly IEventAggregator aggregator;
         private Regex regex = new Regex(@"^\d{11}$");
+        private readonly ILoginService loginService;
+        #endregion
 
-
-        private ILoginService loginService { get; set; }
+        #region Poperty
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
         public DelegateCommand<string> SendCodeCommand { get; set; }
@@ -109,7 +111,9 @@ namespace Mypple_Music.ViewModels.Dialogs
             get { return isButtonEnable; }
             set { isButtonEnable = value; RaisePropertyChanged(); }
         }
+        #endregion
 
+        #region Ctor
         public InfoManageViewModel(ILoginService loginService, IEventAggregator aggregator)
         {
             this.loginService = loginService;
@@ -119,7 +123,9 @@ namespace Mypple_Music.ViewModels.Dialogs
             ExecuteCommand = new DelegateCommand<string>(Execute);
             ConfirmCommand = new DelegateCommand<string>(Confirm);
         }
+        #endregion
 
+        #region Command
         private async void Confirm(string obj)
         {
             if (obj == string.Empty)
@@ -231,8 +237,12 @@ namespace Mypple_Music.ViewModels.Dialogs
 
         private async void SendCode(string obj)
         {
-            if (obj == string.Empty)
+            if (obj.Trim() == string.Empty)
+            {
+                aggregator.SendMessage("字段不可为空！", "InfoView");
                 return;
+            }
+                
             autoStartingActionCountdownStart = DateTime.Now;
             ShowSendButton = false;
 
@@ -251,6 +261,7 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+            Timer.Dispose();
         }
 
         public async Task OnDialogOpendAsync(IDialogParameters parameters)
@@ -276,5 +287,6 @@ namespace Mypple_Music.ViewModels.Dialogs
                 }
             }
         }
+        #endregion
     }
 }

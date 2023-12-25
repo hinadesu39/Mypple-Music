@@ -24,7 +24,8 @@
             </Button>
         </DataTemplate>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                  Margin="10 0 0 0">
         <Grid Background="{DynamicResource DefaultBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />

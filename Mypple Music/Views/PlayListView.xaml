@@ -135,7 +135,7 @@
                             Style="{StaticResource IconWithContentButton}"
                             Width="100"
                             Height="35" />
-
+                   
                     <md:PopupBox DockPanel.Dock="Right"
                                  Margin="0,0,30,0">
                         <md:PopupBox.ToggleContent>
@@ -151,14 +151,14 @@
                                     Height="30"
                                     Style="{StaticResource TransParentWithMouseOverButton}"
                                     Command="{Binding NavigateCommand}"
-                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}"/>
+                                    CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
                             <Button Content="删除播放列表"
                                     Width="120"
                                     Height="30"
                                     Style="{StaticResource TransParentWithMouseOverButton}"
                                     Command="{Binding NavigateCommand}"
                                     CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
-                            <Button Content="更多"
+                            <Button Content="添加至播放列表"
                                     Width="120"
                                     Height="30"
                                     Style="{StaticResource TransParentWithMouseOverButton}"
@@ -360,7 +360,27 @@
                 <DataGridTemplateColumn  Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <md:PopupBox DockPanel.Dock="Right">
+                            <Button Click="Button_Click"
+                                    Content="···"
+                                    Style="{StaticResource MaterialDesignFlatLightButton}"
+                                    DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},Path=DataContext}">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="添加歌曲" />
+                                        <MenuItem Header="删除播放列表" />
+                                        <MenuItem Header="添加至播放列表"
+                                                  ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.ItemContainerStyle>
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                    <Setter Property="Header"
+                                                            Value="{Binding Title}" />
+                                                </Style>
+                                            </MenuItem.ItemContainerStyle>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <!--<md:PopupBox DockPanel.Dock="Right">
                                 <md:PopupBox.ToggleContent>
                                     <StackPanel Orientation="Horizontal">
                                         <md:PackIcon Kind="DotsHorizontal"
@@ -389,7 +409,7 @@
                                             CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
                                 </StackPanel>
 
-                            </md:PopupBox>
+                            </md:PopupBox>-->
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

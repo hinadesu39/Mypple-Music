@@ -19,15 +19,18 @@ namespace Mypple_Music.ViewModels
 {
     public class AlbumViewModel : NavigationViewModel
     {
-        private IAlbumService albumService;
-        private IMusicService musicService;
+        #region Field
+        private readonly IAlbumService albumService;
+        private readonly IMusicService musicService;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
         private bool isUpdating;
         private ObservableCollection<Album> tempAlbum;
+        #endregion
 
+        #region Property
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -70,7 +73,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Album> PlayCommand { get; set; }
         public DelegateCommand<Album> SettingAlbumCommand { get; set; }
         public DelegateCommand<Album> SelectedAlbumChangedCommand { get; set; }
+        #endregion
 
+        #region Ctor
         public AlbumViewModel(
             IContainerProvider containerProvider,
             IAlbumService albumService,
@@ -93,10 +98,12 @@ namespace Mypple_Music.ViewModels
             SettingAlbumCommand = new(SettingAlbum);
             GetAlbumList();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
-            if(tempAlbum != null)
+            if (tempAlbum != null)
             {
                 AlbumList = tempAlbum;
             }
@@ -113,7 +120,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedAlbumList =  AlbumList.Where(a => a.Title.Contains(para));
+                var searchedAlbumList = AlbumList.Where(a => a.Title.Contains(para));
                 if (searchedAlbumList != null)
                 {
                     AlbumList = new ObservableCollection<Album>(searchedAlbumList);
@@ -174,10 +181,10 @@ namespace Mypple_Music.ViewModels
 
         async void GetAlbumList()
         {
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
+            UpdateLoading(true);
             AlbumList = new ObservableCollection<Album>(await albumService.GetAllAsync());
             tempAlbum = AlbumList;
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
+            UpdateLoading(false);
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
@@ -188,8 +195,9 @@ namespace Mypple_Music.ViewModels
             isUpdating = false;
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext) 
-        {           
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
         }
+        #endregion    
     }
 }

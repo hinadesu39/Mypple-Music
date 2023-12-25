@@ -17,10 +17,13 @@ namespace Mypple_Music.ViewModels
 {
     public class MusicWithArtistViewModel : NavigationViewModel
     {
+        #region Field
         private bool isUpdating;
-        private IMusicService musicService;
-        private IAlbumService albumService;
+        private readonly IMusicService musicService;
+        private readonly IAlbumService albumService;
+        #endregion
 
+        #region Property
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -92,7 +95,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> FocuseChangedCommand { set; get; }
         public DelegateCommand ChangeVisibilityCommand { set; get; }
+        #endregion
 
+        #region Ctor
         public MusicWithArtistViewModel(
             IContainerProvider containerProvider,
             IAlbumService albumService,
@@ -114,7 +119,13 @@ namespace Mypple_Music.ViewModels
                     IsSearchVisible = true;
             });
         }
+        #endregion
 
+        #region Command
+        /// <summary>
+        /// 保证整个列表选中歌曲的唯一性
+        /// </summary>
+        /// <param name="music"></param>
         private void FocuseChanged(Music music)
         {
             if (isUpdating)
@@ -161,7 +172,7 @@ namespace Mypple_Music.ViewModels
             if (navigationContext.Parameters.ContainsKey("Artist"))
             {
                 this.Artist = navigationContext.Parameters.GetValue<Artist>("Artist");
-                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
+                UpdateLoading(true);
                 Albums = new ObservableCollection<Album>(
                     await albumService.GetAlbumsByArtistIdAsync(Artist.Id)
                 );
@@ -175,7 +186,7 @@ namespace Mypple_Music.ViewModels
                     count += album.MusicList.Count;
                 }
                 CountOfMusic = count;
-                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
+                UpdateLoading(false);
             }
         }
 
@@ -185,5 +196,6 @@ namespace Mypple_Music.ViewModels
             CountOfAlbum = 0;
             CountOfMusic = 0;
         }
+        #endregion
     }
 }

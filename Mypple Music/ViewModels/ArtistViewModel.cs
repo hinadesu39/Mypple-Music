@@ -18,10 +18,13 @@ namespace Mypple_Music.ViewModels
 {
     public class ArtistViewModel : NavigationViewModel
     {
+        #region Field
         private IArtistService artistService;
         private readonly IRegionManager RegionManager;
         private ObservableCollection<Artist> tempArtist;
+        #endregion
 
+        #region Property
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -38,7 +41,6 @@ namespace Mypple_Music.ViewModels
             set { selectedArtistIndex = value; RaisePropertyChanged(); }
         }
 
-
         private ObservableCollection<Artist> artists;
 
         public ObservableCollection<Artist> Artists
@@ -54,7 +56,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Artist> NavigateCommand { get; set; }
+        #endregion
 
+        #region Ctor
         public ArtistViewModel(IContainerProvider containerProvider, IRegionManager regionManager, IArtistService artistService)
             : base(containerProvider)
         {
@@ -66,7 +70,9 @@ namespace Mypple_Music.ViewModels
             RegionManager = regionManager;
             Config();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
             if (tempArtist != null)
@@ -108,17 +114,17 @@ namespace Mypple_Music.ViewModels
                 RegionManager.Regions[PrismManager.ArtistRegionName].RequestNavigate(
                     "MusicWithArtistView",
                     para
-                );
-                
+                );            
             }
         }
 
         async void Config()
         {
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
+            UpdateLoading(true);
             Artists = new ObservableCollection<Artist>(await artistService.GetAllAsync());
             tempArtist = Artists;
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
+            UpdateLoading(false);
         }
+        #endregion
     }
 }

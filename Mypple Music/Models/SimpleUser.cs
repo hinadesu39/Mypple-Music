@@ -18,9 +18,9 @@ namespace Mypple_Music.Models
             set { userName = value; RaisePropertyChanged(); }
         }
 
-        private string gender;
+        private string? gender;
 
-        public string Gender
+        public string? Gender
         {
             get { return gender; }
             set { gender = value; RaisePropertyChanged(); }
@@ -46,9 +46,9 @@ namespace Mypple_Music.Models
             }
         }
 
-        private DateTime birthDay;
+        private DateTime? birthDay;
 
-        public DateTime BirthDay
+        public DateTime? BirthDay
         {
             get { return birthDay; }
             set { birthDay = value; RaisePropertyChanged(); }
@@ -66,17 +66,17 @@ namespace Mypple_Music.Models
             }
         }
 
-        private string email;
+        private string? email;
 
-        public string Email
+        public string? Email
         {
             get { return email; }
             set { email = value; RaisePropertyChanged(); }
         }
 
-        private string phoneNumber;
+        private string? phoneNumber;
 
-        public string PhoneNumber
+        public string? PhoneNumber
         {
             get { return phoneNumber; }
             set { phoneNumber = value; RaisePropertyChanged(); }

@@ -14,8 +14,9 @@ namespace Mypple_Music.ViewModels
 {
     public class SettingsViewModel : NavigationViewModel
     {
-        private readonly IRegionManager RegionManager;
+        private readonly IRegionManager regionManager;
         public DelegateCommand<MenuBar> NavigateCommand { get; set; }
+
         private ObservableCollection<MenuBar> menuBars;
 
         public ObservableCollection<MenuBar> MenuBars
@@ -31,17 +32,20 @@ namespace Mypple_Music.ViewModels
         public SettingsViewModel(IContainerProvider containerProvider, IRegionManager regionManager)
             : base(containerProvider)
         {
+            this.regionManager = regionManager;
+
             MenuBars = new ObservableCollection<MenuBar>();
-            CreateMenuBar();
+      
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
-            RegionManager = regionManager;
+
+            CreateMenuBar();
         }
 
         private void Navigate(MenuBar obj)
         {
             if (obj == null || string.IsNullOrEmpty(obj.NameSpace))
                 return;
-            RegionManager.Regions[PrismManager.SettingsiewRegionName].RequestNavigate(
+            regionManager.Regions[PrismManager.SettingsiewRegionName].RequestNavigate(
                 obj.NameSpace
             );
         }

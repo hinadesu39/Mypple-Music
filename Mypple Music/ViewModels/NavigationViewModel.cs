@@ -1,4 +1,5 @@
 ﻿using Mypple_Music.Events;
+using Mypple_Music.Extensions;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -37,12 +38,9 @@ namespace Mypple_Music.ViewModels
 
         }
 
-        //public void UpdateLoading(bool IsOpen)
-        //{
-        //    eventAggregator.UpdateLoading(new Common.Events.UpdateModel()
-        //    {
-        //        IsOpen = IsOpen
-        //    });
-        //}
+        public void UpdateLoading(bool IsOpen)
+        {
+            eventAggregator.UpdateLoading(IsOpen);
+        }
     }
 }

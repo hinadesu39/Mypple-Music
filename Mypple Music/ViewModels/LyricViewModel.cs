@@ -17,12 +17,15 @@ namespace Mypple_Music.ViewModels
 {
     public class LyricViewModel : NavigationViewModel
     {
+        #region Field
         public static bool IsAlive;
         private static PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private MediaElement mediaElement;
-        private ILyricService lyricService;
+        private readonly ILyricService lyricService;
         private int musicIndex;
+        #endregion
 
+        #region Property
         private string blurBackground;
 
         public string BlurBackground
@@ -84,7 +87,9 @@ namespace Mypple_Music.ViewModels
         }
 
         public DelegateCommand ClickSentenceCommand { set; get; }
+        #endregion
 
+        #region Ctor
         public LyricViewModel(IContainerProvider containerProvider, ILyricService lyricService)
             : base(containerProvider)
         {
@@ -109,7 +114,9 @@ namespace Mypple_Music.ViewModels
                     }
                 );
         }
+        #endregion
 
+        #region Command
         /// <summary>
         /// 点击歌词跳转对应播放部分
         /// </summary>
@@ -160,5 +167,6 @@ namespace Mypple_Music.ViewModels
         {
             //IsAlive = false;
         }
+        #endregion
     }
 }

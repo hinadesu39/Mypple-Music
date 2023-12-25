@@ -17,9 +17,12 @@ namespace Mypple_Music.ViewModels
 {
     public class MusicListViewModel : NavigationViewModel
     {
-        private IMusicService musicService;
+        #region Field
+        private readonly IMusicService musicService;
         private ObservableCollection<Music> tempMusic;
+        #endregion
 
+        #region Property
         private Music selectedMusic;
 
         public Music SelectedMusic
@@ -58,7 +61,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        #endregion
 
+        #region Ctor
         public MusicListViewModel(IContainerProvider containerProvider, IMusicService musicService)
             : base(containerProvider)
         {
@@ -69,7 +74,9 @@ namespace Mypple_Music.ViewModels
 
             Config();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
             if (tempMusic != null)
@@ -135,5 +142,6 @@ namespace Mypple_Music.ViewModels
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext) { }
+        #endregion
     }
 }

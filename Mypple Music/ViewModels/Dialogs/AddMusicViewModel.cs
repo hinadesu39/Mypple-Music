@@ -18,10 +18,13 @@ namespace Mypple_Music.ViewModels.Dialogs
 {
     public class AddMusicViewModel : BindableBase, IDialogHostAware
     {
-        private IMusicService musicService;
+        #region Field
+        private readonly IMusicService musicService;
         private ObservableCollection<Music> tempMusic;
         private Guid playListId;
+        #endregion
 
+        #region Property
         public string DialogHostName { get; set; }
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
@@ -33,9 +36,10 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
             get
             {
-                if(MusicList == null)
+                if (MusicList == null)
                     return false;
                 var selected = MusicList.Select(item => item.IsSelected).Distinct().ToList();
+                //如果当前选中状态集中状态只有一种返回该状态，有多状态则返回null
                 return selected.Count == 1 ? selected.Single() : (bool?)null;
             }
             set
@@ -59,7 +63,9 @@ namespace Mypple_Music.ViewModels.Dialogs
                 RaisePropertyChanged();
             }
         }
+        #endregion
 
+        #region Ctor
         public AddMusicViewModel(IMusicService musicService)
         {
             this.musicService = musicService;
@@ -70,7 +76,9 @@ namespace Mypple_Music.ViewModels.Dialogs
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             Config();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
             if (tempMusic != null)
@@ -85,6 +93,11 @@ namespace Mypple_Music.ViewModels.Dialogs
             MusicList = new ObservableCollection<Music>(searchedMusicList);
         }
 
+        /// <summary>
+        /// 选中或反选
+        /// </summary>
+        /// <param name="select"></param>
+        /// <param name="models"></param>
         private static void SelectAll(bool select, IEnumerable<Music> models)
         {
             foreach (var model in models)
@@ -139,5 +152,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                 playListId = parameters.GetValue<Guid>("Id");
             }
         }
+
+        #endregion
     }
 }

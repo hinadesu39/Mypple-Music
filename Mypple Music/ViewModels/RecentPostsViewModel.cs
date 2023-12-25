@@ -17,6 +17,7 @@ namespace Mypple_Music.ViewModels
 {
     public class RecentPostsViewModel : NavigationViewModel
     {
+        #region Field
         private IAlbumService albumService;
         private IMusicService musicService;
         private readonly IRegionManager RegionManager;
@@ -25,7 +26,9 @@ namespace Mypple_Music.ViewModels
         private IRegionNavigationJournal journal;
         private bool isUpdating;
         private ObservableCollection<Album> tempAlbum;
+        #endregion
 
+        #region Property
         private string title;
 
         public string Title
@@ -33,7 +36,6 @@ namespace Mypple_Music.ViewModels
             get { return title; }
             set { title = value; RaisePropertyChanged(); }
         }
-
 
         private bool isSearchVisible;
 
@@ -70,7 +72,7 @@ namespace Mypple_Music.ViewModels
                 RaisePropertyChanged();
             }
         }
-
+        
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Album> ConfirmAlbumCommand { get; set; }
@@ -78,6 +80,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Album> SettingAlbumCommand { get; set; }
         public DelegateCommand<Album> SelectedAlbumChangedCommand { get; set; }
 
+        #endregion
+
+        #region Ctor
         public RecentPostsViewModel(
             IContainerProvider containerProvider,
             IAlbumService albumService,
@@ -100,7 +105,9 @@ namespace Mypple_Music.ViewModels
             SettingAlbumCommand = new(SettingAlbum);
             GetRecentPostAlbumList();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
             if (tempAlbum != null)
@@ -181,10 +188,10 @@ namespace Mypple_Music.ViewModels
 
         async void GetRecentPostAlbumList()
         {
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
+            UpdateLoading(true);
             AlbumList = new ObservableCollection<Album>(await albumService.GetAlbumsByMusicPostOrderAsync());
             tempAlbum = AlbumList;
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
+            UpdateLoading(false);
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
@@ -198,5 +205,6 @@ namespace Mypple_Music.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
         }
+        #endregion
     }
 }

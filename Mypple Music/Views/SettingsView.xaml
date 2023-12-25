@@ -40,10 +40,14 @@
                          Margin="5,10,5,0"
                          ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
                          ItemsSource="{Binding MenuBars}"
-                         SelectedIndex="{Binding MenuBarsIndex}"
+                         SelectedIndex="1"
                          DockPanel.Dock="Top">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding NavigateCommand}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction Command="{Binding NavigateCommand}"
                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                         </i:EventTrigger>
@@ -57,13 +61,11 @@
                                 <TextBlock Text="{Binding Title}"
                                            Margin="5,8" />
                             </StackPanel>
-
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Border>
-            <ContentControl Grid.Column="1"
-                            Margin="10,0"
+            <ContentControl Grid.Column="1"                            
                             prism:RegionManager.RegionName="{x:Static extension:PrismManager.SettingsiewRegionName}" />
         </Grid>
     </Grid>

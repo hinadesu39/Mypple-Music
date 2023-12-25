@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -21,18 +22,20 @@ namespace Mypple_Music.ViewModels
 {
     public class MainViewModel : NavigationViewModel
     {
+        #region Field
         private bool isUpdating = false; //后台更新触发SelectionChanged后直接返回不执行命令
         public static MediaElement MediaElement;
-
         private readonly IPlayListService playListService;
+        private readonly ILoginService loginService;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
         private readonly ILogger logger;
         private IRegionNavigationJournal journal;
         private ObservableCollection<MenuBar> AllBars;
+        #endregion
 
-        #region 属性
+        #region Property
 
         private int playIndex;
 
@@ -165,13 +168,10 @@ namespace Mypple_Music.ViewModels
                 RaisePropertyChanged();
             }
         }
-        #endregion 属性
 
-
-        #region Command声明
         public DelegateCommand<MenuBar> NavigateCommand { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
-        public DelegateCommand ConfigCommand { get; set; }
+        public DelegateCommand InitCommand { get; set; }
         public DelegateCommand GoBackCommand { get; set; }
         public DelegateCommand GoForwardCommand { get; set; }
         public DelegateCommand UserCenterCommand { get; set; }
@@ -185,14 +185,15 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> RemoveMusicCommand { set; get; }
         public DelegateCommand<object> ToPlayMusicCommand { get; set; }
         public DelegateCommand ClearToPlayListCommand { set; get; }
-        #endregion Command声明
+        #endregion
 
-        #region 构造函数
+        #region Ctor
         public MainViewModel(
             IDialogHostService dialog,
             IRegionManager regionManager,
             IContainerProvider Container,
             IPlayListService playListService,
+            ILoginService loginService,
             ILogger logger
         )
             : base(Container)
@@ -203,13 +204,14 @@ namespace Mypple_Music.ViewModels
             this.RegionManager = regionManager;
             this.container = Container;
             this.playListService = playListService;
+            this.loginService = loginService;
             MenuBars = new ObservableCollection<MenuBar>();
             MusicInfoBars = new ObservableCollection<MenuBar>();
             PlayListBars = new ObservableCollection<MenuBar>();
             HistoryPlayList = new ObservableCollection<Music>();
 
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
-            ConfigCommand = new DelegateCommand(Config);
+            InitCommand = new DelegateCommand(Init);
             GoBackCommand = new DelegateCommand(GoBack);
             UserCenterCommand = new DelegateCommand(goUserCenterAsync);
             ExecuteCommand = new DelegateCommand<string>(Execute);
@@ -225,11 +227,6 @@ namespace Mypple_Music.ViewModels
             MusicProgressChangedCommand = new DelegateCommand(MusicProgressChanged);
             PlayModeChangedCommand = new DelegateCommand<string>(PlayModeChanged);
             ChangeMusicCommand = new DelegateCommand<string>(ChangeMusic);
-            //LoginOutCommand = new DelegateCommand(() =>
-            //{
-            //    App.LoginOut(Container);
-            //});
-            //this.dialog = dialog;
 
             //播放列表创建事件订阅
             eventAggregator
@@ -284,8 +281,9 @@ namespace Mypple_Music.ViewModels
                     }
                 );
         }
-        #endregion 构造函数
+        #endregion
 
+        #region Command
         /// <summary>
         /// 清空待播列表
         /// </summary>
@@ -601,6 +599,7 @@ namespace Mypple_Music.ViewModels
             else if (obj == "注销")
             {
                 AppSession.JWTToken = "";
+                PlayListBars =new ObservableCollection<MenuBar>(PlayListBars.Take(2));
                 UserDto = null;
             }
         }
@@ -617,6 +616,21 @@ namespace Mypple_Music.ViewModels
                 if (dialogRes.Parameters.ContainsKey("User"))
                 {
                     UserDto = dialogRes.Parameters.GetValue<SimpleUser>("User");
+                    PlayListBars = new ObservableCollection<MenuBar>(PlayListBars.Take(2));
+                    var playList = await playListService.GetAllAsync();
+                    if (playList != null)
+                        foreach (var item in playList)
+                        {
+                            PlayListBars.Add(
+                                new MenuBar()
+                                {
+                                    Id = item.Id,
+                                    Icon = "PlaylistMusicOutline",
+                                    Title = item.Title,
+                                    NameSpace = "PlayListView"
+                                }
+                            );
+                        }
                 }
             }
         }
@@ -636,6 +650,14 @@ namespace Mypple_Music.ViewModels
                 var res = await playListService.AddPlayListAsync(
                     new PlayListAddRequest(playList.PicUrl, playList.Title, playList.Description)
                 );
+                if (res != null)
+                {
+                    eventAggregator.SendMessage("添加成功");
+                }
+                else
+                {
+                    eventAggregator.SendMessage("添加失败");
+                }
                 PlayListBars.Add(
                     new MenuBar()
                     {
@@ -727,20 +749,6 @@ namespace Mypple_Music.ViewModels
                     NameSpace = "AllPlayListsView"
                 }
             );
-
-            var playList = await playListService.GetAllAsync();
-            foreach (var item in playList)
-            {
-                PlayListBars.Add(
-                    new MenuBar()
-                    {
-                        Id = item.Id,
-                        Icon = "PlaylistMusicOutline",
-                        Title = item.Title,
-                        NameSpace = "PlayListView"
-                    }
-                );
-            }
             PlayListBars.Add(
                 new MenuBar()
                 {
@@ -758,14 +766,32 @@ namespace Mypple_Music.ViewModels
         /// <summary>
         /// 初始化
         /// </summary>
-        public void Config()
+        public async void Init()
         {
             if (MenuBars.Count == 0)
             {
                 CreateMenuBar();
             }
-            //UserDto = AppSession.UserDto;
-            //UserAvatar = AppSession.UserAvatar;
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsAutoLogin")))
+            {
+                AppSession.JWTToken = ConfigurationManager.AppSettings.Get("JWTToken")!;
+                UserDto = await loginService.GetUserInfo();
+
+            }
+            var playList = await playListService.GetAllAsync();
+            if (playList != null)
+                foreach (var item in playList)
+                {
+                    PlayListBars.Add(
+                        new MenuBar()
+                        {
+                            Id = item.Id,
+                            Icon = "PlaylistMusicOutline",
+                            Title = item.Title,
+                            NameSpace = "PlayListView"
+                        }
+                    );
+                }
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                 "RecentPostsView",
                 Callback =>
@@ -797,5 +823,7 @@ namespace Mypple_Music.ViewModels
                 list[j] = temp;
             }
         }
+
+        #endregion
     }
 }

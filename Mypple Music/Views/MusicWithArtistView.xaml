@@ -15,7 +15,8 @@
         <converter:StatusToVisibilityConverter x:Key="StatusToVisibility" />
         <converter:ValueConverter x:Key="Value" />
     </UserControl.Resources>
-    <Grid Background="{DynamicResource DefaultBackground}">
+    <Grid Background="{DynamicResource DefaultBackground}"
+          Margin="0 1 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="30" />
@@ -101,23 +102,6 @@
 
                             </Grid>
                         </Border>
-                        <!--<Image Grid.Column="0"
-                               Height="200"
-                               Width="200"
-                               Source="{Binding LocalPicUrl}"
-                               Margin="20,0,0,0"
-                               VerticalAlignment="Top">
-                            <Image.OpacityMask>
-                                <VisualBrush>
-                                    <VisualBrush.Visual>
-                                        <Border Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                Width="{Binding RelativeSource={RelativeSource AncestorType=Image},Path=ActualWidth}"
-                                                CornerRadius="8"
-                                                Background="White" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Image.OpacityMask>
-                        </Image>-->
                         <Border CornerRadius="8"
                                 Margin="20,0,0,0"
                                 Width="200"
@@ -133,8 +117,8 @@
                             <TextBlock Text="{Binding Title}"
                                        FontWeight="Bold"
                                        FontSize="20"
-                                       Foreground="{DynamicResource DefaultForgeground}" 
-                                       TextWrapping="WrapWithOverFlow"/>
+                                       Foreground="{DynamicResource DefaultForgeground}"
+                                       TextWrapping="WrapWithOverFlow" />
                             <DockPanel LastChildFill="False">
                                 <TextBlock Foreground="Gray"
                                            FontWeight="Bold"
@@ -204,16 +188,12 @@
                                     <DataGridTextColumn Header="时长"
                                                         Width="1*"
                                                         Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
-
                                 </DataGrid.Columns>
                             </DataGrid>
-
-
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
     </Grid>
 </UserControl>

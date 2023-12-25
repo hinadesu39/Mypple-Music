@@ -17,15 +17,18 @@ namespace Mypple_Music.ViewModels
 {
     public class AllPlayListsViewModel : NavigationViewModel
     {
-        private IPlayListService playListService;
-        private IMusicService musicService;
+        #region Field
+        private readonly IPlayListService playListService;
+        private readonly IMusicService musicService;
         private readonly IRegionManager RegionManager;
         private readonly IDialogHostService dialog;
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
         private bool isUpdating;
         private ObservableCollection<PlayList> tempPlayList;
+        #endregion
 
+        #region Property
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -68,7 +71,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<PlayList> PlayCommand { get; set; }
         public DelegateCommand<PlayList> SettingPlayListCommand { get; set; }
         public DelegateCommand<PlayList> SelectedPlayListChangedCommand { get; set; }
+        #endregion
 
+        #region Ctor
         public AllPlayListsViewModel(
             IContainerProvider containerProvider,
             IPlayListService playListService,
@@ -89,9 +94,10 @@ namespace Mypple_Music.ViewModels
             SelectedPlayListChangedCommand = new(SelectedPlayListChanged);
             PlayCommand = new(PlayPlayList);
             SettingPlayListCommand = new(SettingPlayList);
-            GetPlayListList();
         }
+        #endregion
 
+        #region Command
         private void TextEmpty()
         {
             if (tempPlayList != null)
@@ -131,7 +137,7 @@ namespace Mypple_Music.ViewModels
         private async void PlayPlayList(PlayList PlayList)
         {
             var MusicList = new ObservableCollection<Music>(
-                await musicService.GetMusicsByPlayListIdAsync(PlayList.Id)
+                await playListService.GetMusicsByPlayListIdAsync(PlayList.Id)
             );
             var music = MusicList.ToList()[0];
             //把当前播放列表发送给播放器待播放
@@ -170,24 +176,22 @@ namespace Mypple_Music.ViewModels
             );
         }
 
-        async void GetPlayListList()
-        {
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
-            PlayList = new ObservableCollection<PlayList>(await playListService.GetAllAsync());
-            tempPlayList = PlayList;
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
-        }
-
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             //重置选中项
             isUpdating = true;
             SelectedIndex = -1;
             isUpdating = false;
+            
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            UpdateLoading(true);
+            PlayList = new ObservableCollection<PlayList>(await playListService.GetAllAsync());
+            tempPlayList = PlayList;
+            UpdateLoading(false);
         }
+        #endregion
     }
 }

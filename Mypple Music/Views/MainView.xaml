@@ -36,7 +36,7 @@
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding ConfigCommand}" />
+            <i:InvokeCommandAction Command="{Binding InitCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>

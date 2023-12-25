@@ -29,6 +29,14 @@ namespace Mypple_Music.ViewModels
         private Guid playListId;
         private Music musicToEdit;
 
+        private ObservableCollection<PlayList> allPlayLists = new ObservableCollection<PlayList> { new PlayList() { Title = "111" }, new PlayList() { Title = "222" } };
+
+        public ObservableCollection<PlayList> AllPlayLists
+        {
+            get { return allPlayLists; }
+            set { allPlayLists = value; RaisePropertyChanged(); }
+        }
+
         /// <summary>
         /// 下载是否进行
         /// </summary>
@@ -211,6 +219,15 @@ namespace Mypple_Music.ViewModels
                         var res = await playListService.AddMusicToPlayListAsync(
                             musicAddToPlayListRequest
                         );
+                        if(res == null)
+                        {
+                            eventAggregator.SendMessage("添加失败");
+                            return;
+                        }
+                        if(MusicList == null)
+                        {
+                            MusicList = new ObservableCollection<Music>(res);
+                        }
                         MusicList.AddRange(res);
                         tempMusic = MusicList;
                     }
@@ -310,24 +327,26 @@ namespace Mypple_Music.ViewModels
             if (navigationContext.Parameters.ContainsKey("Id"))
             {
                 playListId = navigationContext.Parameters.GetValue<Guid>("Id");
+
                 //发现打开的是已加载的播放列表，则直接退出不必重新加载
-                if (whichPlayList != Guid.Empty && PlayList.Id == whichPlayList)
+                if (whichPlayList != Guid.Empty && playListId == whichPlayList)
                 {
                     return;
-                }
+                }                
+                whichPlayList = playListId;
                 AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
                 PlayList = await playListService.GetByIdAsync(playListId);
-                MusicList = new ObservableCollection<Music>(
-                    await musicService.GetMusicsByPlayListIdAsync(playListId)
-                );
+                var musics = await playListService.GetMusicsByPlayListIdAsync(playListId);
+                if (musics != null)
+                {
+                    MusicList = new ObservableCollection<Music>(musics);
+                    tempMusic = MusicList;
+                    Count = MusicList.Count;
+                    Duration = MusicList.Sum(m => m.Duration);                   
+                }
                 AppSession.EventAggregator
                     .GetEvent<LoadingEvent>()
                     .Publish(new LoadingModel(false));
-                tempMusic = MusicList;
-                Count = MusicList.Count;
-                Duration = MusicList.Sum(m => m.Duration);
-                if (whichPlayList == Guid.Empty)
-                    whichPlayList = PlayList.Id;
             }
         }
 

@@ -18,18 +18,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using TagLib.Riff;
 
 namespace Mypple_Music.ViewModels
 {
     public class MusicWithAlbumViewModel : NavigationViewModel
     {
+        #region Field
         private bool isUpdating;     
         private string whichAlbum;
-        private IMusicService musicService;
+        private readonly IMusicService musicService;
         private readonly IDialogHostService dialog;
         private readonly IEventAggregator eventAggregator;
         private ObservableCollection<Music> tempMusic;
+        #endregion
 
+        #region Property
         /// <summary>
         /// 下载是否进行
         /// </summary>
@@ -161,7 +165,9 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
+        #endregion
 
+        #region Ctor
         public MusicWithAlbumViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
@@ -188,6 +194,9 @@ namespace Mypple_Music.ViewModels
             PopUpList = new ObservableCollection<string>(menu);
         }
 
+        #endregion
+
+        #region Command
         private async void DownloadAll()
         {
             IsDownloading = true;
@@ -196,11 +205,14 @@ namespace Mypple_Music.ViewModels
                 try
                 {
                     var res = await DownloadHelper.GetMusicAsync(m.AudioUrl);
-                    if (res != null)
+                    if (res == "File Exist")
+                    {
+                        eventAggregator.SendMessage($"{m.Title} 已存在！");
+                    }
+                    else if(res != "")
                     {
                         eventAggregator.SendMessage($"{m.Title} 下载成功！");
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -337,5 +349,6 @@ namespace Mypple_Music.ViewModels
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext) { }
+        #endregion
     }
 }

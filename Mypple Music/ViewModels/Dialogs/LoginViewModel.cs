@@ -25,40 +25,16 @@ namespace Mypple_Music.ViewModels.Dialogs
 {
     public class LoginViewModel : BindableBase, IDialogHostAware
     {
+        #region Field
         public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        private Regex regex = new Regex(@"^\d{11}$");    
+        private Regex regex = new Regex(@"^\d{11}$");
         private readonly IEventAggregator aggregator;
         private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private DateTime autoStartingActionCountdownStart;
+        private readonly ILoginService loginService;
+        #endregion
 
-        private ILoginService loginService { get; set; }
-        public string DialogHostName { get; set; }
-        public DelegateCommand SaveCommand { get; set; }
-        public DelegateCommand CancelCommand { get; set; }
-        public DelegateCommand<string> ExecuteCommand { get; set; }
-        public DelegateCommand<string> ChangeTransitionerSlideCommand { get; set; }
-        public DelegateCommand<string> SendCodeCommand { get; set; }
-
-        public LoginViewModel(ILoginService loginService, IEventAggregator aggregator)
-        {
-            this.loginService = loginService;
-            this.aggregator = aggregator;
-
-            SaveCommand = new DelegateCommand(Save);
-            CancelCommand = new DelegateCommand(Cancel);
-            ExecuteCommand = new DelegateCommand<string>(Execute);
-            ChangeTransitionerSlideCommand = new DelegateCommand<string>(ChangeTransitionerSlide);
-            SendCodeCommand = new DelegateCommand<string>(SendCode);
-
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsRemember")))
-            {
-                Account = ConfigurationManager.AppSettings.Get("Account");
-                Password = ConfigurationManager.AppSettings.Get("Password");
-            }
-        }
-
-        #region 绑定的属性
-
+        #region Property
         private bool isRemember = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsRemember"));
         public bool IsRemember
         {
@@ -180,8 +156,36 @@ namespace Mypple_Music.ViewModels.Dialogs
             get { return pwd2; }
             set { pwd2 = value; RaisePropertyChanged(); }
         }
+
+        public string DialogHostName { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+        public DelegateCommand<string> ExecuteCommand { get; set; }
+        public DelegateCommand<string> ChangeTransitionerSlideCommand { get; set; }
+        public DelegateCommand<string> SendCodeCommand { get; set; }
         #endregion
 
+        #region Ctor
+        public LoginViewModel(ILoginService loginService, IEventAggregator aggregator)
+        {
+            this.loginService = loginService;
+            this.aggregator = aggregator;
+
+            SaveCommand = new DelegateCommand(Save);
+            CancelCommand = new DelegateCommand(Cancel);
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            ChangeTransitionerSlideCommand = new DelegateCommand<string>(ChangeTransitionerSlide);
+            SendCodeCommand = new DelegateCommand<string>(SendCode);
+
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsRemember")))
+            {
+                Account = ConfigurationManager.AppSettings.Get("Account");
+                Password = ConfigurationManager.AppSettings.Get("Password");
+            }
+        }
+        #endregion
+
+        #region Command
         public async Task OnDialogOpendAsync(IDialogParameters parameters)
         {
             while (await Timer.WaitForNextTickAsync())
@@ -378,5 +382,6 @@ namespace Mypple_Music.ViewModels.Dialogs
                 config.Save();
             }
         }
+        #endregion
     }
 }

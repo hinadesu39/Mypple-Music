@@ -14,7 +14,6 @@
     <UserControl.Resources>
         <converter:GenderToListBoxIndexConverter x:Key="GenderToListBoxIndex" />
         <converter:HasContentConverter x:Key="HasContent" />
-        <!--<converter:ReverseVisibilityConverter x:Key="ReverseVisi"-->
     </UserControl.Resources>
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -174,7 +173,6 @@
                                 </Path.Data>
                             </Path>
                         </Border>
-
                     </Grid>
                     <TextBlock Text="&#xe672;"
                                FontFamily="{StaticResource IconFont}"
@@ -246,7 +244,6 @@
                                 </Path.Data>
                             </Path>
                         </Border>
-
                     </Grid>
                     <TextBlock Text="&#xe61a;"
                                FontFamily="{StaticResource IconFont}"

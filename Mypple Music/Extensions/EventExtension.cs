@@ -31,5 +31,10 @@ namespace Mypple_Music.Extensions
         {
             aggregator.GetEvent<MessageEvent>().Publish(new MessageModel(message, filterName));
         }
+
+        public static void UpdateLoading(this IEventAggregator aggregator,bool isLoading, string filterName = "MainView")
+        {
+            aggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(isLoading, filterName));
+        }
     }
 }

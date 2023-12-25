@@ -12,7 +12,7 @@ namespace Mypple_Music.Service
         where TEntity : class
     {
         private readonly HttpRestClient client;
-        private readonly string serviceName;
+        protected readonly string serviceName;
 
         public BaseService(HttpRestClient client, string ServiceName)
         {
@@ -30,6 +30,7 @@ namespace Mypple_Music.Service
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
             request.Route = $"{serviceName}/GetAll";
+            request.Authorization = AppSession.JWTToken;
             var res = await client.ExecuteAsync<List<TEntity>>(request);
             return res;
         }
@@ -39,6 +40,7 @@ namespace Mypple_Music.Service
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
             request.Route = $"{serviceName}/GetById?id={id}";
+            request.Authorization = AppSession.JWTToken;
             var res = await client.ExecuteAsync<TEntity>(request);
             return res;
         }
@@ -48,6 +50,7 @@ namespace Mypple_Music.Service
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
             request.Route = $"{serviceName}/GetByName?name={name}";
+            request.Authorization = AppSession.JWTToken;
             var res = await client.ExecuteAsync<List<TEntity>>(request);
 
             return res;

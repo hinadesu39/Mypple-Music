@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Models;
+﻿using Mypple_Music.Events;
+using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace Mypple_Music.Service
             BaseRequest.Method = RestSharp.Method.Post;
             BaseRequest.Route = $"/Music.Main/api/PlayList/Add";
             BaseRequest.Parameter = request;
+            BaseRequest.Authorization = AppSession.JWTToken;
             var res = await client.ExecuteAsync<PlayList>(BaseRequest);
             return res;
         }
@@ -45,6 +47,16 @@ namespace Mypple_Music.Service
             request.Route = $"/FileService/api/Uploader/Upload";
             request.Parameter = url;
             var res = await client.UploadAsync(request);
+            return res;
+        }
+
+        public async Task<Music[]> GetMusicsByPlayListIdAsync(Guid PlayListId)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+
+            request.Route = $"{serviceName}/GetByPlayListId?playListId={PlayListId}";
+            var res = await client.ExecuteAsync<Music[]>(request);
             return res;
         }
     }

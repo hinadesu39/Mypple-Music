@@ -72,12 +72,6 @@ namespace Mypple_Music
                 );
             }
             Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
-
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsAutoLogin")))
-            {
-                AppSession.JWTToken = ConfigurationManager.AppSettings.Get("JWTToken")!;
-            }
-
             base.OnInitialized();
         }
 
