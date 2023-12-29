@@ -15,5 +15,7 @@ namespace Mypple_Music.Events
 
         public static string JWTToken;
 
+        public static ObservableCollection<PlayList> AllPlayLists;
+
     }
 }

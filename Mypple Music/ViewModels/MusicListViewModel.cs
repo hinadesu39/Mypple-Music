@@ -1,6 +1,7 @@
 ﻿using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
+using Mypple_Music.Models.Request;
 using Mypple_Music.Service;
 using Prism.Commands;
 using Prism.Ioc;
@@ -20,10 +21,24 @@ namespace Mypple_Music.ViewModels
     {
         #region Field
         private readonly IMusicService musicService;
+        private readonly IPlayListService playListService;
         private ObservableCollection<Music> tempMusic;
         #endregion
 
         #region Property
+
+        private ObservableCollection<PlayList> allPlayLists = AppSession.AllPlayLists;
+
+        public ObservableCollection<PlayList> AllPlayLists
+        {
+            get { return allPlayLists; }
+            set
+            {
+                allPlayLists = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private Music selectedMusic;
 
         public Music SelectedMusic
@@ -62,22 +77,44 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
         #endregion
 
         #region Ctor
-        public MusicListViewModel(IContainerProvider containerProvider, IMusicService musicService)
+        public MusicListViewModel(IContainerProvider containerProvider, IMusicService musicService, IPlayListService playListService)
             : base(containerProvider)
         {
             this.musicService = musicService;
+            this.playListService = playListService;
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
-
+            AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
             Config();
+            
         }
         #endregion
 
         #region Command
+
+        /// <summary>
+        /// 添加单曲到播放列表
+        /// </summary>
+        /// <param name="list"></param>
+        private async void AddToPlayList(PlayList list)
+        {
+            var musicAddToPlayListRequest = new MusicAddToPlayListRequest(list.Id, SelectedMusic);
+            var res = await playListService.AddMusicToPlayListAsync(musicAddToPlayListRequest);
+            if (res == null)
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加失败");
+            }
+            else
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加成功");
+            }
+        }
+
         private void TextEmpty()
         {
             if (tempMusic != null)
@@ -86,7 +123,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private async void Search(string para)
+        private  void Search(string para)
         {
             if (IsSearchVisible)
             {

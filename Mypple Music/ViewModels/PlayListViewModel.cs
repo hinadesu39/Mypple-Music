@@ -31,11 +31,7 @@ namespace Mypple_Music.ViewModels
         #endregion
 
         #region Property
-        private ObservableCollection<PlayList> allPlayLists = new ObservableCollection<PlayList>
-        {
-            new PlayList() { Title = "111" },
-            new PlayList() { Title = "222" }
-        };
+        private ObservableCollection<PlayList> allPlayLists = AppSession.AllPlayLists;
 
         public ObservableCollection<PlayList> AllPlayLists
         {
@@ -141,6 +137,8 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
+        public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
+
         #endregion
 
         #region Ctor
@@ -163,10 +161,31 @@ namespace Mypple_Music.ViewModels
             NavigateCommand = new DelegateCommand<string>(Navigation);
             ExecuteCommand = new DelegateCommand<string>(Execute);
             DownloadAllCommand = new DelegateCommand(DownloadAllAsync);
+            AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
         }
+
         #endregion
 
         #region Command
+
+        /// <summary>
+        /// 添加单曲到播放列表
+        /// </summary>
+        /// <param name="list"></param>
+        private async void AddToPlayList(PlayList list)
+        {
+            var musicAddToPlayListRequest = new MusicAddToPlayListRequest(list.Id, SelectedMusic);
+            var res = await playListService.AddMusicToPlayListAsync(musicAddToPlayListRequest);
+            if(res == null)
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加失败");
+            }
+            else
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加成功");
+            }
+        }
+
         //子弹出框命令
         private void Execute(string obj)
         {

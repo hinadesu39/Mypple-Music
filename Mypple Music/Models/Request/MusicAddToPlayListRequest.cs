@@ -22,7 +22,7 @@ namespace Mypple_Music.Models.Request
             set => musics = value;
         }
 
-        public MusicAddToPlayListRequest(Guid playListId, Music[] musics)
+        public MusicAddToPlayListRequest(Guid playListId,params Music[] musics)
         {
             this.playListId = playListId;
             this.musics = musics;

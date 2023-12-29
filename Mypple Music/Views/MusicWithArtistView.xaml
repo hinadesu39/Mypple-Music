@@ -85,12 +85,12 @@
                                 Background="LightGray"
                                 Margin="20,0,0,0"
                                 VerticalAlignment="Top">
-                            <Border.Effect>
+                            <!--<Border.Effect>
                                 <DropShadowEffect BlurRadius="20"
                                                   ShadowDepth="0"
                                                   Color="Black"
                                                   Opacity="0.4" />
-                            </Border.Effect>
+                            </Border.Effect>-->
                             <Grid>
                                 <TextBlock FontFamily="{StaticResource IconFont}"
                                            FontSize="80"
@@ -146,6 +146,7 @@
                                       AlternationCount="2"
                                       SelectedIndex="{Binding MusicIndex}"
                                       ItemsSource="{Binding MusicList}"
+                                      SelectedItem="{Binding DataContext.SelectedMusic,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"
                                       IsReadOnly="True"
                                       SelectionUnit="FullRow"
                                       GridLinesVisibility="None"
@@ -188,6 +189,37 @@
                                     <DataGridTextColumn Header="时长"
                                                         Width="1*"
                                                         Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
+                                    <DataGridTemplateColumn  Width="0.5*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Click="Button_Click"
+                                                        Content="···"
+                                                        Style="{StaticResource MaterialDesignFlatLightButton}"
+                                                        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl},Path=DataContext}">
+                                                    <Button.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="添加歌曲" />
+                                                            <MenuItem Header="删除播放列表" />
+                                                            <MenuItem Header="添加至播放列表"
+                                                                      ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                <MenuItem.ItemContainerStyle>
+                                                                    <Style TargetType="MenuItem"
+                                                                           BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                                        <Setter Property="Header"
+                                                                                Value="{Binding Title}" />
+                                                                        <Setter Property="Command"
+                                                                                Value="{Binding DataContext.AddToPlayListCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" />
+                                                                        <Setter Property="CommandParameter"
+                                                                                Value="{Binding}" />
+                                                                    </Style>
+                                                                </MenuItem.ItemContainerStyle>
+                                                            </MenuItem>
+                                                        </ContextMenu>
+                                                    </Button.ContextMenu>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>

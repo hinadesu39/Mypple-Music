@@ -135,7 +135,7 @@
                             Style="{StaticResource IconWithContentButton}"
                             Width="100"
                             Height="35" />
-                   
+
                     <md:PopupBox DockPanel.Dock="Right"
                                  Margin="0,0,30,0">
                         <md:PopupBox.ToggleContent>
@@ -198,7 +198,8 @@
                   Grid.Row="2"
                   AutoGenerateColumns="False"
                   AlternationCount="2"
-                  ItemsSource="{Binding MusicList}"
+                  ItemsSource="{Binding MusicList}"         
+                  SelectedItem="{Binding SelectedMusic}"
                   IsReadOnly="True"
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
@@ -254,12 +255,12 @@
                                         CornerRadius="5"
                                         Background="LightGray"
                                         Margin="10,0,0,0">
-                                    <Border.Effect>
+                                    <!--<Border.Effect>
                                         <DropShadowEffect BlurRadius="20"
                                                           ShadowDepth="0"
                                                           Color="Black"
                                                           Opacity="0.4" />
-                                    </Border.Effect>
+                                    </Border.Effect>-->
                                     <TextBlock FontFamily="{StaticResource IconFont}"
                                                FontSize="30"
                                                FontWeight="ExtraBold"
@@ -269,24 +270,15 @@
                                                VerticalAlignment="Center" />
 
                                 </Border>
-                                <Image x:Name="albumImg"
-                                       Source="{Binding LocalPicUrl}"
-                                       d:Source="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png"
-                                       Width="45"
-                                       Height="45"
-                                       Margin="10,0,0,0">
-                                    <!--切掉图片多余的角-->
-                                    <Image.OpacityMask>
-                                        <VisualBrush>
-                                            <VisualBrush.Visual>
-                                                <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                                        CornerRadius="5"
-                                                        Background="White" />
-                                            </VisualBrush.Visual>
-                                        </VisualBrush>
-                                    </Image.OpacityMask>
-                                </Image>
+                                <Border CornerRadius="5"
+                                        Width="45"
+                                        Height="45"
+                                        Margin="10,0,0,0">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                    RenderOptions.BitmapScalingMode="LowQuality" />
+                                    </Border.Background>
+                                </Border>
                                 <!--图片中间的播放按钮-->
                                 <ToggleButton x:Name="playButton"
                                               Margin="10,0,0,0"
@@ -371,45 +363,20 @@
                                         <MenuItem Header="添加至播放列表"
                                                   ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                             <MenuItem.ItemContainerStyle>
-                                                <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                <Style TargetType="MenuItem"
+                                                       BasedOn="{StaticResource MaterialDesignMenuItem}">
                                                     <Setter Property="Header"
                                                             Value="{Binding Title}" />
+                                                    <Setter Property="Command"
+                                                            Value="{Binding DataContext.AddToPlayListCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" />
+                                                    <Setter Property="CommandParameter"
+                                                            Value="{Binding}" />
                                                 </Style>
                                             </MenuItem.ItemContainerStyle>
                                         </MenuItem>
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <!--<md:PopupBox DockPanel.Dock="Right">
-                                <md:PopupBox.ToggleContent>
-                                    <StackPanel Orientation="Horizontal">
-                                        <md:PackIcon Kind="DotsHorizontal"
-                                                     Foreground="{DynamicResource PrimaryHueLightBrush}">
-                                        </md:PackIcon>
-                                    </StackPanel>
-                                </md:PopupBox.ToggleContent>
-                                <StackPanel Margin="5,0,5,0">
-                                    <Button Content="下载该歌曲"
-                                            Width="120"
-                                            Height="30"
-                                            Style="{StaticResource TransParentWithMouseOverButton}"
-                                            Command="{Binding NavigateCommand}"
-                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
-                                    <Button Content="从播放列表中移除"
-                                            Width="120"
-                                            Height="30"
-                                            Style="{StaticResource TransParentWithMouseOverButton}"
-                                            Command="{Binding NavigateCommand}"
-                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
-                                    <Button Content="属性"
-                                            Width="120"
-                                            Height="30"
-                                            Style="{StaticResource TransParentWithMouseOverButton}"
-                                            Command="{Binding NavigateCommand}"
-                                            CommandParameter="{Binding Content,RelativeSource={RelativeSource Self}}" />
-                                </StackPanel>
-
-                            </md:PopupBox>-->
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

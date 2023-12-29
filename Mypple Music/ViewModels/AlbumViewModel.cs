@@ -109,7 +109,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private async void Search(string para)
+        private void Search(string para)
         {
             if (IsSearchVisible)
             {

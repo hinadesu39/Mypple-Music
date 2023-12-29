@@ -22,7 +22,6 @@ namespace Mypple_Music.ViewModels
         private static PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private MediaElement mediaElement;
         private readonly ILyricService lyricService;
-        private int musicIndex;
         #endregion
 
         #region Property
@@ -163,7 +162,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public override async void OnNavigatedFrom(NavigationContext navigationContext)
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             //IsAlive = false;
         }

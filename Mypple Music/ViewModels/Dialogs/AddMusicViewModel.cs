@@ -145,12 +145,13 @@ namespace Mypple_Music.ViewModels.Dialogs
             }
         }
 
-        public async Task OnDialogOpendAsync(IDialogParameters parameters)
+        public Task OnDialogOpendAsync(IDialogParameters parameters)
         {
             if (parameters.ContainsKey("Id"))
             {
                 playListId = parameters.GetValue<Guid>("Id");
             }
+            return Task.CompletedTask;
         }
 
         #endregion

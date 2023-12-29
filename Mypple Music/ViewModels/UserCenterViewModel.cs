@@ -124,7 +124,7 @@ namespace Mypple_Music.ViewModels
             var newPath = await loginService.UploadAsync(filePath);
             if (newPath == null) return;
 
-            UserDto.UserAvatar = new Uri(newPath);
+            UserDto.UserAvatar = newPath;
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)

@@ -100,7 +100,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
         }
 
-        private async void Save()
+        private  void Save()
         {
             if (string.IsNullOrEmpty(Title))
                 return;

@@ -53,6 +53,7 @@
                   AutoGenerateColumns="False"
                   AlternationCount="2"
                   ItemsSource="{Binding MusicList}"
+                  SelectedItem="{Binding SelectedMusic}"
                   IsReadOnly="True"
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
@@ -111,6 +112,37 @@
                 <DataGridTextColumn Header="标题"
                                     Width="2*"
                                     Binding="{Binding Title}" />
+                <DataGridTemplateColumn  Width="0.5*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="Button_Click"
+                                    Content="···"
+                                    Style="{StaticResource MaterialDesignFlatLightButton}"
+                                    DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},Path=DataContext}">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="添加歌曲" />
+                                        <MenuItem Header="删除播放列表" />
+                                        <MenuItem Header="添加至播放列表"
+                                                  ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.ItemContainerStyle>
+                                                <Style TargetType="MenuItem"
+                                                       BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                    <Setter Property="Header"
+                                                            Value="{Binding Title}" />
+                                                    <Setter Property="Command"
+                                                            Value="{Binding DataContext.AddToPlayListCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" />
+                                                    <Setter Property="CommandParameter"
+                                                            Value="{Binding}" />
+                                                </Style>
+                                            </MenuItem.ItemContainerStyle>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="时长"
                                     Width="1*"
                                     Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}" />
@@ -121,11 +153,11 @@
                                     Width="2*"
                                     Binding="{Binding Album}" />
                 <DataGridTextColumn Header="类型"
-                                    Width="2*"
+                                    Width="1.5*"
                                     Binding="{Binding Type}" />
                 <DataGridTextColumn Header="播放次数"
                                     Binding="{Binding PlayTimes}"
-                                    Width="0.8*" />
+                                    Width="1*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

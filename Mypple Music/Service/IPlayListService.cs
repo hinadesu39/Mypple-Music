@@ -12,7 +12,6 @@ namespace Mypple_Music.Service
     {
         public Task<PlayList> AddPlayListAsync(PlayListAddRequest request);
         public Task<Music[]> AddMusicToPlayListAsync(MusicAddToPlayListRequest request);
-        public Task<Uri> UploadAsync(string url);
         public Task<Music[]> GetMusicsByPlayListIdAsync(Guid PlayListId);
     }
 }

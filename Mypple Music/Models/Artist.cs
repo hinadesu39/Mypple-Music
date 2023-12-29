@@ -54,6 +54,14 @@ namespace Mypple_Music.Models
 			set { name = value; RaisePropertyChanged(); }
 		}
 
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; RaisePropertyChanged(); }
+        }
+
         async void CreateLocalPicAsync(Uri picUrl)
         {
             LocalPicUrl = await DownloadHelper.GetImageAsync(picUrl);

@@ -40,21 +40,10 @@ namespace Mypple_Music.Service
             return res;
         }
 
-        public async Task<Uri> UploadAsync(string url)
-        {
-            BaseRequest request = new BaseRequest();
-            request.Method = RestSharp.Method.Post;
-            request.Route = $"/FileService/api/Uploader/Upload";
-            request.Parameter = url;
-            var res = await client.UploadAsync(request);
-            return res;
-        }
-
         public async Task<Music[]> GetMusicsByPlayListIdAsync(Guid PlayListId)
         {
             BaseRequest request = new BaseRequest();
             request.Method = RestSharp.Method.Get;
-
             request.Route = $"{serviceName}/GetByPlayListId?playListId={PlayListId}";
             var res = await client.ExecuteAsync<Music[]>(request);
             return res;

@@ -53,9 +53,9 @@
                  SelectedIndex="{Binding SelectedIndex}"
                  ScrollViewer.CanContentScroll="False"
                  VirtualizingPanel.ScrollUnit="Pixel"
-                 VirtualizingPanel.VirtualizationMode="Recycling">
+                 VirtualizingPanel.VirtualizationMode="Recycling">                        
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
+                <i:EventTrigger EventName="SelectionChanged">                                                            
                     <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                 </i:EventTrigger>

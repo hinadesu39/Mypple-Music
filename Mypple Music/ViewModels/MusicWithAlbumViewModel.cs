@@ -28,12 +28,24 @@ namespace Mypple_Music.ViewModels
         private bool isUpdating;
         private string whichAlbum;
         private readonly IMusicService musicService;
+        private readonly IPlayListService playListService;
         private readonly IDialogHostService dialog;
-        private readonly IEventAggregator eventAggregator;
         private ObservableCollection<Music> tempMusic;
         #endregion
 
         #region Property
+        private ObservableCollection<PlayList> allPlayLists = AppSession.AllPlayLists;
+
+        public ObservableCollection<PlayList> AllPlayLists
+        {
+            get { return allPlayLists; }
+            set
+            {
+                allPlayLists = value;
+                RaisePropertyChanged();
+            }
+        }
+
         /// <summary>
         /// 下载是否进行
         /// </summary>
@@ -169,20 +181,21 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
+        public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
         #endregion
 
         #region Ctor
         public MusicWithAlbumViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
-            IDialogHostService dialog,
-            IEventAggregator eventAggregator
+            IPlayListService playListService,
+            IDialogHostService dialog
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
-            this.eventAggregator = eventAggregator;
+            this.playListService = playListService;
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
@@ -190,6 +203,7 @@ namespace Mypple_Music.ViewModels
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
             DownloadAllCommand = new DelegateCommand(DownloadAll);
+            AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
             var menu = new List<string>();
             menu.Add("下载全部歌曲");
             menu.Add("更多");
@@ -200,6 +214,25 @@ namespace Mypple_Music.ViewModels
         #endregion
 
         #region Command
+
+        /// <summary>
+        /// 添加单曲到播放列表
+        /// </summary>
+        /// <param name="list"></param>
+        private async void AddToPlayList(PlayList list)
+        {
+            var musicAddToPlayListRequest = new MusicAddToPlayListRequest(list.Id, SelectedMusic);
+            var res = await playListService.AddMusicToPlayListAsync(musicAddToPlayListRequest);
+            if (res == null)
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加失败");
+            }
+            else
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加成功");
+            }
+        }
+
         private async void DownloadAll()
         {
             IsDownloading = true;

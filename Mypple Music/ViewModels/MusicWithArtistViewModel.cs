@@ -12,6 +12,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
+using System.Windows;
+using Mypple_Music.Extensions;
+using Mypple_Music.Models.Request;
 
 namespace Mypple_Music.ViewModels
 {
@@ -21,9 +26,23 @@ namespace Mypple_Music.ViewModels
         private bool isUpdating;
         private readonly IMusicService musicService;
         private readonly IAlbumService albumService;
+        private readonly IPlayListService playListService;
         #endregion
 
         #region Property
+
+        private ObservableCollection<PlayList> allPlayLists = AppSession.AllPlayLists;
+
+        public ObservableCollection<PlayList> AllPlayLists
+        {
+            get { return allPlayLists; }
+            set
+            {
+                allPlayLists = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private bool isSearchVisible;
 
         public bool IsSearchVisible
@@ -95,19 +114,22 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
         public DelegateCommand<Music> FocuseChangedCommand { set; get; }
         public DelegateCommand ChangeVisibilityCommand { set; get; }
+        public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
         #endregion
 
         #region Ctor
         public MusicWithArtistViewModel(
             IContainerProvider containerProvider,
             IAlbumService albumService,
-            IMusicService musicService
+            IMusicService musicService,
+            IPlayListService playListService
         )
             : base(containerProvider)
         {
             Albums = new ObservableCollection<Album>();
             this.albumService = albumService;
             this.musicService = musicService;
+            this.playListService = playListService;
 
             SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
             FocuseChangedCommand = new DelegateCommand<Music>(FocuseChanged);
@@ -118,10 +140,31 @@ namespace Mypple_Music.ViewModels
                 else
                     IsSearchVisible = true;
             });
+            AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
+
         }
         #endregion
 
         #region Command
+
+        /// <summary>
+        /// 添加单曲到播放列表
+        /// </summary>
+        /// <param name="list"></param>
+        private async void AddToPlayList(PlayList list)
+        {
+            var musicAddToPlayListRequest = new MusicAddToPlayListRequest(list.Id, SelectedMusic);
+            var res = await playListService.AddMusicToPlayListAsync(musicAddToPlayListRequest);
+            if (res == null)
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加失败");
+            }
+            else
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}添加成功");
+            }
+        }
+
         /// <summary>
         /// 保证整个列表选中歌曲的唯一性
         /// </summary>

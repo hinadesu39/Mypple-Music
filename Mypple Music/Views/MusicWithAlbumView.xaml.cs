@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,15 +24,18 @@ namespace Mypple_Music.Views
     /// </summary>
     public partial class MusicWithAlbumView : UserControl
     {
-        private readonly IEventAggregator eventAggregator;
 
-        public MusicWithAlbumView(IEventAggregator eventAggregator)
+        public MusicWithAlbumView()
         {
-            this.eventAggregator = eventAggregator;
             InitializeComponent();
+        }
 
-
-            this.eventAggregator = eventAggregator;
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            btn.ContextMenu.PlacementTarget = btn;
+            btn.ContextMenu.Placement = PlacementMode.Bottom;
+            btn.ContextMenu.IsOpen = true;
         }
     }
 }

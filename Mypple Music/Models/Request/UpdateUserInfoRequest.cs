@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.Models.Request
 {
-    public record UpdateUserInfoRequest(string UserName, string Gender, DateTime? BirthDay, Uri? UserAvatar);
+    public record UpdateUserInfoRequest(string UserName, string? Gender, DateTime? BirthDay, Uri? UserAvatar);
 }

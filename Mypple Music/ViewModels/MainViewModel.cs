@@ -289,10 +289,12 @@ namespace Mypple_Music.ViewModels
         /// </summary>
         private void LocateMusic()
         {
+            //重置Player.Music的引用以触发前台SelectionChanged命令
             var tempMusic = Player.Music;
             Player.Music = null;
             Player.Music = tempMusic;
         }
+
         /// <summary>
         /// 清空待播列表
         /// </summary>
@@ -312,7 +314,7 @@ namespace Mypple_Music.ViewModels
             if (Player.Music != null)
                 Player.Music.Status = Music.PlayStatus.StopPlay;
             InitPlay(ToPlayList[PlayIndex]);
-            Player.Music.Status = Music.PlayStatus.StartPlay;
+            Player!.Music!.Status = Music.PlayStatus.StartPlay;
 
             eventAggregator
                 .GetEvent<MusicPlayedEvent>()
@@ -434,7 +436,7 @@ namespace Mypple_Music.ViewModels
                         Player.Music.Status = Music.PlayStatus.StopPlay;
                     if (ToPlayList.Count != 0)
                         InitPlay(ToPlayList[PlayIndex]);
-                    Player.Music.Status = Music.PlayStatus.StartPlay;
+                    Player!.Music!.Status = Music.PlayStatus.StartPlay;
                     break;
                 case PlayerModel.PlayMode.RepeatOne:
                     MediaElement.Position = TimeSpan.Zero;
@@ -471,7 +473,7 @@ namespace Mypple_Music.ViewModels
         /// 准备播放歌曲
         /// </summary>
         /// <param name="music"></param>
-        private async void InitPlay(Music music)
+        private void InitPlay(Music music)
         {
             //如果发现播放的是同一首歌
             if (music.AudioUrl == MediaElement.Source)
@@ -590,13 +592,14 @@ namespace Mypple_Music.ViewModels
                     Callback =>
                     {
                         journal = Callback.Context.NavigationService.Journal;
-                    }, para
+                    },
+                    para
                 );
             }
             else if (obj == "注销")
             {
                 AppSession.JWTToken = "";
-                PlayListBars =new ObservableCollection<MenuBar>(PlayListBars.Take(2));
+                PlayListBars = new ObservableCollection<MenuBar>(PlayListBars.Take(2));
                 UserDto = null;
             }
         }
@@ -658,7 +661,7 @@ namespace Mypple_Music.ViewModels
                 PlayListBars.Add(
                     new MenuBar()
                     {
-                        Id = res.Id,
+                        Id = res!.Id,
                         Icon = "PlaylistMusicOutline",
                         Title = res.Title,
                         NameSpace = "PlayListView"
@@ -670,7 +673,7 @@ namespace Mypple_Music.ViewModels
         /// <summary>
         /// 创建导航菜单
         /// </summary>
-        async void CreateMenuBar()
+        void CreateMenuBar()
         {
             MenuBars.Add(
                 new MenuBar()
@@ -765,22 +768,25 @@ namespace Mypple_Music.ViewModels
             {
                 AppSession.JWTToken = ConfigurationManager.AppSettings.Get("JWTToken")!;
                 UserDto = await loginService.GetUserInfo();
-
             }
             var playList = await playListService.GetAllAsync();
             if (playList != null)
+            {
                 foreach (var item in playList)
                 {
-                    PlayListBars.Add(
-                        new MenuBar()
-                        {
-                            Id = item.Id,
-                            Icon = "PlaylistMusicOutline",
-                            Title = item.Title,
-                            NameSpace = "PlayListView"
-                        }
-                    );
+                    var newBar = new MenuBar()
+                    {
+                        Id = item.Id,
+                        Icon = "PlaylistMusicOutline",
+                        Title = item.Title,
+                        NameSpace = "PlayListView"
+                    };
+                    PlayListBars.Add(newBar);
+                    AllBars.Add(newBar);
                 }
+                AppSession.AllPlayLists = new ObservableCollection<PlayList>(playList);
+            }
+
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                 "RecentPostsView",
                 Callback =>

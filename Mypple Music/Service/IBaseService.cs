@@ -9,7 +9,7 @@ namespace Mypple_Music.Service
 {
     public interface IBaseService<TEntity>
     {
-        Task<string?> UploadAsync(string url);
+        Task<Uri> UploadAsync(string url);
 
         Task<TEntity?> GetByIdAsync(Guid id);
 
