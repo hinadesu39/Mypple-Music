@@ -839,89 +839,6 @@
                 </Setter>
             </Style>
 
-            <!--下拉框内容样式-->
-            <!--<Style x:Key="RadioMiniButtonStyle"
-                   TargetType="{x:Type RadioButton}">
-                <Setter Property="BorderBrush"
-                        Value="Transparent" />
-                <Setter Property="BorderThickness"
-                        Value="0" />
-                <Setter Property="Background"
-                        Value="{DynamicResource PrimaryHueLightBrush}" />
-                <Setter Property="MinHeight"
-                        Value="30" />
-
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type RadioButton}">
-                            <Grid x:Name="templateRoot"
-                                  Background="Transparent"
-                                  SnapsToDevicePixels="True">
-                                <Border x:Name="borderHeader"></Border>
-
-                                <Border x:Name="border2" />
-                                <ContentPresenter x:Name="contentPresenter"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                                  Focusable="False"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  Margin="{TemplateBinding Padding}"
-                                                  RecognizesAccessKey="True"
-                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-
-                            </Grid>
-                            <ControlTemplate.Triggers>
-
-                                <Trigger Property="IsChecked"
-                                         Value="false">
-
-                                    <Setter TargetName="border2"
-                                            Property="CornerRadius"
-                                            Value="5" />
-                                </Trigger>
-                                <Trigger Property="IsChecked"
-                                         Value="True">
-                                    <Setter TargetName="border2"
-                                            Property="Background"
-                                            Value="{DynamicResource PrimaryHueLightBrush}" />
-                                    <Setter TargetName="border2"
-                                            Property="Opacity"
-                                            Value="0.2" />
-                                    <Setter TargetName="border2"
-                                            Property="CornerRadius"
-                                            Value="5" />
-                                    <Setter Property="BorderThickness"
-                                            TargetName="borderHeader"
-                                            Value="4,0,0,0" />
-                                    <Setter Property="BorderBrush"
-                                            TargetName="borderHeader"
-                                            Value="{DynamicResource PrimaryHueLightBrush}" />
-
-                                    <Setter TargetName="borderHeader"
-                                            Property="CornerRadius"
-                                            Value="3" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver"
-                                         Value="True">
-                                    <Setter TargetName="border2"
-                                            Property="Background"
-                                            Value="{DynamicResource PrimaryHueLightBrush}" />
-                                    <Setter TargetName="border2"
-                                            Property="Opacity"
-                                            Value="0.2" />
-                                    <Setter TargetName="border2"
-                                            Property="CornerRadius"
-                                            Value="5,5,5,5" />
-
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>-->
-
             <!--待选择歌曲DataGrid行样式-->
             <Style x:Key="ToAddMusicRowStyle"
                    TargetType="DataGridRow">
@@ -1041,7 +958,7 @@
                             <Condition Property="IsGrouping"
                                        Value="true" />
                             <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping"
-                                       Value="false" />
+                                       Value="True" />
                         </MultiTrigger.Conditions>
                         <Setter Property="ScrollViewer.CanContentScroll"
                                 Value="false" />
@@ -1064,10 +981,6 @@
                                             BorderBrush="Transparent"
                                             CornerRadius="3"
                                             Margin="1">
-                                        <Border.OpacityMask>
-                                            <SolidColorBrush Color="Black"
-                                                             Opacity="0.3" />
-                                        </Border.OpacityMask>
                                     </Border>
                                     <Rectangle x:Name="borderHeader"
                                                Width="4"
@@ -1089,6 +1002,15 @@
                                     <Setter Property="Background"
                                             TargetName="border"
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter Property="Opacity"
+                                            TargetName="border"
+                                            Value="0.3" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Opacity"
+                                            TargetName="border"
+                                            Value="0.3" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1105,12 +1027,6 @@
                              Value="1">
                         <Setter Property="Background"
                                 Value="#44000000" />
-                    </Trigger>
-
-                    <Trigger Property="IsMouseOver"
-                             Value="True">
-                        <Setter Property="Background"
-                                Value="{DynamicResource PrimaryHueLightBrush}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -1653,15 +1569,15 @@
                                         <!--图片不存在时默认展示-->
                                         <Border Width="200"
                                                 Height="200"
-                                                CornerRadius="8"
+                                                CornerRadius="5"
                                                 Background="LightGray"
                                                 Margin="5,5,5,0">
-                                            <Border.Effect>
+                                            <!--<Border.Effect>
                                                 <DropShadowEffect BlurRadius="20"
                                                                   ShadowDepth="0"
                                                                   Color="Black"
                                                                   Opacity="0.4" />
-                                            </Border.Effect>
+                                            </Border.Effect>-->
                                             <Grid>
                                                 <TextBlock FontFamily="{StaticResource IconFont}"
                                                            FontSize="80"
@@ -1672,7 +1588,7 @@
                                                            VerticalAlignment="Center" />
                                             </Grid>
                                         </Border>
-                                        <Border CornerRadius="8"
+                                        <Border CornerRadius="5"
                                                 Margin="5,5,5,0"
                                                 Width="200"
                                                 Height="200">

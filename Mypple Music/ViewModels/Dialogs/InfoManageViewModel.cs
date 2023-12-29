@@ -29,7 +29,8 @@ namespace Mypple_Music.ViewModels.Dialogs
         private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private DateTime autoStartingActionCountdownStart;
         private readonly IEventAggregator aggregator;
-        private Regex regex = new Regex(@"^\d{11}$");
+        private Regex phoneRegex = new Regex(@"^(((13[0-9]{1})|(15[0-35-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$");
+        private Regex emailRegex = new Regex(@"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$");
         private readonly ILoginService loginService;
         #endregion
 
@@ -132,7 +133,7 @@ namespace Mypple_Music.ViewModels.Dialogs
                 return;
             autoStartingActionCountdownStart = DateTime.Now;
             ShowSendButton = false;
-            if (regex.IsMatch(obj))
+            if (phoneRegex.IsMatch(obj))
             {
                 var res = await loginService.ConfirmPhone(obj);
                 if (!res.Status)
@@ -140,10 +141,12 @@ namespace Mypple_Music.ViewModels.Dialogs
                     aggregator.SendMessage(res.Message, "InfoManage");
                 }
             }
-            else
+            else if (emailRegex.IsMatch(obj))
             {
                 await loginService.SendCodeByEmail(new SendCodeRequest(obj));
             }
+            else
+                return;
         }
 
         private async void Execute(string obj)
@@ -246,14 +249,16 @@ namespace Mypple_Music.ViewModels.Dialogs
             autoStartingActionCountdownStart = DateTime.Now;
             ShowSendButton = false;
 
-            if (regex.IsMatch(obj))
+            if (phoneRegex.IsMatch(obj))
             {
                 await loginService.SendCodeByPhone(new SendCodeRequest(obj));
             }
-            else
+            else if (emailRegex.IsMatch(obj))
             {
                 await loginService.SendCodeByEmail(new SendCodeRequest(obj));
             }
+            else
+                return;
 
         }
 

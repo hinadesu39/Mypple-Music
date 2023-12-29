@@ -189,7 +189,11 @@ namespace Mypple_Music.ViewModels
         async void GetRecentPostAlbumList()
         {
             UpdateLoading(true);
-            AlbumList = new ObservableCollection<Album>(await albumService.GetAlbumsByMusicPostOrderAsync());
+            var album = await albumService.GetAlbumsByMusicPostOrderAsync();
+            if (album != null)
+                AlbumList = new ObservableCollection<Album>(album);
+            else
+                eventAggregator.SendMessage("连接出现问题~~~");
             tempAlbum = AlbumList;
             UpdateLoading(false);
         }

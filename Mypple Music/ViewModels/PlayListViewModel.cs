@@ -19,22 +19,32 @@ namespace Mypple_Music.ViewModels
 {
     public class PlayListViewModel : NavigationViewModel
     {
+        #region Field
         private bool isUpdating;
         private Guid whichPlayList;
-        private IMusicService musicService;
+        private readonly IMusicService musicService;
         private readonly IDialogHostService dialog;
-        private IPlayListService playListService;
-        private readonly IEventAggregator eventAggregator;
+        private readonly IPlayListService playListService;
         private ObservableCollection<Music> tempMusic;
         private Guid playListId;
         private Music musicToEdit;
+        #endregion
 
-        private ObservableCollection<PlayList> allPlayLists = new ObservableCollection<PlayList> { new PlayList() { Title = "111" }, new PlayList() { Title = "222" } };
+        #region Property
+        private ObservableCollection<PlayList> allPlayLists = new ObservableCollection<PlayList>
+        {
+            new PlayList() { Title = "111" },
+            new PlayList() { Title = "222" }
+        };
 
         public ObservableCollection<PlayList> AllPlayLists
         {
             get { return allPlayLists; }
-            set { allPlayLists = value; RaisePropertyChanged(); }
+            set
+            {
+                allPlayLists = value;
+                RaisePropertyChanged();
+            }
         }
 
         /// <summary>
@@ -131,20 +141,20 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
+        #endregion
 
+        #region Ctor
         public PlayListViewModel(
             IContainerProvider containerProvider,
             IMusicService musicService,
             IDialogHostService dialog,
-            IPlayListService playListService,
-            IEventAggregator eventAggregator
+            IPlayListService playListService
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
             this.playListService = playListService;
-            this.eventAggregator = eventAggregator;
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
@@ -154,7 +164,9 @@ namespace Mypple_Music.ViewModels
             ExecuteCommand = new DelegateCommand<string>(Execute);
             DownloadAllCommand = new DelegateCommand(DownloadAllAsync);
         }
+        #endregion
 
+        #region Command
         //子弹出框命令
         private void Execute(string obj)
         {
@@ -219,12 +231,12 @@ namespace Mypple_Music.ViewModels
                         var res = await playListService.AddMusicToPlayListAsync(
                             musicAddToPlayListRequest
                         );
-                        if(res == null)
+                        if (res == null)
                         {
                             eventAggregator.SendMessage("添加失败");
                             return;
                         }
-                        if(MusicList == null)
+                        if (MusicList == null)
                         {
                             MusicList = new ObservableCollection<Music>(res);
                         }
@@ -332,24 +344,34 @@ namespace Mypple_Music.ViewModels
                 if (whichPlayList != Guid.Empty && playListId == whichPlayList)
                 {
                     return;
-                }                
+                }
                 whichPlayList = playListId;
-                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
-                PlayList = await playListService.GetByIdAsync(playListId);
+                UpdateLoading(true);
+                var playLists = await playListService.GetByIdAsync(playListId);
+                if (playLists != null)
+                {
+                    PlayList = playLists;
+                }
+                else
+                {
+                    eventAggregator.SendMessage("连接出现问题~~~");
+                    UpdateLoading(false);
+                    return;
+                }
                 var musics = await playListService.GetMusicsByPlayListIdAsync(playListId);
                 if (musics != null)
                 {
                     MusicList = new ObservableCollection<Music>(musics);
                     tempMusic = MusicList;
                     Count = MusicList.Count;
-                    Duration = MusicList.Sum(m => m.Duration);                   
+                    Duration = MusicList.Sum(m => m.Duration);
                 }
-                AppSession.EventAggregator
-                    .GetEvent<LoadingEvent>()
-                    .Publish(new LoadingModel(false));
+                UpdateLoading(false);
             }
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext) { }
+
+        #endregion
     }
 }

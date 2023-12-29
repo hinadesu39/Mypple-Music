@@ -27,7 +27,8 @@ namespace Mypple_Music.ViewModels.Dialogs
     {
         #region Field
         public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        private Regex regex = new Regex(@"^\d{11}$");
+        private Regex phoneRegex = new Regex(@"^(((13[0-9]{1})|(15[0-35-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$");
+        private Regex emailRegex = new Regex(@"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$");
         private readonly IEventAggregator aggregator;
         private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
         private DateTime autoStartingActionCountdownStart;
@@ -141,20 +142,20 @@ namespace Mypple_Music.ViewModels.Dialogs
             set { code = value; RaisePropertyChanged(); }
         }
 
-        private string pwd1;
+        private string registerPwd;
 
-        public string Pwd1
+        public string RegisterPwd
         {
-            get { return pwd1; }
-            set { pwd1 = value; RaisePropertyChanged(); }
+            get { return registerPwd; }
+            set { registerPwd = value; RaisePropertyChanged(); }
         }
 
-        private string pwd2;
+        private string repeatPwd;
 
-        public string Pwd2
+        public string RepeatPwd
         {
-            get { return pwd2; }
-            set { pwd2 = value; RaisePropertyChanged(); }
+            get { return repeatPwd; }
+            set { repeatPwd = value; RaisePropertyChanged(); }
         }
 
         public string DialogHostName { get; set; }
@@ -204,20 +205,21 @@ namespace Mypple_Music.ViewModels.Dialogs
 
         private async void SendCode(string obj)
         {
-            if (obj == string.Empty)
+            if (string.IsNullOrEmpty(obj))
                 return;
             autoStartingActionCountdownStart = DateTime.Now;
             ShowSendButton = false;
 
-            if (regex.IsMatch(obj))
+            if (phoneRegex.IsMatch(obj))
             {
                 await loginService.SendCodeByPhone(new SendCodeRequest(obj));
             }
-            else
+            else if (emailRegex.IsMatch(obj))
             {
                 await loginService.SendCodeByEmail(new SendCodeRequest(obj));
             }
-
+            else
+                return;
         }
 
         private void ChangeTransitionerSlide(string obj)
@@ -244,18 +246,19 @@ namespace Mypple_Music.ViewModels.Dialogs
         {
             if (obj == "注册")
             {
-                if (Pwd1 != Pwd2)
+                if (RegisterPwd != RepeatPwd)
                 {
                     aggregator.SendMessage("密码不一致", "Login");
                     return;
                 }
-                if (UserName == null || PhoneNum == null || Code == null || Pwd1 == null || Pwd2 == null)
+                if (UserName == null || PhoneNum == null || Code == null || RegisterPwd == null || RepeatPwd == null)
                 {
-                    aggregator.SendMessage("信息不能为空", "Login");
+                    aggregator.SendMessage("字段不能为空", "Login");
                     return;
                 }
+
                 IsRegisterEnable = false;
-                var res = await loginService.CreateUserWithPhoneNumAndCode(new CreateUserWithPhoneNumAndCodeRequest(UserName, PhoneNum, Pwd1, Code));
+                var res = await loginService.CreateUserWithPhoneNumAndCode(new CreateUserWithPhoneNumAndCodeRequest(UserName, PhoneNum, RegisterPwd, Code));
                 if (res.Status == true)
                 {
                     Account = res.Result!.UserName;
@@ -271,14 +274,16 @@ namespace Mypple_Music.ViewModels.Dialogs
             {
                 IsLoginEnable = false;
                 ApiResponse<string?> res = null;
-                if (regex.IsMatch(Account))
+                if (phoneRegex.IsMatch(Account))
                 {
                     res = await loginService.LoginByPhoneAndCode(new LoginByPhoneAndCodeRequest(Account, Code));
                 }
-                else
+                else if (emailRegex.IsMatch(Account))
                 {
                     res = await loginService.LoginByEmailAndCode(new LoginByEmailAndCodeRequest(Account, Code));
                 }
+                else
+                    return;
 
                 if (res != null && res.Status == true)
                 {
@@ -344,11 +349,11 @@ namespace Mypple_Music.ViewModels.Dialogs
             }
             IsLoginEnable = false;
             ApiResponse<string?> res = null;
-            if (Account.Contains("@"))
+            if (emailRegex.IsMatch(Account))
             {
                 res = await loginService.LoginByEmailAndPwd(new LoginByEmailAndPwdRequest(Account, Password));
             }
-            else if (regex.IsMatch(Account))
+            else if (phoneRegex.IsMatch(Account))
             {
                 res = await loginService.LoginByPhoneAndPwd(new LoginByPhoneAndPwdRequest(Account, Password));
             }

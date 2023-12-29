@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,11 @@ namespace Mypple_Music.Service
     {
         private readonly string apiUrl;
         protected readonly RestClient client;
-        public HttpRestClient(string apiUrl)
+        private readonly ILogger logger;
+        public HttpRestClient(string apiUrl, ILogger logger)
         {
             this.apiUrl = apiUrl;
+            this.logger = logger;
             client = new RestClient(apiUrl);
         }
 
@@ -47,8 +50,18 @@ namespace Mypple_Music.Service
             {
                 request.AddHeader("Authorization", $"Bearer {baseRequest.Authorization}");
             }
-            RestResponse response = await client.ExecuteAsync(request);          
-            return JsonConvert.DeserializeObject<T>(response.Content);
+
+            try
+            {
+                RestResponse response = await client.ExecuteAsync(request);
+                return JsonConvert.DeserializeObject<T>(response.Content);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                return default(T);           
+            }
+
 
         }
 

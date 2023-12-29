@@ -29,6 +29,7 @@ namespace Mypple_Music.Views
         public MainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+            AppSession.EventAggregator = eventAggregator;
             Loaded += MainView_Loaded;
 
             //注册消息通知

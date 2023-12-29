@@ -188,10 +188,19 @@ namespace Mypple_Music.ViewModels
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             UpdateLoading(true);
-            PlayList = new ObservableCollection<PlayList>(await playListService.GetAllAsync());
+            var playLists = await playListService.GetAllAsync();
+            if(playLists != null)
+            {
+                PlayList = new ObservableCollection<PlayList>(playLists);
+            }
+            else
+            {
+                eventAggregator.SendMessage("连接出现问题~~~");
+            }
             tempPlayList = PlayList;
             UpdateLoading(false);
         }
         #endregion
     }
 }
+ 

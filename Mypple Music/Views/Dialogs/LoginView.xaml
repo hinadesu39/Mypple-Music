@@ -183,11 +183,11 @@
                     <PasswordBox md:HintAssist.Hint="请输入密码..."
                                  md:TextFieldAssist.HasClearButton="True"
                                  Margin="10"
-                                 extension:PasswordExtension.PasswordContent="{Binding Pwd1,Mode=TwoWay}" />
+                                 extension:PasswordExtension.PasswordContent="{Binding RegisterPwd,Mode=TwoWay}" />
                     <PasswordBox md:HintAssist.Hint="再次输入密码..."
                                  md:TextFieldAssist.HasClearButton="True"
                                  Margin="10"
-                                 extension:PasswordExtension.PasswordContent="{Binding Pwd2,Mode=TwoWay}" />
+                                 extension:PasswordExtension.PasswordContent="{Binding RepeatPwd,Mode=TwoWay}" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="注册"
                                 Width="120"
@@ -200,7 +200,6 @@
                                 Command="{Binding ChangeTransitionerSlideCommand}"
                                 CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
-                    <TextBlock Text="{Binding RestartCountdownText}" />
                 </StackPanel>
             </md:TransitionerSlide>
             <!--#endregion-->

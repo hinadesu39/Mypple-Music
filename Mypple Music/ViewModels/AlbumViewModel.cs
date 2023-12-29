@@ -182,7 +182,13 @@ namespace Mypple_Music.ViewModels
         async void GetAlbumList()
         {
             UpdateLoading(true);
-            AlbumList = new ObservableCollection<Album>(await albumService.GetAllAsync());
+            var albums = await albumService.GetAllAsync();
+            if (albums != null)
+            {
+                AlbumList = new ObservableCollection<Album>(albums);
+            }
+            else
+                eventAggregator.SendMessage("连接出现问题~~~");
             tempAlbum = AlbumList;
             UpdateLoading(false);
         }

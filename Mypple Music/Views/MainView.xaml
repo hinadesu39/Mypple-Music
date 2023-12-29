@@ -237,7 +237,7 @@
                             <TextBlock Text="{Binding UserDto.UserName,Converter={StaticResource EmptyString},ConverterParameter=未登录,FallbackValue=未登录}"
                                        FontSize="15"
                                        VerticalAlignment="Center"
-                                       Foreground="{DynamicResource DefaultForgeground}"/>
+                                       Foreground="{DynamicResource DefaultForgeground}" />
 
                         </StackPanel>
                     </md:PopupBox.ToggleContent>
@@ -630,18 +630,18 @@
                                                    FontSize="15"
                                                    VerticalAlignment="Center"
                                                    Margin="10,0,0,0" />
-                                        <materialDesign:PackIcon Kind="Infinity"
-                                                                 DockPanel.Dock="Right"
-                                                                 VerticalAlignment="Center"
-                                                                 Margin="0,0,10,0"
-                                                                 FontSize="16"
-                                                                 FontWeight="Bold"
-                                                                 Foreground="{DynamicResource PrimaryHue}" />
                                         <Button Content="清空"
                                                 Style="{StaticResource TransParentButton}"
                                                 DockPanel.Dock="Right"
                                                 Margin="0,0,10,0"
                                                 Command="{Binding ClearToPlayListCommand}" />
+                                        
+                                        <Button Style="{StaticResource MaterialDesignIconButton}"
+                                                ToolTip="MaterialDesignIconButton"
+                                                DockPanel.Dock="Right"
+                                                Command="{Binding LocateMusicCommand}">
+                                            <materialDesign:PackIcon Kind="Target" />
+                                        </Button>
 
                                     </DockPanel>
                                     <Border BorderBrush="#757575"
@@ -662,6 +662,9 @@
                                             <i:EventTrigger EventName="MouseDoubleClick">
                                                 <i:InvokeCommandAction Command="{Binding ToPlayMusicCommand}"
                                                                        CommandParameter="{Binding SelectedIndex, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Loaded">
+                                                <i:InvokeCommandAction Command="{Binding LocateMusicCommand}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                         <ListBox.ItemTemplate>

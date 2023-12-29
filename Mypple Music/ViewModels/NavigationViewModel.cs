@@ -21,7 +21,6 @@ namespace Mypple_Music.ViewModels
         {
             this.containerProvider = containerProvider;          
             eventAggregator = containerProvider.Resolve<IEventAggregator>();
-            AppSession.EventAggregator = eventAggregator;
         }
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {

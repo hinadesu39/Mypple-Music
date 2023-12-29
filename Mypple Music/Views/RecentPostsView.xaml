@@ -62,7 +62,6 @@
                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-
             <d:ListBox.Items>
                 <model:Album Artist="稲葉曇"
                              Title="ポストシェルタ"

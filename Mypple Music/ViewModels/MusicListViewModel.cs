@@ -1,4 +1,5 @@
 ﻿using Mypple_Music.Events;
+using Mypple_Music.Extensions;
 using Mypple_Music.Models;
 using Mypple_Music.Service;
 using Prism.Commands;
@@ -129,11 +130,18 @@ namespace Mypple_Music.ViewModels
 
         async void Config()
         {
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
+            UpdateLoading(true);
             IsSearchVisible = false;
-            MusicList = new ObservableCollection<Music>(await musicService.GetAllAsync());
+            var musics = await musicService.GetAllAsync();
+            if (musics != null)
+            {
+                MusicList = new ObservableCollection<Music>(musics);
+            }
+            else
+                eventAggregator.SendMessage("连接出现问题~~~");
+            
             tempMusic = MusicList;
-            AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(false));
+            UpdateLoading(false);
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)

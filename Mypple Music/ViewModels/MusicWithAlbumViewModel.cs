@@ -25,7 +25,7 @@ namespace Mypple_Music.ViewModels
     public class MusicWithAlbumViewModel : NavigationViewModel
     {
         #region Field
-        private bool isUpdating;     
+        private bool isUpdating;
         private string whichAlbum;
         private readonly IMusicService musicService;
         private readonly IDialogHostService dialog;
@@ -42,7 +42,11 @@ namespace Mypple_Music.ViewModels
         public bool IsDownloading
         {
             get { return isDownloading; }
-            set { isDownloading = value; RaisePropertyChanged(); }
+            set
+            {
+                isDownloading = value;
+                RaisePropertyChanged();
+            }
         }
 
         /// <summary>
@@ -173,7 +177,6 @@ namespace Mypple_Music.ViewModels
             IMusicService musicService,
             IDialogHostService dialog,
             IEventAggregator eventAggregator
-
         )
             : base(containerProvider)
         {
@@ -209,7 +212,7 @@ namespace Mypple_Music.ViewModels
                     {
                         eventAggregator.SendMessage($"{m.Title} 已存在！");
                     }
-                    else if(res != "")
+                    else if (res != "")
                     {
                         eventAggregator.SendMessage($"{m.Title} 下载成功！");
                     }
@@ -334,16 +337,21 @@ namespace Mypple_Music.ViewModels
                 {
                     return;
                 }
-                AppSession.EventAggregator.GetEvent<LoadingEvent>().Publish(new LoadingModel(true));
-                MusicList = new ObservableCollection<Music>(
-                    await musicService.GetMusicsByAlbumIdAsync(Album.Id)
-                );
-                AppSession.EventAggregator
-                    .GetEvent<LoadingEvent>()
-                    .Publish(new LoadingModel(false));
+                UpdateLoading(true);
+                var musics = await musicService.GetMusicsByAlbumIdAsync(Album.Id);
+                if (musics != null)
+                {
+                    MusicList = new ObservableCollection<Music>(musics);
+                    Count = MusicList.Count;
+                    Duration = MusicList.Sum(m => m.Duration);
+                }
+                else
+                {
+                    eventAggregator.SendMessage("连接出现问题~~~");
+                }
+
+                UpdateLoading(false);
                 tempMusic = MusicList;
-                Count = MusicList.Count;
-                Duration = MusicList.Sum(m => m.Duration);
                 whichAlbum = Album.Title;
             }
         }

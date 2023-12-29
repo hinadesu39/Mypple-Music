@@ -121,7 +121,13 @@ namespace Mypple_Music.ViewModels
         async void Config()
         {
             UpdateLoading(true);
-            Artists = new ObservableCollection<Artist>(await artistService.GetAllAsync());
+            var artist = await artistService.GetAllAsync();
+            if (artist != null)
+            {
+                Artists = new ObservableCollection<Artist>(artist);
+            }
+            else
+                eventAggregator.SendMessage("连接出现问题~~~");
             tempArtist = Artists;
             UpdateLoading(false);
         }

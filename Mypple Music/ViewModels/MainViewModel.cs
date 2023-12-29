@@ -185,6 +185,7 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<Music> RemoveMusicCommand { set; get; }
         public DelegateCommand<object> ToPlayMusicCommand { get; set; }
         public DelegateCommand ClearToPlayListCommand { set; get; }
+        public DelegateCommand LocateMusicCommand { get; set; }
         #endregion
 
         #region Ctor
@@ -213,14 +214,13 @@ namespace Mypple_Music.ViewModels
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             InitCommand = new DelegateCommand(Init);
             GoBackCommand = new DelegateCommand(GoBack);
-            UserCenterCommand = new DelegateCommand(goUserCenterAsync);
             ExecuteCommand = new DelegateCommand<string>(Execute);
             RemoveMusicCommand = new DelegateCommand<Music>(RemoveMusic);
             ToPlayMusicCommand = new DelegateCommand<object>(ToPlayMusic);
             ClearToPlayListCommand = new DelegateCommand(ClearToPlayList);
+            LocateMusicCommand = new DelegateCommand(LocateMusic);
 
-            //创建播放器
-            //PlayCommand = new DelegateCommand(Play);
+            //播放相关
             MediaLoadedCommand = new DelegateCommand<MediaElement>(MediaLoadedAsync);
             MediaEndedCommand = new DelegateCommand<string>(MediaEnded);
             VolumeValueChangedCommand = new DelegateCommand<object>(VolumeValueChanged);
@@ -284,6 +284,15 @@ namespace Mypple_Music.ViewModels
         #endregion
 
         #region Command
+        /// <summary>
+        /// 在播放列表中定位到当前播放的音乐
+        /// </summary>
+        private void LocateMusic()
+        {
+            var tempMusic = Player.Music;
+            Player.Music = null;
+            Player.Music = tempMusic;
+        }
         /// <summary>
         /// 清空待播列表
         /// </summary>
@@ -374,6 +383,7 @@ namespace Mypple_Music.ViewModels
                     }
                     break;
             }
+            LocateMusic();
         }
 
         /// <summary>
@@ -480,19 +490,6 @@ namespace Mypple_Music.ViewModels
 
             //添加到历史播放列表
             HistoryPlayList.Add(music);
-        }
-
-        /// <summary>
-        /// 用户中心
-        /// </summary>
-        private void goUserCenterAsync()
-        {
-            DialogParameters parameter = new DialogParameters();
-            if (UserDto != null)
-            {
-                parameter.Add("Value", UserDto);
-            }
-            //var res = await dialog.ShowDialog("UserCenterView", parameter);
         }
 
         /// <summary>
@@ -689,14 +686,6 @@ namespace Mypple_Music.ViewModels
                     Icon = "ViewGridOutline",
                     Title = "浏览",
                     NameSpace = "BrowserView"
-                }
-            );
-            MenuBars.Add(
-                new MenuBar()
-                {
-                    Icon = "Broadcast",
-                    Title = "广播",
-                    NameSpace = "BroadcastView"
                 }
             );
             MenuBars.Add(

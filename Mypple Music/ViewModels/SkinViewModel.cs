@@ -17,7 +17,7 @@ using System.Windows.Media;
 
 namespace Mypple_Music.ViewModels
 {
-    public class SkinViewModel : BindableBase, INavigationAware
+    public class SkinViewModel : NavigationViewModel
     {
         //打开当前应用程序的配置文件
         public static Configuration config = ConfigurationManager.OpenExeConfiguration(
@@ -68,7 +68,8 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public SkinViewModel()
+        public SkinViewModel(IContainerProvider containerProvider)
+            : base(containerProvider)
         {
             ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
         }
