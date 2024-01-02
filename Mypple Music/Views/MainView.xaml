@@ -85,27 +85,14 @@
                              Margin="0,10,0,0"
                              ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
                              ItemsSource="{Binding MenuBars}"
-                             DockPanel.Dock="Top">
+                             DockPanel.Dock="Top"
+                             ItemTemplate="{StaticResource ForNavigation}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding NavigateCommand}"
                                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal"
-                                            Background="Transparent">
-                                    <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                             Margin="10,8"
-                                                             Width="20"
-                                                             Height="20" />
-                                    <TextBlock Text="{Binding Title}"
-                                               Margin="5,8" />
-                                </StackPanel>
-
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
                     </ListBox>
                     <!--#endregion 界面列表栏-->
                     <!--#region 资料库-->
@@ -133,26 +120,14 @@
                                      Margin="0,10,0,0"
                                      ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
                                      ItemsSource="{Binding MusicInfoBars}"
-                                     DockPanel.Dock="Top">
+                                     DockPanel.Dock="Top"
+                                     ItemTemplate="{StaticResource ForSubNavigation}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding NavigateCommand}"
                                                                CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal"
-                                                    Background="Transparent">
-                                            <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                                     Margin="35,8,5,8"
-                                                                     Width="20"
-                                                                     Height="20" />
-                                            <TextBlock Text="{Binding Title}"
-                                                       Margin="5,8" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
                         </StackPanel>
                     </Expander>
@@ -179,26 +154,14 @@
                                      Margin="0,10,0,0"
                                      ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
                                      ItemsSource="{Binding PlayListBars}"
-                                     DockPanel.Dock="Top">
+                                     DockPanel.Dock="Top"
+                                     ItemTemplate="{StaticResource ForSubNavigation}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding NavigateCommand}"
                                                                CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal"
-                                                    Background="Transparent">
-                                            <materialDesign:PackIcon Kind="{Binding Icon}"
-                                                                     Margin="35,8,5,8"
-                                                                     Width="20"
-                                                                     Height="20" />
-                                            <TextBlock Text="{Binding Title}"
-                                                       Margin="5,8" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
                         </StackPanel>
                     </Expander>
@@ -635,7 +598,7 @@
                                                 DockPanel.Dock="Right"
                                                 Margin="0,0,10,0"
                                                 Command="{Binding ClearToPlayListCommand}" />
-                                        
+
                                         <Button Style="{StaticResource MaterialDesignIconButton}"
                                                 ToolTip="MaterialDesignIconButton"
                                                 DockPanel.Dock="Right"
@@ -657,7 +620,8 @@
                                                                 VirtualizingPanel.ScrollUnit="Pixel"
                                                                 VirtualizingPanel.VirtualizationMode="Recycling"
                                                                 SelectedItem="{Binding Player.Music,Mode=OneWay}"
-                                                                Foreground="{DynamicResource DefaultForgeground}">
+                                                                Foreground="{DynamicResource DefaultForgeground}"
+                                                                ItemTemplate="{StaticResource ForToPlayList}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseDoubleClick">
                                                 <i:InvokeCommandAction Command="{Binding ToPlayMusicCommand}"
@@ -667,69 +631,6 @@
                                                 <i:InvokeCommandAction Command="{Binding LocateMusicCommand}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border BorderBrush="#757575"
-                                                        BorderThickness="0,0,0,0.5">
-                                                    <DockPanel LastChildFill="False"
-                                                               Background="Transparent"
-                                                               Margin="0,3,0,3">
-                                                        <Grid>
-                                                            <Border Width="45"
-                                                                    Height="45"
-                                                                    CornerRadius="5"
-                                                                    Background="LightGray">
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect BlurRadius="20"
-                                                                                      ShadowDepth="0"
-                                                                                      Color="Black"
-                                                                                      Opacity="0.4" />
-                                                                </Border.Effect>
-                                                                <TextBlock FontFamily="{StaticResource IconFont}"
-                                                                           FontSize="30"
-                                                                           FontWeight="ExtraBold"
-                                                                           Text="&#xe64b;"
-                                                                           Foreground="#33000000"
-                                                                           HorizontalAlignment="Center"
-                                                                           VerticalAlignment="Center" />
-
-                                                            </Border>
-                                                            <Border CornerRadius="5"
-                                                                    Width="45"
-                                                                    Height="45">
-                                                                <Border.Background>
-                                                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                                                RenderOptions.BitmapScalingMode="LowQuality" />
-                                                                </Border.Background>
-                                                            </Border>
-                                                            <Button Content="&#xe64d;"
-                                                                    Style="{StaticResource TransParentButton}"
-                                                                    FontFamily="{StaticResource IconFont}"
-                                                                    Foreground="Red"
-                                                                    Width="18"
-                                                                    Height="18"
-                                                                    FontSize="15"
-                                                                    VerticalAlignment="Top"
-                                                                    HorizontalAlignment="Left"
-                                                                    Command="{Binding DataContext.RemoveMusicCommand,RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                                                    CommandParameter="{Binding}"
-                                                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                                        </Grid>
-                                                        <StackPanel Margin="10,0,0,0"
-                                                                    VerticalAlignment="Center">
-                                                            <TextBlock Text="{Binding Title}"
-                                                                       Width="200" />
-                                                            <TextBlock Text="{Binding Artist}"
-                                                                       Foreground="Gray" />
-                                                        </StackPanel>
-                                                        <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
-                                                                   DockPanel.Dock="Right"
-                                                                   VerticalAlignment="Center"
-                                                                   Margin="0,0,10,0" />
-                                                    </DockPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
                                     </extension:ScrollingListBox>
                                 </StackPanel>
                                 <!--历史记录-->
@@ -746,63 +647,14 @@
                                              ScrollViewer.VerticalScrollBarVisibility="Visible"
                                              VirtualizingPanel.ScrollUnit="Pixel"
                                              VirtualizingPanel.VirtualizationMode="Recycling"
-                                             Foreground="{DynamicResource DefaultForgeground}">
+                                             Foreground="{DynamicResource DefaultForgeground}"
+                                             ItemTemplate="{StaticResource ForHistoryList}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectionChanged">
                                                 <i:InvokeCommandAction Command="{Binding NavigateCommand}"
                                                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border BorderBrush="#757575"
-                                                        BorderThickness="0,0,0,0.5">
-                                                    <DockPanel LastChildFill="False"
-                                                               Background="Transparent"
-                                                               Margin="0,3,0,3">
-                                                        <Grid>
-                                                            <Border Width="45"
-                                                                    Height="45"
-                                                                    CornerRadius="5"
-                                                                    Background="LightGray">
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect BlurRadius="20"
-                                                                                      ShadowDepth="0"
-                                                                                      Color="Black"
-                                                                                      Opacity="0.4" />
-                                                                </Border.Effect>
-                                                                <TextBlock FontFamily="{StaticResource IconFont}"
-                                                                           FontSize="30"
-                                                                           FontWeight="ExtraBold"
-                                                                           Text="&#xe64b;"
-                                                                           Foreground="#33000000"
-                                                                           HorizontalAlignment="Center"
-                                                                           VerticalAlignment="Center" />
-                                                            </Border>
-                                                            <Border CornerRadius="5"
-                                                                    Width="45"
-                                                                    Height="45">
-                                                                <Border.Background>
-                                                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                                                RenderOptions.BitmapScalingMode="LowQuality" />
-                                                                </Border.Background>
-                                                            </Border>
-                                                        </Grid>
-                                                        <StackPanel Margin="10,0,0,0"
-                                                                    VerticalAlignment="Center">
-                                                            <TextBlock Text="{Binding Title}"
-                                                                       Width="200" />
-                                                            <TextBlock Text="{Binding Artist}"
-                                                                       Foreground="Gray" />
-                                                        </StackPanel>
-                                                        <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
-                                                                   DockPanel.Dock="Right"
-                                                                   VerticalAlignment="Center"
-                                                                   Margin="0,0,10,0" />
-                                                    </DockPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
                                     </ListBox>
                                 </StackPanel>
                             </StackPanel>

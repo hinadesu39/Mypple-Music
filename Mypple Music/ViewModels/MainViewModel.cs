@@ -186,6 +186,7 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<object> ToPlayMusicCommand { get; set; }
         public DelegateCommand ClearToPlayListCommand { set; get; }
         public DelegateCommand LocateMusicCommand { get; set; }
+        public DelegateCommand<string> SearchCommand { get; set; }
         #endregion
 
         #region Ctor
@@ -213,12 +214,14 @@ namespace Mypple_Music.ViewModels
 
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             InitCommand = new DelegateCommand(Init);
+            
             GoBackCommand = new DelegateCommand(GoBack);
             ExecuteCommand = new DelegateCommand<string>(Execute);
             RemoveMusicCommand = new DelegateCommand<Music>(RemoveMusic);
             ToPlayMusicCommand = new DelegateCommand<object>(ToPlayMusic);
             ClearToPlayListCommand = new DelegateCommand(ClearToPlayList);
             LocateMusicCommand = new DelegateCommand(LocateMusic);
+            SearchCommand = new DelegateCommand<string>(Search);
 
             //播放相关
             MediaLoadedCommand = new DelegateCommand<MediaElement>(MediaLoadedAsync);
@@ -281,9 +284,17 @@ namespace Mypple_Music.ViewModels
                     }
                 );
         }
+
+
         #endregion
 
         #region Command
+
+        private void Search(string obj)
+        {
+            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("SearchView");
+        }
+
         /// <summary>
         /// 在播放列表中定位到当前播放的音乐
         /// </summary>
@@ -764,6 +775,7 @@ namespace Mypple_Music.ViewModels
             {
                 CreateMenuBar();
             }
+            UpdateLoading(true);
             if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsAutoLogin")))
             {
                 AppSession.JWTToken = ConfigurationManager.AppSettings.Get("JWTToken")!;
@@ -786,14 +798,14 @@ namespace Mypple_Music.ViewModels
                 }
                 AppSession.AllPlayLists = new ObservableCollection<PlayList>(playList);
             }
-
-            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
-                "RecentPostsView",
-                Callback =>
-                {
-                    journal = Callback.Context.NavigationService.Journal;
-                }
-            );
+            UpdateLoading(false);
+            //RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
+            //    "RecentPostsView",
+            //    Callback =>
+            //    {
+            //        journal = Callback.Context.NavigationService.Journal;
+            //    }
+            //);
         }
 
         /// <summary>

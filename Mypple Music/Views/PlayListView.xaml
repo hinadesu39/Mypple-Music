@@ -255,12 +255,6 @@
                                         CornerRadius="5"
                                         Background="LightGray"
                                         Margin="10,0,0,0">
-                                    <!--<Border.Effect>
-                                        <DropShadowEffect BlurRadius="20"
-                                                          ShadowDepth="0"
-                                                          Color="Black"
-                                                          Opacity="0.4" />
-                                    </Border.Effect>-->
                                     <TextBlock FontFamily="{StaticResource IconFont}"
                                                FontSize="30"
                                                FontWeight="ExtraBold"

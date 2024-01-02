@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Mypple_Music.ViewModels.Dialogs
 {
-    public class InfoManageViewModel : BindableBase, IDialogHostAware
+    public class UserInfoManageViewModel : BindableBase, IDialogHostAware
     {
         #region Field
         public string DialogHostName { get; set; } = "InfoManageView";
@@ -115,7 +115,7 @@ namespace Mypple_Music.ViewModels.Dialogs
         #endregion
 
         #region Ctor
-        public InfoManageViewModel(ILoginService loginService, IEventAggregator aggregator)
+        public UserInfoManageViewModel(ILoginService loginService, IEventAggregator aggregator)
         {
             this.loginService = loginService;
             this.aggregator = aggregator;

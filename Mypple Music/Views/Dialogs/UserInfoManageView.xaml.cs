@@ -20,9 +20,9 @@ namespace Mypple_Music.Views.Dialogs
     /// <summary>
     /// InfoManageView.xaml 的交互逻辑
     /// </summary>
-    public partial class InfoManageView : UserControl
+    public partial class UserInfoManageView : UserControl
     {
-        public InfoManageView(IEventAggregator aggregator)
+        public UserInfoManageView(IEventAggregator aggregator)
         {
             InitializeComponent();
             //注册消息提示

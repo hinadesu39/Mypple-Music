@@ -23,7 +23,7 @@ namespace Mypple_Music.Extensions
             // var item = FindVisualChild<ListBoxItem>(listBox);
             if (scrollViewer == null)
             {
-                scrollViewer = FindVisualChild<ScrollViewer>(listBox);
+                scrollViewer = ScrollViewerExtension.FindVisualChild<ScrollViewer>(listBox);
                 return;
             }
 
@@ -48,34 +48,6 @@ namespace Mypple_Music.Extensions
 
             }
             //告诉viewmodel点击事件后播放进度需要发生改变(待做)
-        }
-
-        /// <summary>
-        /// 通过遍历可视化树获取到Listbox中的ScrollViewer
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        public static T FindVisualChild<T>(DependencyObject parent)
-            where T : DependencyObject
-        {
-            if (parent != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                    if (child != null && child is T)
-                    {
-                        return (T)child;
-                    }
-                    T childItem = FindVisualChild<T>(child);
-                    if (childItem != null)
-                    {
-                        return childItem;
-                    }
-                }
-            }
-            return null;
         }
     }
 }

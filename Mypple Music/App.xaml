@@ -21,6 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converter:VolumeValueConverter x:Key="VolumeValue" />
             <converter:StatusToBoolConverter x:Key="StatusToBool" />
+            <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
             <!--滚动条样式-->
             <Style x:Key="ScrollThumbStyle"
@@ -238,6 +239,56 @@
 
             </Style>
             <!--搜索框样式-->
+            <Style x:Key="AssistButton"
+                   TargetType="Button">
+                <Setter Property="FontSize"
+                        Value="14" />
+                <Setter Property="Width"
+                        Value="30" />
+                <Setter Property="Height"
+                        Value="25" />
+                <Setter Property="FontFamily"
+                        Value="{StaticResource IconFont}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="Cursor"
+                        Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    CornerRadius="5"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    SnapsToDevicePixels="True">
+                                <Grid>
+                                    <TextBlock />
+                                    <TextBlock Text="{TemplateBinding Content}"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="Gray" />
+                                </Trigger>
+                                <Trigger Property="IsPressed"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="#22000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="SearchTextBoxTemplate"
                    TargetType="TextBox">
                 <Setter Property="MinHeight"
@@ -258,62 +309,28 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock x:Name="mt"
+                                        <TextBlock x:Name="hint"
                                                    Text="搜索"
                                                    Visibility="Collapsed"
                                                    Foreground="#e0e0e0"
                                                    Margin="15 3 0 0"
                                                    VerticalAlignment="Center" />
-                                        <Button Grid.Column="1"
-                                                Content="&#xe600;"
-                                                FontFamily="Resource/#iconfont"
-                                                FontSize="16"
-                                                Width="40"
-                                                Height="30"
-                                                Margin="0,0,5,0"
-                                                HorizontalAlignment="Right"
-                                                x:Name="btn">
-                                            <Button.Resources>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="Foreground"
-                                                            Value="{DynamicResource DefaultForgeground}" />
-                                                    <Setter Property="BorderThickness"
-                                                            Value="0" />
-                                                    <Setter Property="Cursor"
-                                                            Value="Hand" />
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="Button">
-                                                                <Border x:Name="border"
-                                                                        CornerRadius="5"
-                                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                                        SnapsToDevicePixels="True">
-                                                                    <TextBlock Text="{TemplateBinding Content}"
-                                                                               Foreground="{TemplateBinding Foreground}"
-                                                                               VerticalAlignment="Center"
-                                                                               HorizontalAlignment="Center" />
-                                                                </Border>
-                                                                <ControlTemplate.Triggers>
-                                                                    <Trigger Property="IsMouseOver"
-                                                                             Value="True">
-                                                                        <Setter TargetName="border"
-                                                                                Property="Background"
-                                                                                Value="Gray" />
-                                                                    </Trigger>
-                                                                    <Trigger Property="IsPressed"
-                                                                             Value="True">
-                                                                        <Setter TargetName="border"
-                                                                                Property="Background"
-                                                                                Value="#22000000" />
-                                                                    </Trigger>
-                                                                </ControlTemplate.Triggers>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </Button.Resources>
-                                        </Button>
+                                        <DockPanel HorizontalAlignment="Right"
+                                                   LastChildFill="False"
+                                                   Grid.Column="1">
+                                            <Button Content="&#xe600;"
+                                                    Margin="0,0,5,0"
+                                                    DockPanel.Dock="Right"
+                                                    Style="{StaticResource AssistButton}"
+                                                    Command="{Binding DataContext.SearchCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TextBox}}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBox},Path=Text}" />
+                                            <Button Content="&#xeca0;"
+                                                    Margin="0,0,5,0"
+                                                    DockPanel.Dock="Right"
+                                                    x:Name="clearButton"
+                                                    Style="{StaticResource AssistButton}" />
+
+                                        </DockPanel>
                                         <ScrollViewer x:Name="PART_ContentHost"
                                                       Grid.Column="0"
                                                       Focusable="false"
@@ -346,10 +363,17 @@
                                 </Trigger>
                                 <DataTrigger Binding="{Binding Text,RelativeSource={RelativeSource Mode=Self}}"
                                              Value="">
-                                    <Setter TargetName="mt"
+                                    <Setter TargetName="hint"
                                             Property="Visibility"
                                             Value="Visible" />
-
+                                    <Setter TargetName="clearButton"
+                                            Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsPressed,ElementName=clearButton}"
+                                             Value="True">
+                                    <Setter Property="Text"
+                                            Value="" />
                                 </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1026,7 +1050,7 @@
                     <Trigger Property="AlternationIndex"
                              Value="1">
                         <Setter Property="Background"
-                                Value="#44000000" />
+                                Value="#22000000" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -1404,6 +1428,8 @@
                                     <Setter TargetName="border"
                                             Property="Background"
                                             Value="#33000000" />
+                                    <Setter Property="FontSize"
+                                            Value="22" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1572,12 +1598,6 @@
                                                 CornerRadius="5"
                                                 Background="LightGray"
                                                 Margin="5,5,5,0">
-                                            <!--<Border.Effect>
-                                                <DropShadowEffect BlurRadius="20"
-                                                                  ShadowDepth="0"
-                                                                  Color="Black"
-                                                                  Opacity="0.4" />
-                                            </Border.Effect>-->
                                             <Grid>
                                                 <TextBlock FontFamily="{StaticResource IconFont}"
                                                            FontSize="80"
@@ -1602,11 +1622,10 @@
                                                    Fill="#88000000"
                                                    Width="200"
                                                    Height="200"
-                                                   RadiusX="8"
+                                                   RadiusX="5"
                                                    Margin="5,5,5,0"
-                                                   RadiusY="8"
-                                                   Visibility="Hidden">
-                                        </Rectangle>
+                                                   RadiusY="5"
+                                                   Visibility="Hidden" />
                                         <Button x:Name="playButton"
                                                 Style="{StaticResource CornerRadiusButton}"
                                                 Content="&#xea82;"
@@ -1617,7 +1636,7 @@
                                                 HorizontalAlignment="Left"
                                                 Visibility="Hidden"
                                                 Margin="20,10,10,10"
-                                                Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                Command="{Binding DataContext.PlayAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}" />
                                         <Button x:Name="infoButton"
                                                 Style="{StaticResource CornerRadiusButton}"
@@ -1657,8 +1676,6 @@
                                     <Setter TargetName="playButton"
                                             Property="Visibility"
                                             Value="Visible" />
-                                    <!--<Setter Property="Tag"
-                                            Value="{Binding RelativeSource={RelativeSource Self},Path=}" />-->
 
                                 </Trigger>
 
@@ -1971,7 +1988,6 @@
                                                Margin="10,0,0,0" />
                                 </StackPanel>
                             </materialDesign:TransitioningContent>
-
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver"
                                          Value="True">
@@ -1994,6 +2010,576 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <!--搜索歌曲展示列表-->
+            <Style x:Key="SearchMusicList"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer>
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe61f;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin="-30 0 0 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe620;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin=" 0 0 -30 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right"
+                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                                           HorizontalAlignment="Right"
+                                                           Maximum="{TemplateBinding ScrollableHeight}"
+                                                           Orientation="Vertical"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           ViewportSize="{TemplateBinding ViewportHeight}"
+                                                           Value="{TemplateBinding VerticalOffset}"
+                                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <WrapPanel Orientation="Vertical"
+                                           IsItemsHost="True"
+                                           ScrollViewer.CanContentScroll="False"
+                                           Height="170" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="SearchMusicListItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="MinHeight"
+                        Value="30" />
+                <Setter Property="Width"
+                        Value="300" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Grid Margin="0 0 10 5">
+                                <Border BorderBrush="#757575"
+                                        BorderThickness="0,0.5,0,0" />
+                                <Rectangle x:Name="borderHeader"
+                                           Width="4"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Height="20"
+                                           HorizontalAlignment="Left"
+                                           Margin="5,0,0,0">
+                                </Rectangle>
+                                <Border x:Name="border" />
+                                <!--<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalAlignment}" />-->
+                                <DockPanel LastChildFill="False"
+                                           Background="Transparent"
+                                           Margin="3">
+                                    <Grid>
+                                        <Border Width="45"
+                                                Height="45"
+                                                CornerRadius="5"
+                                                Background="LightGray">
+                                            <TextBlock FontFamily="{StaticResource IconFont}"
+                                                       FontSize="30"
+                                                       FontWeight="ExtraBold"
+                                                       Text="&#xe64b;"
+                                                       Foreground="#33000000"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
+                                        </Border>
+                                        <Border CornerRadius="5"
+                                                Width="45"
+                                                Height="45">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                            RenderOptions.BitmapScalingMode="LowQuality" />
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                    <StackPanel Margin="10,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Width="200" />
+                                        <TextBlock Text="{Binding Artist}"
+                                                   Foreground="Gray" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
+                                               DockPanel.Dock="Right"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,10,0" />
+                                </DockPanel>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Fill"
+                                            TargetName="borderHeader"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    <Setter TargetName="border"
+                                            Property="Opacity"
+                                            Value="0.2" />
+                                    <Setter TargetName="border"
+                                            Property="CornerRadius"
+                                            Value="5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--搜索艺人展示列表-->
+            <Style x:Key="SearchArtistList"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer>
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe61f;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin="-35 0 0 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe620;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin=" 0 0 -35 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right"
+                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <StackPanel Orientation="Horizontal"
+                                            IsItemsHost="True"
+                                            ScrollViewer.CanContentScroll="False"
+                                            Height="130" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="SearchArtistListItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <StackPanel Margin="0 0 12 0">
+                                <Grid>
+                                    <Border Width="115"
+                                            Height="115"
+                                            CornerRadius="60"
+                                            Background="LightGray">
+                                        <TextBlock FontFamily="{StaticResource IconFont}"
+                                                   FontSize="55"
+                                                   FontWeight="ExtraBold"
+                                                   Text="&#xe64b;"
+                                                   Foreground="#33000000"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </Border>
+                                    <Border CornerRadius="60"
+                                            Width="115"
+                                            Height="115">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                        RenderOptions.BitmapScalingMode="LowQuality" />
+                                        </Border.Background>
+                                    </Border>
+                                    <Rectangle x:Name="background"
+                                               Fill="#88000000"
+                                               Width="115"
+                                               Height="115"
+                                               RadiusX="60"
+                                               RadiusY="60"
+                                               Visibility="Hidden" />
+                                </Grid>
+                                <TextBlock Text="{Binding Name}"
+                                           TextWrapping="Wrap"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="background"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--搜索专辑展示列表-->
+            <Style x:Key="SearchAlbumListStyle"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer>
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe61f;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin="-35 0 0 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                <Button Width="30"
+                                                        Height="40"
+                                                        Content="&#xe620;"
+                                                        FontFamily="{StaticResource IconFont}"
+                                                        Foreground="White"
+                                                        Margin=" 0 0 -30 0"
+                                                        Style="{StaticResource TransParentButton}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right"
+                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <StackPanel Orientation="Horizontal"
+                                            IsItemsHost="True"
+                                            ScrollViewer.CanContentScroll="True"
+                                            Height="250" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="SearchAlbumListItemStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
+                                <StackPanel Width="220"
+                                            Height="250"
+                                            Margin="5 0 0 0">
+                                    <Grid>
+                                        <!--图片不存在时默认展示-->
+                                        <Border Width="200"
+                                                Height="200"
+                                                CornerRadius="5"
+                                                Background="LightGray">
+                                            <Grid>
+                                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                                           FontSize="80"
+                                                           FontWeight="ExtraBold"
+                                                           Text="&#xe64b;"
+                                                           Foreground="#33000000"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                        <Border CornerRadius="5"
+                                                Width="200"
+                                                Height="200">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                            RenderOptions.BitmapScalingMode="LowQuality" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <Rectangle x:Name="background"
+                                                   Fill="#88000000"
+                                                   Width="200"
+                                                   Height="200"
+                                                   RadiusX="5"
+                                                   RadiusY="5"
+                                                   Visibility="Hidden" />
+                                        <Button x:Name="playButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xea82;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Visibility="Hidden"
+                                                Margin="20,10,10,10"
+                                                Command="{Binding DataContext.PlayAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
+                                        <Button x:Name="infoButton"
+                                                Style="{StaticResource CornerRadiusButton}"
+                                                Content="&#xe719;"
+                                                FontFamily="{StaticResource IconFont}"
+                                                Foreground="Snow"
+                                                FontSize="18"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Right"
+                                                Margin="10,10,20,10"
+                                                Visibility="Hidden"
+                                                Command="{Binding DataContext.SettingAlbumCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" />
+                                    </Grid>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="15"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0"
+                                               Foreground="{DynamicResource DefaultForgeground}" />
+                                    <TextBlock Text="{Binding Artist}"
+                                               FontSize="12"
+                                               Foreground="#7E7E7E"
+                                               TextWrapping="Wrap"
+                                               Margin="10,0,0,0" />
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="background"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="infoButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+                                    <Setter TargetName="playButton"
+                                            Property="Visibility"
+                                            Value="Visible" />
+
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--一些DataTemplate-->
+            <DataTemplate x:Key="ForNavigation"
+                          DataType="ListBoxItem">
+                <StackPanel Orientation="Horizontal"
+                            Background="Transparent">
+                    <materialDesign:PackIcon Kind="{Binding Icon}"
+                                             Margin="10,8"
+                                             Width="20"
+                                             Height="20" />
+                    <TextBlock Text="{Binding Title}"
+                               Margin="5,8" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="ForSubNavigation">
+                <StackPanel Orientation="Horizontal"
+                            Background="Transparent">
+                    <materialDesign:PackIcon Kind="{Binding Icon}"
+                                             Margin="35,8,5,8"
+                                             Width="20"
+                                             Height="20" />
+                    <TextBlock Text="{Binding Title}"
+                               Margin="5,8" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="ForDiaplayPicAndTitle"
+                          DataType="ListBoxItem">
+                <StackPanel Orientation="Horizontal"
+                            Background="Transparent"
+                            Height="50">
+                    <Border CornerRadius="50"
+                            Width="40"
+                            Height="40"
+                            Margin="12,0,0,0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                        RenderOptions.BitmapScalingMode="LowQuality" />
+                        </Border.Background>
+                    </Border>
+                    <TextBlock Text="{Binding Name}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="10,0,0,0" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="ForToPlayList"
+                          DataType="ListBoxItem">
+                <Border BorderBrush="#757575"
+                        BorderThickness="0,0,0,0.5">
+                    <DockPanel LastChildFill="False"
+                               Background="Transparent"
+                               Margin="0,3,0,3">
+                        <Grid>
+                            <Border Width="45"
+                                    Height="45"
+                                    CornerRadius="5"
+                                    Background="LightGray">
+                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                           FontSize="30"
+                                           FontWeight="ExtraBold"
+                                           Text="&#xe64b;"
+                                           Foreground="#33000000"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+
+                            </Border>
+                            <Border CornerRadius="5"
+                                    Width="45"
+                                    Height="45">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                RenderOptions.BitmapScalingMode="LowQuality" />
+                                </Border.Background>
+                            </Border>
+                            <Button Content="&#xe64d;"
+                                    Style="{StaticResource TransParentButton}"
+                                    FontFamily="{StaticResource IconFont}"
+                                    Foreground="Red"
+                                    Width="18"
+                                    Height="18"
+                                    FontSize="15"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding DataContext.RemoveMusicCommand,RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                        <StackPanel Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Title}"
+                                       Width="200" />
+                            <TextBlock Text="{Binding Artist}"
+                                       Foreground="Gray" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
+                                   DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0" />
+                    </DockPanel>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="ForHistoryList"
+                          DataType="ListBoxItem">
+                <Border BorderBrush="#757575"
+                        BorderThickness="0,0,0,0.5">
+                    <DockPanel LastChildFill="False"
+                               Background="Transparent"
+                               Margin="0,3,0,3">
+                        <Grid>
+                            <Border Width="45"
+                                    Height="45"
+                                    CornerRadius="5"
+                                    Background="LightGray">
+                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                           FontSize="30"
+                                           FontWeight="ExtraBold"
+                                           Text="&#xe64b;"
+                                           Foreground="#33000000"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                            <Border CornerRadius="5"
+                                    Width="45"
+                                    Height="45">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                RenderOptions.BitmapScalingMode="LowQuality" />
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                        <StackPanel Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Title}"
+                                       Width="200" />
+                            <TextBlock Text="{Binding Artist}"
+                                       Foreground="Gray" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
+                                   DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0" />
+                    </DockPanel>
+                </Border>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

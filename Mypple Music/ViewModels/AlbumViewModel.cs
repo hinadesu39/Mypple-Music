@@ -70,7 +70,7 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
         public DelegateCommand<Album> ConfirmAlbumCommand { get; set; }
-        public DelegateCommand<Album> PlayCommand { get; set; }
+        public DelegateCommand<Album> PlayAlbumCommand { get; set; }
         public DelegateCommand<Album> SettingAlbumCommand { get; set; }
         public DelegateCommand<Album> SelectedAlbumChangedCommand { get; set; }
         #endregion
@@ -94,7 +94,7 @@ namespace Mypple_Music.ViewModels
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             ConfirmAlbumCommand = new(ConfirmAlbum);
             SelectedAlbumChangedCommand = new(SelectedAlbumChanged);
-            PlayCommand = new(PlayAlbum);
+            PlayAlbumCommand = new(PlayAlbum);
             SettingAlbumCommand = new(SettingAlbum);
             GetAlbumList();
         }

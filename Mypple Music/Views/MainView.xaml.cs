@@ -8,6 +8,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,19 +27,19 @@ namespace Mypple_Music.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView(IEventAggregator eventAggregator)
+        private IRegionManager regionManager;
+        public MainView(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
             InitializeComponent();
+            this.regionManager = regionManager;
             AppSession.EventAggregator = eventAggregator;
             Loaded += MainView_Loaded;
 
             //注册消息通知
-            eventAggregator.RegisterMessage(
-                arg =>
-                {
-                    Snackbar.MessageQueue.Enqueue(arg.Message);
-                }
-            );
+            eventAggregator.RegisterMessage(arg =>
+            {
+                Snackbar.MessageQueue.Enqueue(arg.Message);
+            });
 
             //加载动画注册
             eventAggregator
@@ -57,7 +58,6 @@ namespace Mypple_Music.Views
                         return m.filter == "MainView";
                     }
                 );
-
             ColorZone.MouseDown += (s, e) =>
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
@@ -136,6 +136,9 @@ namespace Mypple_Music.Views
                         return f.filter == "MainView";
                     }
                 );
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
+                "RecentPostsView"
+            );
         }
     }
 }

@@ -257,7 +257,7 @@
                              PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
             </d:DataGrid.Items>
             <DataGrid.Columns>
-                <DataGridTemplateColumn  Width="0.5*">
+                <DataGridTemplateColumn  Width="0.6*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
