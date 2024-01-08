@@ -17,6 +17,6 @@ namespace Mypple_Music.Service
 
         Task<List<TEntity>> GetByNameAsync(string name);
 
-        Task<TEntity> DeleteAsync();
+        Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -27,7 +27,8 @@
                 BorderThickness="0,0,0,0.3" />
 
         <TextBlock x:Name="Title"
-                   Text="正在显示“晴天”的结果"
+                   Text="{Binding KeyWords,StringFormat={}正在显示“{0}”的搜索结果}"
+                   d:Text="正在显示“晴天”的结果"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
                    FontSize="14"
@@ -50,29 +51,30 @@
                                    Margin="0 3 0 0" />
                     </StackPanel>
                 </Button>
-                <ListBox Height="170"
+                <ListBox MaxHeight="170"
                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=ActualWidth,Converter={StaticResource value},ConverterParameter=80}"
                          Style="{StaticResource SearchMusicList}"
-                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"                      
+                         ItemsSource="{Binding Musics}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                          ItemContainerStyle="{StaticResource SearchMusicListItemStyle}"
                          VirtualizingPanel.ScrollUnit="Pixel"
                          VirtualizingPanel.VirtualizationMode="Recycling"
                          Foreground="{DynamicResource DefaultForgeground}"
                          PreviewMouseWheel="ListBox_PreviewMouseWheel">
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding NavigateCommand}"
-                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                        <i:EventTrigger EventName="PreviewMouseDoubleClick">
+                            <i:InvokeCommandAction  Command="{Binding DataContext.ToPlayMusicCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"
+                                                    CommandParameter="{Binding SelectedItem,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <ListBox.Items>
+                    <d:ListBox.Items>
                         <model:Album Artist="1"
                                      Title="ポストシェルタ"
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
                         <model:Album Artist="2"
                                      Title="ただ君に晴れ"
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
-                        <model:Album Artist="3"
+                        <!--<model:Album Artist="3"
                                      Title="春泥棒"
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
                         <model:Album Artist="4"
@@ -137,8 +139,8 @@
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
                         <model:Album Artist="ヨルシカ"
                                      Title="end"
-                                     LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
-                    </ListBox.Items>
+                                     LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />-->
+                    </d:ListBox.Items>
                 </ListBox>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                         FontSize="16"
@@ -154,9 +156,11 @@
                                    Margin="0 3 0 0" />
                     </StackPanel>
                 </Button>
-                <ListBox Height="130"
+                <ListBox MaxHeight="130"
                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=ActualWidth,Converter={StaticResource value},ConverterParameter=100}"
                          Style="{StaticResource SearchArtistList}"
+                         ItemsSource="{Binding Artists}"
+                         SelectedIndex="{Binding SelectedArtist}"
                          ItemContainerStyle="{StaticResource SearchArtistListItemStyle}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                          VirtualizingPanel.ScrollUnit="Pixel"
@@ -165,11 +169,11 @@
                          PreviewMouseWheel="ListBox_PreviewMouseWheel">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding NavigateCommand}"
+                            <i:InvokeCommandAction Command="{Binding ConfirmArtistCommand}"
                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <ListBox.Items>
+                    <d:ListBox.Items>
                         <model:Artist Name="1"
                                       LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
                         <model:Artist Name="2"
@@ -190,7 +194,7 @@
                                       LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
                         <model:Artist Name="end"
                                       LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
-                    </ListBox.Items>
+                    </d:ListBox.Items>
                 </ListBox>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                         FontSize="16"
@@ -206,9 +210,11 @@
                                    Margin="0 3 0 0" />
                     </StackPanel>
                 </Button>
-                <ListBox Height="250"
+                <ListBox Height="300"
                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=ActualWidth,Converter={StaticResource value},ConverterParameter=80}"
                          Style="{StaticResource SearchAlbumListStyle}"
+                         ItemsSource="{Binding Albums}"
+                         SelectedIndex="{Binding SelectedAlbum}"
                          ItemContainerStyle="{StaticResource SearchAlbumListItemStyle}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                          VirtualizingPanel.ScrollUnit="Pixel"
@@ -217,11 +223,11 @@
                          PreviewMouseWheel="ListBox_PreviewMouseWheel">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding NavigateCommand}"
+                            <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <ListBox.Items>
+                    <d:ListBox.Items>
                         <model:Album Artist="稲葉曇"
                                      Title="ポストシェルタ"
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
@@ -249,7 +255,7 @@
                         <model:Album Artist="ヨルシカ"
                                      Title="春泥棒"
                                      LocalPicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
-                    </ListBox.Items>
+                    </d:ListBox.Items>
                 </ListBox>
             </StackPanel>
         </extension:SmoothScrollViewer>

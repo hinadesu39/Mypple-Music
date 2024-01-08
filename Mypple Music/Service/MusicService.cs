@@ -17,6 +17,15 @@ namespace Mypple_Music.Service
             this.client = client;
         }
 
+        public async Task<SearchedResult> GetByKeywordsAsync(string Keywords)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"{ServiceName}/GetByKeyWords?keywords={Keywords}";
+            var res = await client.ExecuteAsync<SearchedResult>(request);
+            return res;
+        }
+
         public async Task<Music[]> GetMusicsByAlbumIdAsync(Guid AlbumId)
         {
             BaseRequest request = new BaseRequest();

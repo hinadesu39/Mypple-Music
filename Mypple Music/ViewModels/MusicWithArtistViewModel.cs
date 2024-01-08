@@ -111,7 +111,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
         public DelegateCommand<Music> FocuseChangedCommand { set; get; }
         public DelegateCommand ChangeVisibilityCommand { set; get; }
         public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
@@ -131,7 +131,7 @@ namespace Mypple_Music.ViewModels
             this.musicService = musicService;
             this.playListService = playListService;
 
-            SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
+            ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             FocuseChangedCommand = new DelegateCommand<Music>(FocuseChanged);
             ChangeVisibilityCommand = new DelegateCommand(() =>
             {
@@ -181,7 +181,7 @@ namespace Mypple_Music.ViewModels
             isUpdating = false;         
         }
 
-        private void SelectedMusicChanged(Music music)
+        private void ToPlayMusic(Music music)
         {
             var album = Albums.FirstOrDefault(a => a.Id == music.AlbumId);           
             //设置播放状态

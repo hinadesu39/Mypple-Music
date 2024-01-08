@@ -3,10 +3,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
+
 namespace Mypple_Music.Service
 {
     public class LyricService : ILyricService
-    {      
+    {
         public ObservableCollection<Lyric> LyricSplitter(string lyric)
         {
             ObservableCollection<Lyric> Lyrics = new();
@@ -30,6 +32,8 @@ namespace Mypple_Music.Service
 
                     // 提取歌词内容
                     var content = line.Substring(line.IndexOf(']') + 1);
+                    //if (!(content.Contains(":") || content.Contains("-") ||Regex.IsMatch(content, "[a-zA-Z]+")))
+                    //    content = Regex.Replace(content, @"\s+", "\r\n");
                     if (content != string.Empty)
                         Lyrics.Add(new Lyric() { Content = content, TimeSpan = progress });
 

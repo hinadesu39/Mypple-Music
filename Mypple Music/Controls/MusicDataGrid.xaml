@@ -1,0 +1,193 @@
+﻿<UserControl x:Class="Mypple_Music.Controls.MusicDataGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Mypple_Music.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:model="clr-namespace:Mypple_Music.Models"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <DataGrid AutoGenerateColumns="False"
+              AlternationCount="2"
+              ItemsSource="{Binding MusicList}"
+              SelectedItem="{Binding SelectedMusic}"
+              IsReadOnly="True"
+              SelectionUnit="FullRow"
+              GridLinesVisibility="None"
+              Style="{StaticResource MusicGrid}"
+              RowStyle="{StaticResource DataGridRowStyle}"
+              MinRowHeight="55"
+              CellStyle="{StaticResource DataGridCellStyle}"
+              VerticalAlignment="Top"
+              ScrollViewer.CanContentScroll="False"
+              ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <DataGrid.InputBindings>
+            <MouseBinding MouseAction="LeftDoubleClick"
+                          Command="{Binding ToPlayMusicCommand}"
+                          CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+        </DataGrid.InputBindings>
+        <d:DataGrid.Items>
+            <model:Music Album="111"
+                         Artist="111"
+                         Duration="111"
+                         Type="True"
+                         PlayTimes="11"
+                         Title="222"
+                         PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\postShelter.png" />
+            <model:Music Album="111"
+                         Artist="111"
+                         Duration="111"
+                         Type="True"
+                         PlayTimes="11"
+                         Title="222"
+                         PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika0.jpg" />
+            <model:Music Album="111"
+                         Artist="111"
+                         Duration="111"
+                         Type="True"
+                         PlayTimes="11"
+                         Title="222"
+                         PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika1.jpg" />
+            <model:Music Album="111"
+                         Artist="111"
+                         Duration="111"
+                         Type="True"
+                         PlayTimes="11"
+                         Title="222"
+                         PicUrl="C:\Users\Hinadesu\Desktop\projects\Mypple Music\Mypple Music\Resource\yorushika2.jpg" />
+        </d:DataGrid.Items>
+        <DataGrid.Columns>
+            <DataGridTemplateColumn  Width="0.8*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Border Width="45"
+                                    Height="45"
+                                    CornerRadius="5"
+                                    Background="LightGray"
+                                    Margin="10,0,0,0">
+                                <TextBlock FontFamily="{StaticResource IconFont}"
+                                           FontSize="30"
+                                           FontWeight="ExtraBold"
+                                           Text="&#xe64b;"
+                                           Foreground="#33000000"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+
+                            </Border>
+                            <Border CornerRadius="5"
+                                    Width="45"
+                                    Height="45"
+                                    Margin="10,0,0,0">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
+                                                RenderOptions.BitmapScalingMode="LowQuality" />
+                                </Border.Background>
+                            </Border>
+                            <!--图片中间的播放按钮-->
+                            <ToggleButton x:Name="playButton"
+                                          Margin="10,0,0,0"
+                                          Height="35"
+                                          Tag="{Binding Status,Converter={StaticResource StatusToString}}"
+                                          Visibility="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Checked">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                                               CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Unchecked">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"
+                                                               CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border x:Name="borderIn"
+                                                Background="Transparent"
+                                                CornerRadius="2">
+                                            <StackPanel VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center">
+                                                <TextBlock x:Name="btnContent"
+                                                           HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                                           FontFamily="{StaticResource IconFont}"
+                                                           Text="&#xea82;"
+                                                           FontSize="16"
+                                                           FontWeight="Bold">
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter TargetName="borderIn"
+                                                        Property="Background"
+                                                        Value="#22000000" />
+                                            </Trigger>
+                                            <Trigger Property="Tag"
+                                                     Value="true">
+                                                <Setter TargetName="borderIn"
+                                                        Property="Background"
+                                                        Value="#33000000" />
+                                                <Setter TargetName="btnContent"
+                                                        Property="Text"
+                                                        Value="&#xea81;" />
+
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                        </Grid>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="歌曲"
+                                Width="2*"
+                                Binding="{Binding Title}" />
+            <DataGridTextColumn Header="艺人"
+                                Width="2*"
+                                Binding="{Binding Artist}" />
+            <DataGridTextColumn Header="专辑"
+                                Width="2*"
+                                Binding="{Binding Album}" />
+            <DataGridTextColumn Header="时长"
+                                Binding="{Binding Duration, Converter={StaticResource DoubleToTime}}"
+                                Width="1*" />
+            <DataGridTemplateColumn  Width="0.5*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Click="Button_Click"
+                                Content="···"
+                                Style="{StaticResource MaterialDesignFlatLightButton}"
+                                DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},Path=DataContext}">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="下载歌曲" />
+                                    <MenuItem Header="从播放列表删除"
+                                              Command="{Binding PlacementTarget.DataContext.RemoveMusicFromPlayListCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                    <MenuItem Header="添加至播放列表"
+                                              ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                        <MenuItem.ItemContainerStyle>
+                                            <Style TargetType="MenuItem"
+                                                   BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                <Setter Property="Header"
+                                                        Value="{Binding Title}" />
+                                                <Setter Property="Command"
+                                                        Value="{Binding DataContext.AddToPlayListCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" />
+                                                <Setter Property="CommandParameter"
+                                                        Value="{Binding}" />
+                                            </Style>
+                                        </MenuItem.ItemContainerStyle>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

@@ -27,11 +27,13 @@ namespace Mypple_Music.Views
     /// </summary>
     public partial class MainView : Window
     {
-        private IRegionManager regionManager;
-        public MainView(IEventAggregator eventAggregator, IRegionManager regionManager)
+        private readonly IRegionManager regionManager;
+        private readonly IDialogHostService dialogHostService;
+        public MainView(IEventAggregator eventAggregator, IRegionManager regionManager, IDialogHostService dialogHostService)
         {
             InitializeComponent();
             this.regionManager = regionManager;
+            this.dialogHostService = dialogHostService;
             AppSession.EventAggregator = eventAggregator;
             Loaded += MainView_Loaded;
 
@@ -93,7 +95,7 @@ namespace Mypple_Music.Views
                     this.WindowState = WindowState.Maximized;
                 }
             };
-            btn_Close.Click += (s, e) =>
+            btn_Close.Click += async (s, e) =>
             {
                 //var dialogRes = await dialogHostService.Question("温馨提示", $"确认退出系统?");
                 //if (dialogRes.Result != Prism.Services.Dialogs.ButtonResult.OK) return;

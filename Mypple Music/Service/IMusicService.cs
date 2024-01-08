@@ -11,5 +11,7 @@ namespace Mypple_Music.Service
     {
         public Task<Music[]> GetMusicsByAlbumIdAsync(Guid AlbumId);
         public Task<Music[]> GetMusicsByArtistIdAsync(Guid ArtistId);
+
+        public Task<SearchedResult> GetByKeywordsAsync(string Keywords);
     }
 }

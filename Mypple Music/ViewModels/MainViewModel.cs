@@ -214,7 +214,7 @@ namespace Mypple_Music.ViewModels
 
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             InitCommand = new DelegateCommand(Init);
-            
+
             GoBackCommand = new DelegateCommand(GoBack);
             ExecuteCommand = new DelegateCommand<string>(Execute);
             RemoveMusicCommand = new DelegateCommand<Music>(RemoveMusic);
@@ -283,6 +283,12 @@ namespace Mypple_Music.ViewModels
                         return m.filter == "MainView";
                     }
                 );
+            eventAggregator.GetEvent<PlayListDeletedEvent>().Subscribe(arg =>
+            {
+                var res = PlayListBars.FirstOrDefault(p => p.Title == arg.PlayList.Title);
+                PlayListBars.Remove(res);
+                AllBars.Remove(res);
+            });
         }
 
 
@@ -292,7 +298,9 @@ namespace Mypple_Music.ViewModels
 
         private void Search(string obj)
         {
-            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("SearchView");
+            NavigationParameters para = new NavigationParameters();
+            para.Add("KeyWords", obj);
+            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("SearchView",para);
         }
 
         /// <summary>
@@ -551,6 +559,7 @@ namespace Mypple_Music.ViewModels
             NavigationParameters para = new NavigationParameters();
             para.Add("Title", menu.Title);
             para.Add("Id", menu.Id);
+            para.Add("journal", journal);
             RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(
                 menu.NameSpace,
                 Callback =>
@@ -656,8 +665,8 @@ namespace Mypple_Music.ViewModels
             if (dialogRes.Result == ButtonResult.OK)
             {
                 var playList = dialogRes.Parameters.GetValue<PlayList>("Value");
-                Debug.WriteLine(playList.PicUrl);
-                playList.PicUrl = await playListService.UploadAsync(playList.LocalPicUrl);
+                if (playList.PicUrl != null)
+                    playList.PicUrl = await playListService.UploadAsync(playList.LocalPicUrl);
                 var res = await playListService.AddPlayListAsync(
                     new PlayListAddRequest(playList.PicUrl, playList.Title, playList.Description)
                 );

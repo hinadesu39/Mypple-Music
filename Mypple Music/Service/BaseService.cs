@@ -20,9 +20,14 @@ namespace Mypple_Music.Service
             serviceName = ServiceName;
         }
 
-        public Task<TEntity> DeleteAsync()
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Delete;
+            request.Route = $"{serviceName}/Delete?id={id}";
+            request.Authorization = AppSession.JWTToken;
+            var res = await client.ExecuteAsync<bool>(request);
+            return res;
         }
 
         public async Task<List<TEntity>> GetAllAsync()

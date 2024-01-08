@@ -55,7 +55,7 @@ namespace Mypple_Music.ViewModels
 
         private ObservableCollection<PlayList> playList;
 
-        public ObservableCollection<PlayList> PlayList
+        public ObservableCollection<PlayList> AlbumList
         {
             get { return playList; }
             set
@@ -67,9 +67,9 @@ namespace Mypple_Music.ViewModels
 
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
-        public DelegateCommand<PlayList> ConfirmPlayListCommand { get; set; }
-        public DelegateCommand<PlayList> PlayCommand { get; set; }
-        public DelegateCommand<PlayList> SettingPlayListCommand { get; set; }
+        public DelegateCommand<PlayList> ConfirmAlbumCommand { get; set; }
+        public DelegateCommand<PlayList> PlayAlbumCommand { get; set; }
+        public DelegateCommand<PlayList> SettingAlbumCommand { get; set; }
         public DelegateCommand<PlayList> SelectedPlayListChangedCommand { get; set; }
         #endregion
 
@@ -90,10 +90,10 @@ namespace Mypple_Music.ViewModels
             this.dialog = dialog;
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
-            ConfirmPlayListCommand = new(ConfirmPlayList);
+            ConfirmAlbumCommand = new(ConfirmPlayList);
             SelectedPlayListChangedCommand = new(SelectedPlayListChanged);
-            PlayCommand = new(PlayPlayList);
-            SettingPlayListCommand = new(SettingPlayList);
+            PlayAlbumCommand = new(PlayPlayList);
+            SettingAlbumCommand = new(SettingPlayList);
         }
         #endregion
 
@@ -102,7 +102,7 @@ namespace Mypple_Music.ViewModels
         {
             if (tempPlayList != null)
             {
-                PlayList = tempPlayList;
+                AlbumList = tempPlayList;
             }
         }
 
@@ -113,14 +113,14 @@ namespace Mypple_Music.ViewModels
                 if (para == string.Empty)
                 {
                     IsSearchVisible = false;
-                    PlayList = tempPlayList;
+                    AlbumList = tempPlayList;
                     return;
                 }
                 //查找
-                var searchedPlayListList = PlayList.Where(a => a.Title.Contains(para));
+                var searchedPlayListList = AlbumList.Where(a => a.Title.Contains(para));
                 if (searchedPlayListList != null)
                 {
-                    PlayList = new ObservableCollection<PlayList>(searchedPlayListList);
+                    AlbumList = new ObservableCollection<PlayList>(searchedPlayListList);
                 }
             }
             else
@@ -191,13 +191,13 @@ namespace Mypple_Music.ViewModels
             var playLists = await playListService.GetAllAsync();
             if(playLists != null)
             {
-                PlayList = new ObservableCollection<PlayList>(playLists);
+                AlbumList = new ObservableCollection<PlayList>(playLists);
             }
             else
             {
                 eventAggregator.SendMessage("连接出现问题~~~");
             }
-            tempPlayList = PlayList;
+            tempPlayList = AlbumList;
             UpdateLoading(false);
         }
         #endregion

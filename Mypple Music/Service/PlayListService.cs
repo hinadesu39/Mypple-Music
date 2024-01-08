@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Events;
+﻿using DryIoc;
+using Mypple_Music.Events;
 using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using System;
@@ -46,6 +47,17 @@ namespace Mypple_Music.Service
             request.Method = RestSharp.Method.Get;
             request.Route = $"{serviceName}/GetByPlayListId?playListId={PlayListId}";
             var res = await client.ExecuteAsync<Music[]>(request);
+            return res;
+        }
+
+        public async Task<bool> RemoveMusicFromPlayList(RemoveMusicFromPlayListRequest request)
+        {
+            BaseRequest BaseRequest = new BaseRequest();
+            BaseRequest.Method = RestSharp.Method.Post;
+            BaseRequest.Route = $"/Music.Main/api/PlayList/RemoveMusicFromPlayList";
+            BaseRequest.Authorization = AppSession.JWTToken;
+            BaseRequest.Parameter = request;
+            var res = await client.ExecuteAsync<bool>(BaseRequest);
             return res;
         }
     }

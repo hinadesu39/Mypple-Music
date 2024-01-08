@@ -22,6 +22,8 @@
             <converter:VolumeValueConverter x:Key="VolumeValue" />
             <converter:StatusToBoolConverter x:Key="StatusToBool" />
             <converter:DoubleToTimeConverter x:Key="DoubleToTime" />
+            <converter:ValueConverter x:Key="Value" />
+            <converter:StatusToStringConverter x:Key="StatusToString" />
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
             <!--滚动条样式-->
             <Style x:Key="ScrollThumbStyle"
@@ -1312,7 +1314,9 @@
                                         HorizontalAlignment="Left"
                                         Margin="0,20,0,0">
                                 <TextBlock x:Name="Lyric"
-                                           Text="{Binding Content}">
+                                           Text="{Binding Content}"
+                                           TextWrapping="WrapWithOverflow"
+                                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=ActualWidth,Converter={StaticResource Value},ConverterParameter=480}">
                                     <TextBlock.Foreground>
                                         <SolidColorBrush x:Name="ForegroundBrush"
                                                          Color="Gray" />
@@ -2028,7 +2032,7 @@
                                                         Height="40"
                                                         Content="&#xe61f;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin="-30 0 0 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2038,7 +2042,7 @@
                                                         Height="40"
                                                         Content="&#xe620;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin=" 0 0 -30 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2070,7 +2074,7 @@
                                 <WrapPanel Orientation="Vertical"
                                            IsItemsHost="True"
                                            ScrollViewer.CanContentScroll="False"
-                                           Height="170" />
+                                           MaxHeight="170" />
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
@@ -2123,18 +2127,98 @@
                                                             RenderOptions.BitmapScalingMode="LowQuality" />
                                             </Border.Background>
                                         </Border>
+
+                                        <!--图片中间的播放按钮-->
+                                        <ToggleButton x:Name="playButton"
+                                                      Height="35"
+                                                      Tag="{Binding Status,Converter={StaticResource StatusToString}}"
+                                                      Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsMouseOver,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Checked">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"
+                                                                           CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                                <i:EventTrigger EventName="Unchecked">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.PauseOrPlayCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"
+                                                                           CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                            <ToggleButton.Template>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border x:Name="borderIn"
+                                                            Background="Transparent"
+                                                            CornerRadius="2">
+                                                        <StackPanel VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Center">
+                                                            <TextBlock x:Name="btnContent"
+                                                                       HorizontalAlignment="Center"
+                                                                       Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                                                       FontFamily="{StaticResource IconFont}"
+                                                                       Text="&#xea82;"
+                                                                       FontSize="16"
+                                                                       FontWeight="Bold">
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver"
+                                                                 Value="True">
+                                                            <Setter TargetName="borderIn"
+                                                                    Property="Background"
+                                                                    Value="#22000000" />
+                                                        </Trigger>
+                                                        <Trigger Property="Tag"
+                                                                 Value="true">
+                                                            <Setter TargetName="borderIn"
+                                                                    Property="Background"
+                                                                    Value="#33000000" />
+                                                            <Setter TargetName="btnContent"
+                                                                    Property="Text"
+                                                                    Value="&#xea81;" />
+
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ToggleButton.Template>
+                                        </ToggleButton>
                                     </Grid>
                                     <StackPanel Margin="10,0,0,0"
                                                 VerticalAlignment="Center">
+
                                         <TextBlock Text="{Binding Title}"
-                                                   Width="200" />
+                                                   Width="180" />
                                         <TextBlock Text="{Binding Artist}"
                                                    Foreground="Gray" />
                                     </StackPanel>
-                                    <TextBlock Text="{Binding Duration,Converter={StaticResource DoubleToTime}}"
-                                               DockPanel.Dock="Right"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,10,0" />
+                                    <!--<Button/>-->
+                                    <Button Click="Button_Click"
+                                            DockPanel.Dock="Right"
+                                            Foreground="{DynamicResource PrimaryHueLightBrush}"
+                                            Content="···"
+                                            FontSize="12"
+                                            FontWeight="Bold"
+                                            Style="{StaticResource  TransParentWithMouseOverButton}"
+                                            DataContext="{Binding RelativeSource={RelativeSource AncestorType=ListBox},Path=DataContext}">
+                                        <Button.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="下载歌曲" />
+                                                <MenuItem Header="添加至播放列表"
+                                                          ItemsSource="{Binding PlacementTarget.DataContext.AllPlayLists,RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                    <MenuItem.ItemContainerStyle>
+                                                        <Style TargetType="MenuItem"
+                                                               BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                                            <Setter Property="Header"
+                                                                    Value="{Binding Title}" />
+                                                            <Setter Property="Command"
+                                                                    Value="{Binding DataContext.AddToPlayListCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}" />
+                                                            <Setter Property="CommandParameter"
+                                                                    Value="{Binding}" />
+                                                        </Style>
+                                                    </MenuItem.ItemContainerStyle>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </DockPanel>
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -2188,7 +2272,7 @@
                                                         Height="40"
                                                         Content="&#xe61f;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin="-35 0 0 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2198,7 +2282,7 @@
                                                         Height="40"
                                                         Content="&#xe620;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin=" 0 0 -35 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2222,7 +2306,7 @@
                                 <StackPanel Orientation="Horizontal"
                                             IsItemsHost="True"
                                             ScrollViewer.CanContentScroll="False"
-                                            Height="130" />
+                                            MaxHeight="130" />
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
@@ -2298,7 +2382,7 @@
                                                         Height="40"
                                                         Content="&#xe61f;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin="-35 0 0 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2308,7 +2392,7 @@
                                                         Height="40"
                                                         Content="&#xe620;"
                                                         FontFamily="{StaticResource IconFont}"
-                                                        Foreground="White"
+                                                        Foreground="DimGray"
                                                         Margin=" 0 0 -30 0"
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
@@ -2332,7 +2416,7 @@
                                 <StackPanel Orientation="Horizontal"
                                             IsItemsHost="True"
                                             ScrollViewer.CanContentScroll="True"
-                                            Height="250" />
+                                            MaxHeight="300" />
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
@@ -2345,7 +2429,7 @@
                         <ControlTemplate TargetType="ListBoxItem">
                             <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom}">
                                 <StackPanel Width="220"
-                                            Height="250"
+                                            Height="280"
                                             Margin="5 0 0 0">
                                     <Grid>
                                         <!--图片不存在时默认展示-->

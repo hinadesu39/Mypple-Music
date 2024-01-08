@@ -27,7 +27,7 @@ namespace Mypple_Music.ViewModels.Dialogs
     {
         #region Field
         public static Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        private Regex phoneRegex = new Regex(@"^(((13[0-9]{1})|(15[0-35-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$");
+        private Regex phoneRegex = new Regex(@"^(((13[0-9]{1})|(15[0-35-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$");
         private Regex emailRegex = new Regex(@"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$");
         private readonly IEventAggregator aggregator;
         private PeriodicTimer Timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));

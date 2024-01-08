@@ -76,7 +76,7 @@ namespace Mypple_Music.ViewModels
 
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
-        public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
         public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
         #endregion
 
@@ -88,10 +88,15 @@ namespace Mypple_Music.ViewModels
             this.playListService = playListService;
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
-            SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
+            ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
-            Config();
-            
+            Init();
+
+            eventAggregator.GetEvent<PlayListDeletedEvent>().Subscribe(arg =>
+            {
+                AllPlayLists.Remove(arg.PlayList);
+            });
+
         }
         #endregion
 
@@ -146,7 +151,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private void SelectedMusicChanged(Music Music)
+        private void ToPlayMusic(Music Music)
         {
             SelectedMusic = Music;
             //把当前播放列表发送给播放器待播放
@@ -165,7 +170,7 @@ namespace Mypple_Music.ViewModels
                 .Publish(new MusicPlayedModel(Music, "LyricView"));
         }
 
-        async void Config()
+        async void Init()
         {
             UpdateLoading(true);
             IsSearchVisible = false;

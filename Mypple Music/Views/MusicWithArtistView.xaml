@@ -165,7 +165,7 @@
                                 </i:Interaction.Triggers>
                                 <DataGrid.InputBindings>
                                     <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding DataContext.SelectedMusicChangedCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                  Command="{Binding DataContext.ToPlayMusicCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                                 </DataGrid.InputBindings>
 

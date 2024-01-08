@@ -16,6 +16,8 @@ using DryIoc;
 using Mypple_Music.Events;
 using Serilog;
 using Mypple_Music.Common;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 
 namespace Mypple_Music
 {
@@ -121,8 +123,17 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<UserCenterView, UserCenterViewModel>();
             containerRegistry.RegisterForNavigation<UserInfoManageView, UserInfoManageViewModel>();
             containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
+            containerRegistry.RegisterForNavigation<QuestionView, QuestionViewModel>();
+            containerRegistry.RegisterForNavigation<DetailSearchedResultView, DetailSearchedResultViewModel>();
 
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            btn.ContextMenu.PlacementTarget = btn;
+            btn.ContextMenu.Placement = PlacementMode.Bottom;
+            btn.ContextMenu.IsOpen = true;
         }
     }
 }

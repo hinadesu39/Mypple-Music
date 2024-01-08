@@ -5,6 +5,7 @@ using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using Mypple_Music.Service;
 using Prism.Commands;
+using Prism.Common;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
@@ -25,9 +26,11 @@ namespace Mypple_Music.ViewModels
         private readonly IMusicService musicService;
         private readonly IDialogHostService dialog;
         private readonly IPlayListService playListService;
+        private readonly IDialogHostService dialogHostService;
         private ObservableCollection<Music> tempMusic;
         private Guid playListId;
         private Music musicToEdit;
+        private IRegionNavigationJournal journal;
         #endregion
 
         #region Property
@@ -132,12 +135,12 @@ namespace Mypple_Music.ViewModels
 
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
-        public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
-        public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
         public DelegateCommand<PlayList> AddToPlayListCommand { set; get; }
+        public DelegateCommand RemoveMusicFromPlayListCommand { set; get; }
 
         #endregion
 
@@ -146,27 +149,51 @@ namespace Mypple_Music.ViewModels
             IContainerProvider containerProvider,
             IMusicService musicService,
             IDialogHostService dialog,
-            IPlayListService playListService
+            IPlayListService playListService,
+            IDialogHostService dialogHostService
         )
             : base(containerProvider)
         {
             this.dialog = dialog;
             this.musicService = musicService;
             this.playListService = playListService;
-
+            this.dialogHostService = dialogHostService;
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
-            SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
+            ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
-            NavigateCommand = new DelegateCommand<string>(Navigation);
             ExecuteCommand = new DelegateCommand<string>(Execute);
             DownloadAllCommand = new DelegateCommand(DownloadAllAsync);
             AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
+            RemoveMusicFromPlayListCommand = new DelegateCommand(RemoveMusicFromPlayList);
         }
+
 
         #endregion
 
         #region Command
+
+        private async void RemoveMusicFromPlayList()
+        {
+            //移除最后一首歌的时候要求整个播放列表要被删除
+            if (MusicList.Count == 1)
+            {
+                DeletePlayList();
+                return;
+            }
+
+            var res = await playListService.RemoveMusicFromPlayList(new RemoveMusicFromPlayListRequest(whichPlayList, SelectedMusic.Id));
+            if (!res)
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}移除失败");
+            }
+            else
+            {
+                eventAggregator.SendMessage($"{SelectedMusic.Title}移除成功");
+                MusicList.Remove(SelectedMusic);
+            }
+
+        }
 
         /// <summary>
         /// 添加单曲到播放列表
@@ -176,29 +203,13 @@ namespace Mypple_Music.ViewModels
         {
             var musicAddToPlayListRequest = new MusicAddToPlayListRequest(list.Id, SelectedMusic);
             var res = await playListService.AddMusicToPlayListAsync(musicAddToPlayListRequest);
-            if(res == null)
+            if (res == null)
             {
                 eventAggregator.SendMessage($"{SelectedMusic.Title}添加失败");
             }
             else
             {
                 eventAggregator.SendMessage($"{SelectedMusic.Title}添加成功");
-            }
-        }
-
-        //子弹出框命令
-        private void Execute(string obj)
-        {
-            switch (obj)
-            {
-                case "下载该歌曲":
-                    break;
-                case "从播放列表中移除":
-                    break;
-                case "更多":
-                    break;
-                case "属性":
-                    break;
             }
         }
 
@@ -233,7 +244,7 @@ namespace Mypple_Music.ViewModels
         }
 
         //主弹出框命令
-        private async void Navigation(string obj)
+        private async void Execute(string obj)
         {
             if (isUpdating)
                 return;
@@ -263,12 +274,34 @@ namespace Mypple_Music.ViewModels
                         tempMusic = MusicList;
                     }
                     break;
-                case "删除该播放列表":
+                case "添加至播放列表":
+
                     break;
-                case "更多":
+                case "删除播放列表":
+                    DeletePlayList();
                     break;
-                case "属性":
-                    break;
+            }
+        }
+
+        private async void DeletePlayList()
+        {
+            var dialogRes = await dialogHostService.Question("温馨提示", $"将会永久删除整个播放列表(真的很久！！)");
+            if (dialogRes.Result != ButtonResult.OK) return;
+            var res = await playListService.DeleteAsync(whichPlayList);
+            if (!res)
+            {
+                eventAggregator.SendMessage($"{PlayList.Title},删除失败");
+            }
+            else
+            {
+                if (journal.CanGoBack)
+                {
+                    journal.GoBack();
+                }
+                eventAggregator.SendMessage($"{PlayList.Title},删除成功");
+                eventAggregator.GetEvent<PlayListDeletedEvent>().Publish(new PlayListDeletedModel(PlayList));
+                AllPlayLists.Remove(PlayList);
+                AppSession.AllPlayLists.Remove(PlayList);
             }
         }
 
@@ -276,7 +309,7 @@ namespace Mypple_Music.ViewModels
         {
             if (SelectedMusic != music)
             {
-                SelectedMusicChanged(music);
+                ToPlayMusic(music);
                 return;
             }
             if (music.Status == Music.PlayStatus.PausePlay)
@@ -286,6 +319,10 @@ namespace Mypple_Music.ViewModels
             else if (music.Status == Music.PlayStatus.StartPlay)
             {
                 music.Status = Music.PlayStatus.PausePlay;
+            }
+            else
+            {
+                ToPlayMusic(music);
             }
         }
 
@@ -320,7 +357,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private void SelectedMusicChanged(Music Music)
+        private void ToPlayMusic(Music Music)
         {
             if (isUpdating)
             {
@@ -355,6 +392,10 @@ namespace Mypple_Music.ViewModels
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            if (navigationContext.Parameters.ContainsKey("journal"))
+            {
+                journal = navigationContext.Parameters.GetValue<IRegionNavigationJournal>("journal");
+            }
             if (navigationContext.Parameters.ContainsKey("Id"))
             {
                 playListId = navigationContext.Parameters.GetValue<Guid>("Id");

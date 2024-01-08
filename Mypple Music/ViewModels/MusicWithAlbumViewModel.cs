@@ -177,7 +177,7 @@ namespace Mypple_Music.ViewModels
 
         public DelegateCommand<string> SearchCommand { get; set; }
         public DelegateCommand TextEmptyCommand { get; set; }
-        public DelegateCommand<Music> SelectedMusicChangedCommand { set; get; }
+        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
         public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
         public DelegateCommand<string> NavigateCommand { get; set; }
         public DelegateCommand DownloadAllCommand { set; get; }
@@ -199,7 +199,7 @@ namespace Mypple_Music.ViewModels
 
             SearchCommand = new DelegateCommand<string>(Search);
             TextEmptyCommand = new DelegateCommand(TextEmpty);
-            SelectedMusicChangedCommand = new DelegateCommand<Music>(SelectedMusicChanged);
+            ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             NavigateCommand = new DelegateCommand<string>(Navigation);
             DownloadAllCommand = new DelegateCommand(DownloadAll);
@@ -209,6 +209,12 @@ namespace Mypple_Music.ViewModels
             menu.Add("更多");
             menu.Add("属性");
             PopUpList = new ObservableCollection<string>(menu);
+
+            eventAggregator.GetEvent<PlayListDeletedEvent>().Subscribe(arg =>
+            {
+                AllPlayLists.Remove(arg.PlayList);
+            });
+
         }
 
         #endregion
@@ -283,7 +289,7 @@ namespace Mypple_Music.ViewModels
         {
             if (SelectedMusic != music)
             {
-                SelectedMusicChanged(music);
+                ToPlayMusic(music);
                 return;
             }
             if (music.Status == Music.PlayStatus.PausePlay)
@@ -294,6 +300,11 @@ namespace Mypple_Music.ViewModels
             {
                 music.Status = Music.PlayStatus.PausePlay;
             }
+            else
+            {
+                ToPlayMusic(music);
+            }
+
         }
 
         private void TextEmpty()
@@ -327,7 +338,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private void SelectedMusicChanged(Music Music)
+        private void ToPlayMusic(Music Music)
         {
             if (isUpdating)
             {
