@@ -124,7 +124,6 @@ namespace Mypple_Music
             containerRegistry.RegisterForNavigation<UserInfoManageView, UserInfoManageViewModel>();
             containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
             containerRegistry.RegisterForNavigation<QuestionView, QuestionViewModel>();
-            containerRegistry.RegisterForNavigation<DetailSearchedResultView, DetailSearchedResultViewModel>();
 
         }
 

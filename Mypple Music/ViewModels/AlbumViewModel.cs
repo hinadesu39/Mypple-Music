@@ -27,6 +27,7 @@ namespace Mypple_Music.ViewModels
         private readonly IContainerProvider container;
         private IRegionNavigationJournal journal;
         private bool isUpdating;
+        private bool isSearchedResult;
         private ObservableCollection<Album> tempAlbum;
         #endregion
 
@@ -96,7 +97,7 @@ namespace Mypple_Music.ViewModels
             SelectedAlbumChangedCommand = new(SelectedAlbumChanged);
             PlayAlbumCommand = new(PlayAlbum);
             SettingAlbumCommand = new(SettingAlbum);
-            GetAlbumList();
+            //Init();
         }
         #endregion
 
@@ -120,7 +121,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedAlbumList = AlbumList.Where(a => a.Title.Contains(para));
+                var searchedAlbumList = AlbumList.Where(a => a.Title.Contains(para,StringComparison.OrdinalIgnoreCase));
                 if (searchedAlbumList != null)
                 {
                     AlbumList = new ObservableCollection<Album>(searchedAlbumList);
@@ -179,7 +180,7 @@ namespace Mypple_Music.ViewModels
             );
         }
 
-        async void GetAlbumList()
+        async void Init()
         {
             UpdateLoading(true);
             var albums = await albumService.GetAllAsync();
@@ -199,10 +200,26 @@ namespace Mypple_Music.ViewModels
             isUpdating = true;
             SelectedIndex = -1;
             isUpdating = false;
+
+            if (isSearchedResult)
+            {
+                isSearchedResult = false;
+                AlbumList = null;
+            }
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            if (navigationContext.Parameters.ContainsKey("SearchedResult"))
+            {
+                AlbumList = navigationContext.Parameters.GetValue<ObservableCollection<Album>>("SearchedResult");
+                tempAlbum = AlbumList;
+                isSearchedResult = true;
+            }
+            else if (AlbumList == null)
+            {
+                Init();
+            }
         }
         #endregion    
     }

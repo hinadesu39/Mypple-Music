@@ -594,7 +594,7 @@
                                                    VerticalAlignment="Center"
                                                    Margin="10,0,0,0" />
                                         <Button Content="清空"
-                                                Style="{StaticResource TransParentButton}"
+                                                Style="{StaticResource MaterialDesignFlatButton}"
                                                 DockPanel.Dock="Right"
                                                 Margin="0,0,10,0"
                                                 Command="{Binding ClearToPlayListCommand}" />
@@ -611,7 +611,7 @@
                                             BorderThickness="0,0,0,0.5" />
                                     <extension:ScrollingListBox x:Name="ToPlayList"
                                                                 Grid.Row="1"
-                                                                Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=80}"
+                                                                Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=100}"
                                                                 Margin="5,0,0,0"
                                                                 Style="{StaticResource MusicListStyle}"
                                                                 ItemsSource="{Binding ToPlayList}"

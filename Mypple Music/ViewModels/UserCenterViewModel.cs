@@ -80,7 +80,7 @@ namespace Mypple_Music.ViewModels
             DialogParameters para = new DialogParameters();
             para.Add("SelectedIndex", selectedIndex);
             para.Add("User", UserDto);
-            var dialogRes = await dialog.ShowDialog("InfoManageView", para);
+            var dialogRes = await dialog.ShowDialog("UserInfoManageView", para);
         }
 
         private async void Save()

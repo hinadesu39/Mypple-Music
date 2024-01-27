@@ -24,6 +24,7 @@ namespace Mypple_Music.ViewModels
     {
         #region Field
         private bool isUpdating;
+        private Artist whichArtist;
         private readonly IMusicService musicService;
         private readonly IAlbumService albumService;
         private readonly IPlayListService playListService;
@@ -215,6 +216,9 @@ namespace Mypple_Music.ViewModels
             if (navigationContext.Parameters.ContainsKey("Artist"))
             {
                 this.Artist = navigationContext.Parameters.GetValue<Artist>("Artist");
+                if (whichArtist == Artist)
+                    return;
+                whichArtist = Artist;
                 UpdateLoading(true);
                 Albums = new ObservableCollection<Album>(
                     await albumService.GetAlbumsByArtistIdAsync(Artist.Id)

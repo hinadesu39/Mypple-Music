@@ -4,6 +4,7 @@ using Mypple_Music.Models;
 using Mypple_Music.Models.Request;
 using Mypple_Music.Service;
 using Prism.Commands;
+using Prism.Common;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -22,6 +23,7 @@ namespace Mypple_Music.ViewModels
         #region Field
         private readonly IMusicService musicService;
         private readonly IPlayListService playListService;
+        private bool isSearchedResult;
         private ObservableCollection<Music> tempMusic;
         #endregion
 
@@ -90,7 +92,7 @@ namespace Mypple_Music.ViewModels
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             AddToPlayListCommand = new DelegateCommand<PlayList>(AddToPlayList);
-            Init();
+            //Init();
 
             eventAggregator.GetEvent<PlayListDeletedEvent>().Subscribe(arg =>
             {
@@ -128,7 +130,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        private  void Search(string para)
+        private void Search(string para)
         {
             if (IsSearchVisible)
             {
@@ -139,7 +141,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para));
+                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para,StringComparison.OrdinalIgnoreCase));
                 if (searchedMusicList != null)
                 {
                     MusicList = new ObservableCollection<Music>(searchedMusicList);
@@ -172,6 +174,8 @@ namespace Mypple_Music.ViewModels
 
         async void Init()
         {
+            if (MusicList != null)
+                return;
             UpdateLoading(true);
             IsSearchVisible = false;
             var musics = await musicService.GetAllAsync();
@@ -182,16 +186,32 @@ namespace Mypple_Music.ViewModels
             else
                 eventAggregator.SendMessage("连接出现问题~~~");
             
-            tempMusic = MusicList;
+            tempMusic = MusicList!;
             UpdateLoading(false);
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
-
+            if (isSearchedResult)
+            {
+                isSearchedResult = false;
+                MusicList = null;
+            }
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext) { }
+        public override void OnNavigatedTo(NavigationContext navigationContext) 
+        {
+            if (navigationContext.Parameters.ContainsKey("SearchedResult"))
+            {
+                MusicList = navigationContext.Parameters.GetValue<ObservableCollection<Music>>("SearchedResult");
+                tempMusic = MusicList;
+                isSearchedResult = true;
+            }
+            else if(MusicList == null)
+            {
+               Init();
+            }
+        }
         #endregion
     }
 }

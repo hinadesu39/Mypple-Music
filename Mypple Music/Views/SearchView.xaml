@@ -41,7 +41,9 @@
                         FontSize="16"
                         FontWeight="Bold"
                         HorizontalAlignment="Left"
-                        Margin="10">
+                        Margin="10"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="MusicListView">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="歌曲"
                                    VerticalAlignment="Center" />
@@ -146,7 +148,9 @@
                         FontSize="16"
                         FontWeight="Bold"
                         HorizontalAlignment="Left"
-                        Margin="10">
+                        Margin="10"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="ArtistView">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="艺人"
                                    VerticalAlignment="Center" />
@@ -200,7 +204,9 @@
                         FontSize="16"
                         FontWeight="Bold"
                         HorizontalAlignment="Left"
-                        Margin="10">
+                        Margin="10"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="AlbumView">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="专辑"
                                    VerticalAlignment="Center" />
@@ -210,7 +216,7 @@
                                    Margin="0 3 0 0" />
                     </StackPanel>
                 </Button>
-                <ListBox Height="300"
+                <ListBox MaxHeight="300"
                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=ActualWidth,Converter={StaticResource value},ConverterParameter=80}"
                          Style="{StaticResource SearchAlbumListStyle}"
                          ItemsSource="{Binding Albums}"

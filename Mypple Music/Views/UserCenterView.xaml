@@ -113,8 +113,7 @@
                                 md:HintAssist.Hint="Pick Date"
                                 md:TextFieldAssist.HasClearButton="True"
                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                Margin="0 0 0 40"
-                                
+                                Margin="0 0 0 40"                               
                                 SelectedDate="{Binding UserDto.BirthDay}" />
                     <ListBox SelectedIndex="{Binding UserDto.Gender,Converter={StaticResource GenderToListBoxIndex}}"
                              Style="{StaticResource MaterialDesignToolToggleListBox}">

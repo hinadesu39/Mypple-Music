@@ -15,6 +15,7 @@
 
     </UserControl.Resources>
     <Grid ClipToBounds="True">
+        <!--背景-->
         <Grid>
             <Image Source="{Binding BlurBackground}"
                    d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
@@ -54,7 +55,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel HorizontalAlignment="Center"
                         Margin="0 50 0 0">
-                <Grid>
+                <Grid HorizontalAlignment="Center">
                     <!--图片不存在时默认展示-->
                     <Border Width="200"
                             Height="200"

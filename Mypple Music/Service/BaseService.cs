@@ -70,6 +70,15 @@ namespace Mypple_Music.Service
             return res;
         }
 
+        public async Task<FileExistsResponse> FileExistsAsync(long fileSize, string sha256Hash)
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"/FileService/api/Uploader/FileExists?fileSize={fileSize}&sha256Hash={sha256Hash}";
+            var res = await client.ExecuteAsync<FileExistsResponse>(request);
+            return res;
+        }
+
         //public async Task<string?> UploadAsync(string url)
         //{
         //    var client = new RestClient();

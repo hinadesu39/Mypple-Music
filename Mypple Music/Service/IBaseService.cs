@@ -11,6 +11,8 @@ namespace Mypple_Music.Service
     {
         Task<Uri> UploadAsync(string url);
 
+        Task<FileExistsResponse> FileExistsAsync(long fileSize, string sha256Hash);
+
         Task<TEntity?> GetByIdAsync(Guid id);
 
         Task<List<TEntity>> GetAllAsync();

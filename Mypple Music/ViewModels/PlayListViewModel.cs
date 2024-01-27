@@ -345,7 +345,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para));
+                var searchedMusicList = MusicList.Where(m => m.Title.Contains(para, StringComparison.OrdinalIgnoreCase));
                 if (searchedMusicList != null)
                 {
                     MusicList = new ObservableCollection<Music>(searchedMusicList);

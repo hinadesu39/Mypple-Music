@@ -932,8 +932,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGrid}">
                             <extension:SmoothScrollViewer x:Name="DG_ScrollViewer"
-                                                          Focusable="false"
-                                                          HorizontalScrollBarVisibility="Disabled">
+                                                          Focusable="false">
                                 <extension:SmoothScrollViewer.Template>
                                     <ControlTemplate TargetType="extension:SmoothScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
@@ -960,7 +959,7 @@
                                                            Value="{TemplateBinding VerticalOffset}"
                                                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                                                            Grid.Row="1" />
-                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                <!--<ScrollBar x:Name="PART_HorizontalScrollBar"
                                                            Maximum="{TemplateBinding ScrollableWidth}"
                                                            Orientation="Horizontal"
                                                            Style="{StaticResource ScrollBarStyle}"
@@ -968,7 +967,7 @@
                                                            Value="{TemplateBinding HorizontalOffset}"
                                                            ViewportSize="{TemplateBinding ViewportWidth}"
                                                            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                                                           Grid.Row="1" />
+                                                           Grid.Row="1" />-->
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
@@ -986,8 +985,6 @@
                             <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping"
                                        Value="True" />
                         </MultiTrigger.Conditions>
-                        <Setter Property="ScrollViewer.CanContentScroll"
-                                Value="false" />
                     </MultiTrigger>
                 </Style.Triggers>
             </Style>
@@ -1173,6 +1170,7 @@
                                     <Track.DecreaseRepeatButton>
                                         <RepeatButton Name="RepeatButton1"
                                                       Height="3"
+                                                      Background="#BDBDBD"
                                                       Command="{x:Static Slider.DecreaseLarge}"
                                                       Style="{StaticResource RepeatButtonTransparent}" />
                                     </Track.DecreaseRepeatButton>
@@ -1186,7 +1184,7 @@
                                     <Track.Thumb>
                                         <Thumb x:Name="Thumb"
                                                Focusable="False"
-                                               Width="0"
+                                               Width="10"
                                                Height="6"
                                                Background="{DynamicResource PrimaryHueLightBrush}"
                                                VerticalAlignment="Center">
@@ -1211,7 +1209,7 @@
                                          Value="true">
                                     <Setter Property="Width"
                                             TargetName="Thumb"
-                                            Value="10" />
+                                            Value="12" />
                                     <Setter Property="Height"
                                             TargetName="RepeatButton1"
                                             Value="4" />
@@ -1602,15 +1600,13 @@
                                                 CornerRadius="5"
                                                 Background="LightGray"
                                                 Margin="5,5,5,0">
-                                            <Grid>
-                                                <TextBlock FontFamily="{StaticResource IconFont}"
-                                                           FontSize="80"
-                                                           FontWeight="ExtraBold"
-                                                           Text="&#xe64b;"
-                                                           Foreground="#33000000"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center" />
-                                            </Grid>
+                                            <TextBlock FontFamily="{StaticResource IconFont}"
+                                                       FontSize="80"
+                                                       FontWeight="ExtraBold"
+                                                       Text="&#xe64b;"
+                                                       Foreground="#33000000"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
                                         </Border>
                                         <Border CornerRadius="5"
                                                 Margin="5,5,5,0"
@@ -2312,6 +2308,49 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="SearchArtistListForDetail"
+                   TargetType="ListBox">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
+                                                                         Margin="{TemplateBinding Padding}"
+                                                                         ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                                           HorizontalAlignment="Right"
+                                                           Maximum="{TemplateBinding ScrollableHeight}"
+                                                           Orientation="Vertical"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           ViewportSize="{TemplateBinding ViewportHeight}"
+                                                           Value="{TemplateBinding VerticalOffset}"
+                                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                                                <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                                           Maximum="{TemplateBinding ScrollableWidth}"
+                                                           Orientation="Horizontal"
+                                                           Style="{StaticResource ScrollBarStyle}"
+                                                           VerticalAlignment="Bottom"
+                                                           Value="{TemplateBinding HorizontalOffset}"
+                                                           ViewportSize="{TemplateBinding ViewportWidth}"
+                                                           Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <WrapPanel Orientation="Horizontal"
+                                           IsItemsHost="True"
+                                           ScrollViewer.CanContentScroll="True" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="SearchArtistListItemStyle"
                    TargetType="ListBoxItem">
                 <Setter Property="Template">
@@ -2521,6 +2560,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
             <!--一些DataTemplate-->
             <DataTemplate x:Key="ForNavigation"
                           DataType="ListBoxItem">

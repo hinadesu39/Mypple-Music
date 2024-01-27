@@ -19,6 +19,7 @@ namespace Mypple_Music.ViewModels
     public class SearchViewModel : NavigationViewModel
     {
         #region Field
+
         private readonly IRegionManager regionManager;
         private readonly IMusicService musicService;
         private string whichKeyWords;
@@ -26,6 +27,13 @@ namespace Mypple_Music.ViewModels
         #endregion
 
         #region Property
+
+        public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
+        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
+        public DelegateCommand<Artist> ConfirmArtistCommand { set; get; }
+        public DelegateCommand<Album> ConfirmAlbumCommand { set; get; }
+        public DelegateCommand<Album> PlayAlbumCommand { set; get; }
+        public DelegateCommand<string> ExecuteCommand { set; get; }
         private int selectedArtist = -1;
 
         public int SelectedArtist
@@ -88,33 +96,45 @@ namespace Mypple_Music.ViewModels
             set { keyWords = value; RaisePropertyChanged(); }
         }
 
-        public DelegateCommand<Music> PauseOrPlayCommand { set; get; }
-        public DelegateCommand<Music> ToPlayMusicCommand { set; get; }
-        public DelegateCommand<Artist> ConfirmArtistCommand { set; get; }
-        public DelegateCommand<Album> ConfirmAlbumCommand { set; get; }
-        public DelegateCommand<Album> PlayAlbumCommand { set; get; }
-
-
         #endregion
 
         #region Ctor
 
         public SearchViewModel(IContainerProvider containerProvider, IMusicService musicService, IRegionManager regionManager) : base(containerProvider)
         {
+            this.regionManager = regionManager;
             this.musicService = musicService;
             PauseOrPlayCommand = new DelegateCommand<Music>(PauseOrPlay);
             ToPlayMusicCommand = new DelegateCommand<Music>(ToPlayMusic);
             ConfirmAlbumCommand = new DelegateCommand<Album>(ConfirmAlbum);
             ConfirmArtistCommand = new DelegateCommand<Artist>(ConfirmArtist);
             PlayAlbumCommand = new DelegateCommand<Album>(PlayAlbum);
-            this.regionManager = regionManager;  
+            ExecuteCommand = new DelegateCommand<string>(Execute);
         }
-
 
 
         #endregion
 
         #region Command
+
+        private void Execute(string obj)
+        {
+            NavigationParameters para = new NavigationParameters();
+            if(obj == "MusicListView")
+            {
+                para.Add("SearchedResult", musics);
+            }
+            else if(obj == "AlbumView")
+            {
+                para.Add("SearchedResult", albums);
+            }
+            else
+            {
+                para.Add("SearchedResult", artists);
+            }
+            
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(obj, para);
+        }
 
         private async void PlayAlbum(Album album)
         {
@@ -144,7 +164,7 @@ namespace Mypple_Music.ViewModels
 
         private void ConfirmArtist(Artist artist)
         {
-            if (artist == null) 
+            if (artist == null)
                 return;
             NavigationParameters para = new NavigationParameters();
             para.Add("Artist", artist);
@@ -154,6 +174,8 @@ namespace Mypple_Music.ViewModels
 
         private void ToPlayMusic(Music music)
         {
+            if(music == null)
+                return;
             //设置播放状态
             var playingMusic = Musics.FirstOrDefault(
                 m => m.Status == Music.PlayStatus.StartPlay

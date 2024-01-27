@@ -117,7 +117,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedPlayListList = AlbumList.Where(a => a.Title.Contains(para));
+                var searchedPlayListList = AlbumList.Where(a => a.Title.Contains(para,StringComparison.OrdinalIgnoreCase));
                 if (searchedPlayListList != null)
                 {
                     AlbumList = new ObservableCollection<PlayList>(searchedPlayListList);

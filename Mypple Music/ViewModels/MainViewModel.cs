@@ -1,4 +1,5 @@
-﻿using Mypple_Music.Common;
+﻿using CommonHelper;
+using Mypple_Music.Common;
 using Mypple_Music.Events;
 using Mypple_Music.Extensions;
 using Mypple_Music.Models;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
@@ -240,6 +242,7 @@ namespace Mypple_Music.ViewModels
                         //将当前播放音乐状态设置成关闭
                         if (Player.Music != null)
                             Player.Music.Status = Music.PlayStatus.StopPlay;
+
                         PlayList = arg.Musics;
 
                         //如果提前点击了随机播放按钮，那么收到播放列表时应当及时生成随机列表
@@ -247,7 +250,7 @@ namespace Mypple_Music.ViewModels
                         {
                             ShufflePlayList = new ObservableCollection<Music>(PlayList);
                             Shuffle(ShufflePlayList);
-                            PlayIndex = ShufflePlayList.IndexOf(Player.Music);
+                            PlayIndex = ShufflePlayList.IndexOf(arg.Musics[arg.id]);
                             ToPlayList = ShufflePlayList;
                         }
                         else
@@ -291,7 +294,6 @@ namespace Mypple_Music.ViewModels
             });
         }
 
-
         #endregion
 
         #region Command
@@ -300,7 +302,7 @@ namespace Mypple_Music.ViewModels
         {
             NavigationParameters para = new NavigationParameters();
             para.Add("KeyWords", obj);
-            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("SearchView",para);
+            RegionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("SearchView", para);
         }
 
         /// <summary>
@@ -665,8 +667,7 @@ namespace Mypple_Music.ViewModels
             if (dialogRes.Result == ButtonResult.OK)
             {
                 var playList = dialogRes.Parameters.GetValue<PlayList>("Value");
-                if (playList.PicUrl != null)
-                    playList.PicUrl = await playListService.UploadAsync(playList.LocalPicUrl);
+                playList.PicUrl = await playListService.UploadAsync(playList.LocalPicUrl);
                 var res = await playListService.AddPlayListAsync(
                     new PlayListAddRequest(playList.PicUrl, playList.Title, playList.Description)
                 );

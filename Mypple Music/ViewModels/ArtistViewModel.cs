@@ -19,8 +19,9 @@ namespace Mypple_Music.ViewModels
     public class ArtistViewModel : NavigationViewModel
     {
         #region Field
-        private IArtistService artistService;
+        private readonly IArtistService artistService;
         private readonly IRegionManager RegionManager;
+        private bool isSearchedResult;
         private ObservableCollection<Artist> tempArtist;
         #endregion
 
@@ -68,7 +69,7 @@ namespace Mypple_Music.ViewModels
             TextEmptyCommand = new DelegateCommand(TextEmpty);
             NavigateCommand = new DelegateCommand<Artist>(Navigate);
             RegionManager = regionManager;
-            Config();
+            //Init();
         }
         #endregion
 
@@ -93,7 +94,7 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 //查找
-                var searchedArtistList = Artists.Where(a => a.Name.Contains(para));
+                var searchedArtistList = Artists.Where(a => a.Name.Contains(para, StringComparison.OrdinalIgnoreCase));
                 if (searchedArtistList != null)
                 {
                     Artists = new ObservableCollection<Artist>(searchedArtistList);
@@ -118,7 +119,7 @@ namespace Mypple_Music.ViewModels
             }
         }
 
-        async void Config()
+        async void Init()
         {
             UpdateLoading(true);
             var artist = await artistService.GetAllAsync();
@@ -130,6 +131,32 @@ namespace Mypple_Music.ViewModels
                 eventAggregator.SendMessage("连接出现问题~~~");
             tempArtist = Artists;
             UpdateLoading(false);
+        }
+
+        public override void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+            if (isSearchedResult)
+            {
+                isSearchedResult = false;
+                Artists = null;
+            }
+        }
+
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (navigationContext.Parameters.ContainsKey("SearchedResult"))
+            {
+                Artists = navigationContext.Parameters.GetValue<ObservableCollection<Artist>>("SearchedResult");
+                tempArtist = Artists;
+                isSearchedResult = true;
+                Navigate(Artists[0]);
+            }
+            else if (Artists == null)
+            {
+                Init();
+                SelectedArtistIndex = 0;
+            }
         }
         #endregion
     }

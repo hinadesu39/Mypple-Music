@@ -50,6 +50,7 @@
 
         </Button>
         <DataGrid Grid.Row="1"
+                  MinRowHeight="45"
                   AutoGenerateColumns="False"
                   AlternationCount="2"
                   ItemsSource="{Binding MusicList}"
@@ -58,12 +59,13 @@
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
                   ScrollViewer.CanContentScroll="False"
-                  RowStyle="{StaticResource DataGridRowStyle}"
-                  MinRowHeight="45"
+                  RowStyle="{StaticResource DataGridRowStyle}"                
                   CellStyle="{StaticResource DataGridCellStyle}"
                   ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                   Style="{StaticResource MusicGrid}"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  EnableColumnVirtualization="True"
+                  EnableRowVirtualization="True">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                               Command="{Binding ToPlayMusicCommand}"

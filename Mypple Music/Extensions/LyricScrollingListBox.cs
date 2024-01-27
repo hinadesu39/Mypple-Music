@@ -36,7 +36,7 @@ namespace Mypple_Music.Extensions
                 //切歌了滚动偏移量需要重新计算
                 verticalOffSet = new double[listBox.Items.Count];
             }
-            if (scrollViewer != null)
+            if (scrollViewer != null && listBox.Items != null)
             {
                 //如果偏移量没有初始化就遍历所有itme计算一次
                 if (verticalOffSet[listBox.Items.Count - 1] == 0)
@@ -59,7 +59,7 @@ namespace Mypple_Music.Extensions
                     TimeSpan.FromSeconds(1),
                     new ElasticEase() { Oscillations = 1, Springiness = 6 }
                 );
-                Debug.WriteLine(verticalOffSet[listBox.SelectedIndex == -1 ? 0 : listBox.SelectedIndex] - 200);
+                //Debug.WriteLine(verticalOffSet[listBox.SelectedIndex == -1 ? 0 : listBox.SelectedIndex] - 200);
             }
         }
 
