@@ -382,6 +382,9 @@ namespace Mypple_Music.ViewModels
                     return;
                 }
                 UpdateLoading(true);
+                MusicList = null;
+                Count = 0;
+                Duration = 0;
                 var musics = await musicService.GetMusicsByAlbumIdAsync(Album.Id);
                 if (musics != null)
                 {

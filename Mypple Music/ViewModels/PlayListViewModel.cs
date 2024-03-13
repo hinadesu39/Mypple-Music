@@ -407,6 +407,7 @@ namespace Mypple_Music.ViewModels
                 }
                 whichPlayList = playListId;
                 UpdateLoading(true);
+                PlayList = null;
                 var playLists = await playListService.GetByIdAsync(playListId);
                 if (playLists != null)
                 {
@@ -418,6 +419,7 @@ namespace Mypple_Music.ViewModels
                     UpdateLoading(false);
                     return;
                 }
+                MusicList = null; 
                 var musics = await playListService.GetMusicsByPlayListIdAsync(playListId);
                 if (musics != null)
                 {
