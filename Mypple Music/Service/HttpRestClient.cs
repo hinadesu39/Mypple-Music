@@ -24,21 +24,31 @@ namespace Mypple_Music.Service
         }
 
         public async Task<Uri> UploadAsync(BaseRequest baseRequest)
-        {          
+        {
             var url = new Uri(apiUrl + baseRequest.Route);
             var request = new RestRequest(url, baseRequest.Method);
             request.AlwaysMultipartFormData = true;
             if (baseRequest.Parameter != null)
             {
-                request.AddFile("File",baseRequest.Parameter.ToString());
+                request.AddFile("File", baseRequest.Parameter.ToString());
             }
             //request.AddHeader("Authorization", "Bearer " + token);//增加的 JWT 认证
-            RestResponse response = await client.ExecuteAsync(request);          
-            return JsonConvert.DeserializeObject<Uri>(response.Content);
+            try
+            {
+                RestResponse response = await client.ExecuteAsync(request);
+                return JsonConvert.DeserializeObject<Uri>(response.Content);
+            }
+            catch (Exception ex)
+            {
+
+                logger.Error(ex.Message);
+                return null;
+            }
+
         }
 
         public async Task<T> ExecuteAsync<T>(BaseRequest baseRequest)
-        {          
+        {
             var url = new Uri(apiUrl + baseRequest.Route);
             var request = new RestRequest(url, baseRequest.Method);
             request.AddHeader("Content-Type", baseRequest.ContentType);
@@ -46,11 +56,10 @@ namespace Mypple_Music.Service
             {
                 request.AddJsonBody(baseRequest.Parameter);
             }
-            if(baseRequest.Authorization != null)
+            if (baseRequest.Authorization != null)
             {
                 request.AddHeader("Authorization", $"Bearer {baseRequest.Authorization}");
             }
-
             try
             {
                 RestResponse response = await client.ExecuteAsync(request);
@@ -59,7 +68,7 @@ namespace Mypple_Music.Service
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                return default(T);           
+                return default(T);
             }
 
 
