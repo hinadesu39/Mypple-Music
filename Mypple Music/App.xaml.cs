@@ -18,6 +18,9 @@ using Serilog;
 using Mypple_Music.Common;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
+using System.Diagnostics;
+using SixLabors.ImageSharp.Drawing;
+using System.IO;
 
 namespace Mypple_Music
 {
@@ -74,6 +77,12 @@ namespace Mypple_Music
                 );
             }
             Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
+
+            var imagePath = System.IO.Path.Combine(Environment.CurrentDirectory, "image");
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
             base.OnInitialized();
         }
 
