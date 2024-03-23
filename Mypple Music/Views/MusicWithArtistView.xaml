@@ -69,8 +69,7 @@
                  Height="{Binding ElementName=MusicWithArtistViewControl,Path=ActualHeight,Converter={StaticResource Value},ConverterParameter=100}"
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ScrollViewer.CanContentScroll="False"
-                 VirtualizingPanel.ScrollUnit="Pixel"
-                 VirtualizingPanel.VirtualizationMode="Recycling">
+                 extension:ScrollAnimationBehavior.IsEnabled="True">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0,0,30">
@@ -79,39 +78,34 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <!--图片不存在时默认展示-->
-                        <Border Width="200"
-                                Height="200"
-                                CornerRadius="8"
-                                Background="LightGray"
-                                Margin="20,0,0,0"
-                                VerticalAlignment="Top">
-                            <!--<Border.Effect>
-                                <DropShadowEffect BlurRadius="20"
-                                                  ShadowDepth="0"
-                                                  Color="Black"
-                                                  Opacity="0.4" />
-                            </Border.Effect>-->
-                            <Grid>
-                                <TextBlock FontFamily="{StaticResource IconFont}"
-                                           FontSize="80"
-                                           FontWeight="ExtraBold"
-                                           Text="&#xe64b;"
-                                           Foreground="#33000000"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
+                        <Grid VerticalAlignment="Top"
+                              Margin="20,0,0,0">
+                            <Border Width="200"
+                                    Height="200"
+                                    CornerRadius="8"
+                                    Background="LightGray">
+                                <Grid>
+                                    <TextBlock FontFamily="{StaticResource IconFont}"
+                                               FontSize="80"
+                                               FontWeight="ExtraBold"
+                                               Text="&#xe64b;"
+                                               Foreground="#33000000"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <Image  Width="200"
+                                    Height="200"
+                                    Source="{Binding LocalPicUrl}"
+                                    RenderOptions.BitmapScalingMode="Fant">
+                                <Image.Clip>
+                                    <RectangleGeometry RadiusX="8"
+                                                       RadiusY="8"
+                                                       Rect="0,0,200,200" />
+                                </Image.Clip>
+                            </Image>
+                        </Grid>
 
-                            </Grid>
-                        </Border>
-                        <Border CornerRadius="8"
-                                Margin="20,0,0,0"
-                                Width="200"
-                                Height="200"
-                                VerticalAlignment="Top">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                            RenderOptions.BitmapScalingMode="LowQuality" />
-                            </Border.Background>
-                        </Border>
                         <StackPanel Grid.Column="1"
                                     Margin="30,0,0,0">
                             <TextBlock Text="{Binding Title}"

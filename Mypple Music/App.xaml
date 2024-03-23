@@ -132,10 +132,10 @@
             </Style>
 
             <Style x:Key="ScrollViewerStyle"
-                   TargetType="extension:SmoothScrollViewer">
+                   TargetType="ScrollViewer">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                        <ControlTemplate TargetType="ScrollViewer">
                             <Border BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     SnapsToDevicePixels="True">
@@ -540,9 +540,9 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
-                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
-                                <extension:SmoothScrollViewer.Template>
-                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True">
@@ -569,11 +569,11 @@
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
-                                </extension:SmoothScrollViewer.Template>
+                                </ScrollViewer.Template>
                                 <StackPanel IsItemsHost="True"
                                             ScrollViewer.CanContentScroll="True"
                                             Margin="0,0,10,0" />
-                            </extension:SmoothScrollViewer>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -604,9 +604,9 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
-                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
-                                <extension:SmoothScrollViewer.Template>
-                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True">
@@ -633,10 +633,10 @@
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
-                                </extension:SmoothScrollViewer.Template>
+                                </ScrollViewer.Template>
                                 <StackPanel IsItemsHost="True"
                                             ScrollViewer.CanContentScroll="True" />
-                            </extension:SmoothScrollViewer>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -931,10 +931,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGrid}">
-                            <extension:SmoothScrollViewer x:Name="DG_ScrollViewer"
-                                                          Focusable="false">
-                                <extension:SmoothScrollViewer.Template>
-                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <ScrollViewer x:Name="DG_ScrollViewer"
+                                          Focusable="false">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True">
@@ -971,9 +971,9 @@
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
-                                </extension:SmoothScrollViewer.Template>
+                                </ScrollViewer.Template>
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                            </extension:SmoothScrollViewer>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1164,27 +1164,28 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Slider}">
                             <Border x:Name="border"
-                                    Background="{DynamicResource PrimaryHueLightBrush}">
+                                    Background="Transparent">
                                 <Track x:Name="PART_Track"
                                        Grid.Row="1">
                                     <Track.DecreaseRepeatButton>
                                         <RepeatButton Name="RepeatButton1"
-                                                      Height="3"
-                                                      Background="#BDBDBD"
+                                                      Height="4"
+                                                      Background="#99ffffff"
                                                       Command="{x:Static Slider.DecreaseLarge}"
                                                       Style="{StaticResource RepeatButtonTransparent}" />
                                     </Track.DecreaseRepeatButton>
                                     <Track.IncreaseRepeatButton>
                                         <RepeatButton Name="RepeatButton2"
-                                                      Height="3"
+                                                      Height="4"
                                                       Command="{x:Static Slider.IncreaseLarge}"
-                                                      Background="White"
+                                                      Background="#33000000"
                                                       Style="{StaticResource RepeatButtonTransparent}" />
                                     </Track.IncreaseRepeatButton>
                                     <Track.Thumb>
                                         <Thumb x:Name="Thumb"
                                                Focusable="False"
-                                               Width="10"
+                                               Cursor="Hand"
+                                               Width="12"
                                                Height="6"
                                                Background="{DynamicResource PrimaryHueLightBrush}"
                                                VerticalAlignment="Center">
@@ -1193,9 +1194,7 @@
                                                     <Grid HorizontalAlignment="Center"
                                                           UseLayoutRounding="True"
                                                           VerticalAlignment="Center">
-                                                        <Border Background="{TemplateBinding Background}"
-                                                                CornerRadius="25"
-                                                                Width="{TemplateBinding Width}"
+                                                        <Border Width="{TemplateBinding Width}"
                                                                 Height="{TemplateBinding Height}" />
                                                     </Grid>
                                                 </ControlTemplate>
@@ -1204,20 +1203,6 @@
                                     </Track.Thumb>
                                 </Track>
                             </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver"
-                                         Value="true">
-                                    <Setter Property="Width"
-                                            TargetName="Thumb"
-                                            Value="12" />
-                                    <Setter Property="Height"
-                                            TargetName="RepeatButton1"
-                                            Value="4" />
-                                    <Setter Property="Height"
-                                            TargetName="RepeatButton2"
-                                            Value="4" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1545,9 +1530,9 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
-                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
-                                <extension:SmoothScrollViewer.Template>
-                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True">
@@ -1574,12 +1559,12 @@
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
-                                </extension:SmoothScrollViewer.Template>
+                                </ScrollViewer.Template>
                                 <WrapPanel Orientation="Horizontal"
                                            IsItemsHost="True"
                                            ScrollViewer.CanContentScroll="True"
                                            Margin="0,0,10,0" />
-                            </extension:SmoothScrollViewer>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1608,15 +1593,17 @@
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center" />
                                         </Border>
-                                        <Border CornerRadius="5"
-                                                Margin="5,5,5,0"
-                                                Width="200"
-                                                Height="200">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                            RenderOptions.BitmapScalingMode="LowQuality" />
-                                            </Border.Background>
-                                        </Border>
+                                        <Image Source="{Binding LocalPicUrl}"
+                                               Margin="5,5,5,0"
+                                               Width="200"
+                                               Height="200"
+                                               RenderOptions.BitmapScalingMode="Fant">
+                                            <Image.Clip>
+                                                <RectangleGeometry RadiusX="5"
+                                                                   RadiusY="5"
+                                                                   Rect="0,0,200,200" />
+                                            </Image.Clip>
+                                        </Image>
 
                                         <Rectangle x:Name="background"
                                                    Fill="#88000000"
@@ -1860,9 +1847,9 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListBox}">
-                            <extension:SmoothScrollViewer HorizontalScrollBarVisibility="Disabled">
-                                <extension:SmoothScrollViewer.Template>
-                                    <ControlTemplate TargetType="extension:SmoothScrollViewer">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 SnapsToDevicePixels="True">
@@ -1889,12 +1876,12 @@
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
-                                </extension:SmoothScrollViewer.Template>
+                                </ScrollViewer.Template>
                                 <StackPanel Orientation="Horizontal"
                                             IsItemsHost="True"
                                             ScrollViewer.CanContentScroll="True"
                                             Margin="0,0,10,0" />
-                            </extension:SmoothScrollViewer>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1932,15 +1919,17 @@
 
                                             </Grid>
                                         </Border>
-                                        <Border CornerRadius="8"
-                                                Margin="5,5,5,0"
-                                                Width="450"
-                                                Height="600">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding Img}"
-                                                            RenderOptions.BitmapScalingMode="LowQuality" />
-                                            </Border.Background>
-                                        </Border>
+                                        <Image Margin="5,5,5,0"
+                                               Width="450"
+                                               Height="600"
+                                               Source="{Binding Img}"
+                                               RenderOptions.BitmapScalingMode="Fant">
+                                            <Image.Clip>
+                                                <RectangleGeometry RadiusX="8"
+                                                                   RadiusY="8"
+                                                                   Rect="0,0,450,600" />
+                                            </Image.Clip>
+                                        </Image>
 
                                         <Rectangle x:Name="background"
                                                    Fill="#88000000"
@@ -2033,7 +2022,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Left"
-                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollRight="True" />
                                                 <Button Width="30"
                                                         Height="40"
                                                         Content="&#xe620;"
@@ -2043,7 +2032,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Right"
-                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollLeft="True" />
                                                 <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
                                                                          Margin="{TemplateBinding Padding}"
                                                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
@@ -2115,15 +2104,16 @@
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center" />
                                         </Border>
-                                        <Border CornerRadius="5"
-                                                Width="45"
-                                                Height="45">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                            RenderOptions.BitmapScalingMode="LowQuality" />
-                                            </Border.Background>
-                                        </Border>
-
+                                        <Image  Width="45"
+                                                Height="45"
+                                                Source="{Binding LocalPicUrl}"
+                                                RenderOptions.BitmapScalingMode="Fant">
+                                            <Image.Clip>
+                                                <RectangleGeometry RadiusX="5"
+                                                                   RadiusY="5"
+                                                                   Rect="0,0,45,45" />
+                                            </Image.Clip>
+                                        </Image>
                                         <!--图片中间的播放按钮-->
                                         <ToggleButton x:Name="playButton"
                                                       Height="35"
@@ -2273,7 +2263,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Left"
-                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollRight="True" />
                                                 <Button Width="30"
                                                         Height="40"
                                                         Content="&#xe620;"
@@ -2283,7 +2273,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Right"
-                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollLeft="True" />
                                                 <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
                                                                          Margin="{TemplateBinding Padding}"
                                                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
@@ -2370,14 +2360,16 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center" />
                                     </Border>
-                                    <Border CornerRadius="60"
-                                            Width="115"
-                                            Height="115">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                        RenderOptions.BitmapScalingMode="LowQuality" />
-                                        </Border.Background>
-                                    </Border>
+                                    <Image  Width="115"
+                                            Height="115"
+                                            Source="{Binding LocalPicUrl}"
+                                            RenderOptions.BitmapScalingMode="Fant">
+                                        <Image.Clip>
+                                            <RectangleGeometry RadiusX="60"
+                                                               RadiusY="60"
+                                                               Rect="0,0,115,115" />
+                                        </Image.Clip>
+                                    </Image>
                                     <Rectangle x:Name="background"
                                                Fill="#88000000"
                                                Width="115"
@@ -2426,7 +2418,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Left"
-                                                        extension:ScrollViewerExtension.ScrollRight="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollRight="True" />
                                                 <Button Width="30"
                                                         Height="40"
                                                         Content="&#xe620;"
@@ -2436,7 +2428,7 @@
                                                         Style="{StaticResource TransParentButton}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Right"
-                                                        extension:ScrollViewerExtension.ScrollLeft="True" />
+                                                        extension:ScrollAnimationBehavior.ScrollLeft="True" />
                                                 <ScrollContentPresenter  Cursor="{TemplateBinding Cursor}"
                                                                          Margin="{TemplateBinding Padding}"
                                                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
@@ -2486,15 +2478,16 @@
                                                            VerticalAlignment="Center" />
                                             </Grid>
                                         </Border>
-                                        <Border CornerRadius="5"
-                                                Width="200"
-                                                Height="200">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                            RenderOptions.BitmapScalingMode="LowQuality" />
-                                            </Border.Background>
-                                        </Border>
-
+                                        <Image  Width="200"
+                                                Height="200"
+                                                Source="{Binding LocalPicUrl}"
+                                                RenderOptions.BitmapScalingMode="Fant">
+                                            <Image.Clip>
+                                                <RectangleGeometry RadiusX="8"
+                                                                   RadiusY="8"
+                                                                   Rect="0,0,200,200" />
+                                            </Image.Clip>
+                                        </Image>
                                         <Rectangle x:Name="background"
                                                    Fill="#88000000"
                                                    Width="200"
@@ -2590,15 +2583,17 @@
                 <StackPanel Orientation="Horizontal"
                             Background="Transparent"
                             Height="50">
-                    <Border CornerRadius="50"
-                            Width="40"
-                            Height="40"
-                            Margin="12,0,0,0">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                        RenderOptions.BitmapScalingMode="LowQuality" />
-                        </Border.Background>
-                    </Border>
+                    <Image Width="40"
+                           Height="40"
+                           Margin="12,0,0,0"
+                           Source="{Binding LocalPicUrl}"
+                           RenderOptions.BitmapScalingMode="Fant">
+                        <Image.Clip>
+                            <RectangleGeometry RadiusX="40"
+                                               RadiusY="40"
+                                               Rect="0,0,40,40" />
+                        </Image.Clip>
+                    </Image>
                     <TextBlock Text="{Binding Name}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
@@ -2612,7 +2607,7 @@
                     <DockPanel LastChildFill="False"
                                Background="Transparent"
                                Margin="0,3,0,3">
-                        <Grid>
+                        <Grid Margin="5 0 0 0">
                             <Border Width="45"
                                     Height="45"
                                     CornerRadius="5"
@@ -2626,14 +2621,16 @@
                                            VerticalAlignment="Center" />
 
                             </Border>
-                            <Border CornerRadius="5"
-                                    Width="45"
-                                    Height="45">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                RenderOptions.BitmapScalingMode="LowQuality" />
-                                </Border.Background>
-                            </Border>
+                            <Image  Width="45"
+                                    Height="45"
+                                    Source="{Binding LocalPicUrl}"
+                                    RenderOptions.BitmapScalingMode="Fant">
+                                <Image.Clip>
+                                    <RectangleGeometry RadiusX="5"
+                                                       RadiusY="5"
+                                                       Rect="0,0,45,45" />
+                                </Image.Clip>
+                            </Image>
                             <Button Content="&#xe64d;"
                                     Style="{StaticResource TransParentButton}"
                                     FontFamily="{StaticResource IconFont}"
@@ -2668,7 +2665,7 @@
                     <DockPanel LastChildFill="False"
                                Background="Transparent"
                                Margin="0,3,0,3">
-                        <Grid>
+                        <Grid Margin="5 0 0 0">
                             <Border Width="45"
                                     Height="45"
                                     CornerRadius="5"
@@ -2681,14 +2678,16 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Border>
-                            <Border CornerRadius="5"
-                                    Width="45"
-                                    Height="45">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{Binding LocalPicUrl}"
-                                                RenderOptions.BitmapScalingMode="LowQuality" />
-                                </Border.Background>
-                            </Border>
+                            <Image  Width="45"
+                                    Height="45"
+                                    Source="{Binding LocalPicUrl}"
+                                    RenderOptions.BitmapScalingMode="Fant">
+                                <Image.Clip>
+                                    <RectangleGeometry RadiusX="5"
+                                                       RadiusY="5"
+                                                       Rect="0,0,45,45" />
+                                </Image.Clip>
+                            </Image>
                         </Grid>
                         <StackPanel Margin="10,0,0,0"
                                     VerticalAlignment="Center">

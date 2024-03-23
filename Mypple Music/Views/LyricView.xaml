@@ -19,9 +19,11 @@
         <Grid>
             <Image Source="{Binding BlurBackground}"
                    d:Source="C:\Users\Hinadesu\Desktop\projects\WpfLrcTest\WpfLrcTest\aimer.png"
-                   Stretch="Fill"
-                   RenderTransformOrigin="0.5,0.5"
-                   RenderOptions.BitmapScalingMode="LowQuality">
+                   Stretch="UniformToFill"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="Fant"
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <ScaleTransform />
                 </Image.RenderTransform>
@@ -60,9 +62,7 @@
                     <Border Width="200"
                             Height="200"
                             CornerRadius="8"
-                            Background="LightGray"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top">
+                            Background="LightGray">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="20"
                                               ShadowDepth="0"
@@ -84,19 +84,12 @@
                            Source="{Binding Music.LocalPicUrl}"
                            Height="200"
                            Width="200"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Top">
-                        <!--切掉图片多余的角-->
-                        <Image.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                            Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                            CornerRadius="5"
-                                            Background="White" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Image.OpacityMask>
+                           RenderOptions.BitmapScalingMode="Fant">
+                        <Image.Clip>
+                            <RectangleGeometry RadiusY="5"
+                                               RadiusX="5"
+                                               Rect="0,0,200,200" />
+                        </Image.Clip>
                     </Image>
                 </Grid>
                 <StackPanel HorizontalAlignment="Center"
@@ -106,18 +99,19 @@
                                FontSize="18"
                                Foreground="Snow"
                                FontWeight="Bold"
-                               TextWrapping="WrapWithOverflow" 
-                               HorizontalAlignment="Center"/>
+                               TextWrapping="WrapWithOverflow"
+                               HorizontalAlignment="Center" />
                     <TextBlock d:Text="MIMI"
                                Text="{Binding Music.Artist}"
                                FontSize="16"
                                Margin="0,10,0,0"
-                               Foreground="Snow" 
-                               HorizontalAlignment="Center"/>
+                               Foreground="Snow"
+                               HorizontalAlignment="Center" />
                 </StackPanel>
             </StackPanel>
 
-            <Grid Grid.Column="1" Margin="50 0 0 0">
+            <Grid Grid.Column="1"
+                  Margin="50 0 0 0">
                 <extension:LyricScrollingListBox ItemContainerStyle="{StaticResource LyricListBoxStyle}"
                                                  ItemsSource="{Binding Lyrics}"
                                                  Background="Transparent"
@@ -126,12 +120,14 @@
                                                  SelectedIndex="{Binding SelectedLyricIndex}"
                                                  ScrollViewer.CanContentScroll="False"
                                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                                                 BorderThickness="0">
-
+                                                 BorderThickness="0"
+                                                 extension:ScrollAnimationBehavior.IsEnabled="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseUp">
                             <i:InvokeCommandAction Command="{Binding ClickSentenceCommand}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding LocateSentenceCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </extension:LyricScrollingListBox>

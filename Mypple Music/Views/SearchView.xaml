@@ -34,7 +34,7 @@
                    FontSize="14"
                    FontWeight="Bold"
                    Margin="10 0 0 0" />
-        <extension:SmoothScrollViewer Grid.Row="1"
+        <ScrollViewer Grid.Row="1"
                                       Style="{StaticResource ScrollViewerStyle}">
             <StackPanel>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
@@ -59,10 +59,9 @@
                          ItemsSource="{Binding Musics}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                          ItemContainerStyle="{StaticResource SearchMusicListItemStyle}"
-                         VirtualizingPanel.ScrollUnit="Pixel"
-                         VirtualizingPanel.VirtualizationMode="Recycling"
                          Foreground="{DynamicResource DefaultForgeground}"
-                         PreviewMouseWheel="ListBox_PreviewMouseWheel">
+                         PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                         extension:ScrollAnimationBehavior.IsEnabled="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseDoubleClick">
                             <i:InvokeCommandAction  Command="{Binding DataContext.ToPlayMusicCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"
@@ -167,10 +166,9 @@
                          SelectedIndex="{Binding SelectedArtist}"
                          ItemContainerStyle="{StaticResource SearchArtistListItemStyle}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                         VirtualizingPanel.ScrollUnit="Pixel"
-                         VirtualizingPanel.VirtualizationMode="Recycling"
                          Foreground="{DynamicResource DefaultForgeground}"
-                         PreviewMouseWheel="ListBox_PreviewMouseWheel">
+                         PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                         extension:ScrollAnimationBehavior.IsEnabled="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding ConfirmArtistCommand}"
@@ -223,10 +221,9 @@
                          SelectedIndex="{Binding SelectedAlbum}"
                          ItemContainerStyle="{StaticResource SearchAlbumListItemStyle}"
                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                         VirtualizingPanel.ScrollUnit="Pixel"
-                         VirtualizingPanel.VirtualizationMode="Recycling"
                          Foreground="{DynamicResource DefaultForgeground}"
-                         PreviewMouseWheel="ListBox_PreviewMouseWheel">
+                         PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                         extension:ScrollAnimationBehavior.IsEnabled="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"
@@ -264,7 +261,7 @@
                     </d:ListBox.Items>
                 </ListBox>
             </StackPanel>
-        </extension:SmoothScrollViewer>
+        </ScrollViewer>
 
     </Grid>
 

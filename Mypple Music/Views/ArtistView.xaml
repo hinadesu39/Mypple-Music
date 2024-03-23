@@ -49,27 +49,22 @@
             </Grid.ColumnDefinitions>
             <Border BorderBrush="#616161"
                     BorderThickness="0 0 0.3 0" />
-            <StackPanel Margin="5,0,5,0">
-                <ListBox x:Name="menuBar"
-                         Margin="0,10,0,0"
-                         ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
-                         ItemsSource="{Binding Artists}"
-                         Height="{Binding ElementName=ArtistViewControl,Path=ActualHeight}"
-                         ScrollViewer.CanContentScroll="True"
-                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                         SelectedIndex="{Binding SelectedArtistIndex}"
-                         VirtualizingPanel.ScrollUnit="Pixel"
-                         VirtualizingPanel.VirtualizationMode="Recycling"
-                         ItemTemplate="{StaticResource ForDiaplayPicAndTitle}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding NavigateCommand}"
-                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </ListBox>
-            </StackPanel>
-
+            <ListBox x:Name="menuBar"
+                     Margin="10"
+                     ItemContainerStyle="{StaticResource NavigateListBoxItemStyle}"
+                     ItemsSource="{Binding Artists}"
+                     ScrollViewer.CanContentScroll="False"
+                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                     SelectedIndex="{Binding SelectedArtistIndex}"
+                     ItemTemplate="{StaticResource ForDiaplayPicAndTitle}"
+                     extension:ScrollAnimationBehavior.IsEnabled="True">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding NavigateCommand}"
+                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListBox>
             <ContentControl Grid.Column="1"
                             prism:RegionManager.RegionName="{x:Static extension:PrismManager.ArtistRegionName}" />
         </Grid>

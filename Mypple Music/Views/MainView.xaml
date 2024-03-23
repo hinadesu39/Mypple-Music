@@ -189,7 +189,8 @@
                                 <Image Width="40"
                                        Height="40"
                                        Source="{Binding UserDto.LocalPicUrl}"
-                                       Margin="20,0">
+                                       Margin="20,0"
+                                       RenderOptions.BitmapScalingMode="Fant">
                                     <Image.Clip>
                                         <EllipseGeometry Center="20,20"
                                                          RadiusX="20"
@@ -344,8 +345,10 @@
                         <!--#region 中间播放信息以及进度条-->
                         <Border Grid.Column="2"
                                 BorderBrush="#33000000"
-                                BorderThickness="3,2.5,3,2.5"
-                                CornerRadius="3">
+                                BorderThickness="0.5"
+                                CornerRadius="3"
+                                Background="#15ffffff"
+                                Margin="0 4 0 4">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -361,23 +364,26 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center">
                                     </TextBlock>
-                                    <Border CornerRadius="4,0,0,4"
-                                            Width="55"
-                                            Height="55">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Player.Music.LocalPicUrl}"
-                                                        RenderOptions.BitmapScalingMode="LowQuality" />
-                                        </Border.Background>
-                                    </Border>
+                                    <Image Width="52"
+                                           Height="52"
+                                           Source="{Binding Player.Music.LocalPicUrl}"
+                                           RenderOptions.BitmapScalingMode="Fant">
+                                        <Image.Clip>
+                                            <RectangleGeometry RadiusY="4"
+                                                               RadiusX="4"
+                                                               Rect="0,0,52,52" />
+                                        </Image.Clip>
+                                    </Image>
                                 </Grid>
                                 <!--歌曲信息-->
                                 <StackPanel Grid.Column="1">
                                     <TextBlock  d:Text="靴の花火"
                                                 HorizontalAlignment="Center"
                                                 Foreground="#242424"
+                                                FontWeight="Light"
                                                 Text="{Binding Player.Music.Title}"
                                                 Margin="0,6,0,0" />
-                                    <Grid Margin="0,8,0,0">
+                                    <Grid Margin="0,6,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="auto" />
@@ -412,17 +418,19 @@
                                                    HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <!--歌曲进度条-->
-                                    <Slider x:Name="MusicProgress"
-                                            Minimum="0"
-                                            Margin="0,4,0,0"
-                                            Maximum="{Binding Player.PlayProgressLength}"
-                                            Value="{Binding Player.PlayProgress}"
-                                            Style="{StaticResource MusicSliderStyle}"
-                                            extension:SliderExtension.DragCompletedCommand="{Binding MusicProgressChangedCommand}"
-                                            extension:SliderExtension.PreviewMouseDownCommand="{Binding MusicProgressChangedCommand}">
-                                    </Slider>
+                                    
                                 </StackPanel>
+                                <!--歌曲进度条-->
+                                <Slider x:Name="MusicProgress"
+                                        Grid.Column="1"
+                                        Minimum="0"
+                                        VerticalAlignment="Bottom"
+                                        Maximum="{Binding Player.PlayProgressLength}"
+                                        Value="{Binding Player.PlayProgress}"
+                                        Style="{StaticResource MusicSliderStyle}"
+                                        extension:SliderExtension.DragCompletedCommand="{Binding MusicProgressChangedCommand}"
+                                        extension:SliderExtension.PreviewMouseDownCommand="{Binding MusicProgressChangedCommand}">
+                                </Slider>
                             </Grid>
                         </Border>
                         <!--#endregion 中间播放信息以及进度条-->
@@ -506,7 +514,8 @@
                                           FontSize="22"
                                           FontWeight="Light"
                                           Style="{StaticResource ToggleButtonStyle}"
-                                          ToolTip="播放清单">
+                                          ToolTip="播放清单"
+                                          >
                             </ToggleButton>
 
                         </StackPanel>
@@ -609,29 +618,30 @@
                                     </DockPanel>
                                     <Border BorderBrush="#757575"
                                             BorderThickness="0,0,0,0.5" />
-                                    <extension:ScrollingListBox x:Name="ToPlayList"
-                                                                Grid.Row="1"
-                                                                Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=100}"
-                                                                Margin="5,0,0,0"
-                                                                Style="{StaticResource MusicListStyle}"
-                                                                ItemsSource="{Binding ToPlayList}"
-                                                                ItemContainerStyle="{StaticResource MusicListBoxItemStyle}"
-                                                                ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                                                VirtualizingPanel.ScrollUnit="Pixel"
-                                                                VirtualizingPanel.VirtualizationMode="Recycling"
-                                                                SelectedItem="{Binding Player.Music,Mode=OneWay}"
-                                                                Foreground="{DynamicResource DefaultForgeground}"
-                                                                ItemTemplate="{StaticResource ForToPlayList}">
+                                    <ListBox x:Name="ToPlayList"
+                                             Grid.Row="1"
+                                             Height="{Binding ElementName=ContentControl,Path=ActualHeight,Converter={StaticResource value},ConverterParameter=100}"
+                                             Margin="5,0,0,0"
+                                             Style="{StaticResource MusicListStyle}"
+                                             ItemsSource="{Binding ToPlayList}"
+                                             ItemContainerStyle="{StaticResource MusicListBoxItemStyle}"
+                                             ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                             SelectedItem="{Binding Player.Music,Mode=OneWay}"
+                                             Foreground="{DynamicResource DefaultForgeground}"
+                                             ItemTemplate="{StaticResource ForToPlayList}"
+                                             extension:ScrollAnimationBehavior.IsEnabled="True"
+                                             extension:ScrollAnimationBehavior.IsScrollToSelection="True">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseDoubleClick">
                                                 <i:InvokeCommandAction Command="{Binding ToPlayMusicCommand}"
                                                                        CommandParameter="{Binding SelectedIndex, RelativeSource={RelativeSource AncestorType=ListBox}}" />
                                             </i:EventTrigger>
-                                            <i:EventTrigger EventName="Loaded">
+                                            <i:DataTrigger Binding="{Binding ElementName=ToPlayListViewButton, Path=IsChecked}"
+                                                           Value="true">
                                                 <i:InvokeCommandAction Command="{Binding LocateMusicCommand}" />
-                                            </i:EventTrigger>
+                                            </i:DataTrigger>
                                         </i:Interaction.Triggers>
-                                    </extension:ScrollingListBox>
+                                    </ListBox>
                                 </StackPanel>
                                 <!--历史记录-->
                                 <StackPanel Visibility="{Binding ElementName=HistoryButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -645,10 +655,9 @@
                                              ItemsSource="{Binding HistoryPlayList}"
                                              ItemContainerStyle="{StaticResource MusicListBoxItemStyle}"
                                              ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                             VirtualizingPanel.ScrollUnit="Pixel"
-                                             VirtualizingPanel.VirtualizationMode="Recycling"
                                              Foreground="{DynamicResource DefaultForgeground}"
-                                             ItemTemplate="{StaticResource ForHistoryList}">
+                                             ItemTemplate="{StaticResource ForHistoryList}"
+                                             extension:ScrollAnimationBehavior.IsEnabled="True">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="SelectionChanged">
                                                 <i:InvokeCommandAction Command="{Binding NavigateCommand}"

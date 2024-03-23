@@ -9,7 +9,6 @@
              xmlns:model="clr-namespace:Mypple_Music.Models"
              xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              mc:Ignorable="d"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              FontFamily="微软雅黑"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -59,13 +58,12 @@
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
                   ScrollViewer.CanContentScroll="False"
-                  RowStyle="{StaticResource DataGridRowStyle}"                
+                  RowStyle="{StaticResource DataGridRowStyle}"
                   CellStyle="{StaticResource DataGridCellStyle}"
                   ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                   Style="{StaticResource MusicGrid}"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  EnableColumnVirtualization="True"
-                  EnableRowVirtualization="True">
+                  extension:ScrollAnimationBehavior.IsEnabled="True">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                               Command="{Binding ToPlayMusicCommand}"

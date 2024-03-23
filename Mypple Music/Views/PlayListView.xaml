@@ -82,18 +82,13 @@
                    Source="{Binding PlayList.LocalPicUrl}"
                    Width="250"
                    Height="250"
-                   Margin="10">
-                <!--切掉图片多余的角-->
-                <Image.OpacityMask>
-                    <VisualBrush>
-                        <VisualBrush.Visual>
-                            <Border Width="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualWidth}"
-                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Image}, Path=ActualHeight}"
-                                    CornerRadius="8"
-                                    Background="White" />
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </Image.OpacityMask>
+                   Margin="10"
+                   RenderOptions.BitmapScalingMode="Fant">
+                <Image.Clip>
+                    <RectangleGeometry RadiusX="8"
+                                       RadiusY="8"
+                                       Rect="0,0,250,250" />
+                </Image.Clip>
             </Image>
             <Grid Grid.Column="1"
                   Margin="30,0,0,0"

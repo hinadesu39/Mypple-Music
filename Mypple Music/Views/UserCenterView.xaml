@@ -70,15 +70,17 @@
 
                     </Grid>
                 </Border>
-                <Border CornerRadius="8"
+                <Image  Width="200"
+                        Height="200"
                         Margin="5,5,5,0"
-                        Width="200"
-                        Height="200">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{Binding UserDto.LocalPicUrl}"
-                                    RenderOptions.BitmapScalingMode="LowQuality" />
-                    </Border.Background>
-                </Border>
+                        Source="{Binding UserDto.LocalPicUrl}"
+                        RenderOptions.BitmapScalingMode="Fant">
+                    <Image.Clip>
+                        <RectangleGeometry RadiusX="8"
+                                           RadiusY="8"
+                                           Rect="0,0,200,200" />
+                    </Image.Clip>
+                </Image>
                 <Button Content="&#xe67e;"
                         Style="{StaticResource CornerRadiusButton}"
                         FontFamily="{StaticResource IconFont}"
@@ -86,7 +88,7 @@
                         FontWeight="Bold"
                         Width="50"
                         Height="50"
-                        Command="{Binding ChangeAvatarCommand}"/>
+                        Command="{Binding ChangeAvatarCommand}" />
             </Grid>
             <!--#endregion-->
             <Grid Margin="0 30 0 0">
@@ -113,7 +115,7 @@
                                 md:HintAssist.Hint="Pick Date"
                                 md:TextFieldAssist.HasClearButton="True"
                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                Margin="0 0 0 40"                               
+                                Margin="0 0 0 40"
                                 SelectedDate="{Binding UserDto.BirthDay}" />
                     <ListBox SelectedIndex="{Binding UserDto.Gender,Converter={StaticResource GenderToListBoxIndex}}"
                              Style="{StaticResource MaterialDesignToolToggleListBox}">
@@ -352,13 +354,13 @@
             <Button Content="返回"
                     DockPanel.Dock="Right"
                     Width="150"
-                    Margin="0 0 30 0" 
-                    Command="{Binding GoBackCommand}"/>
+                    Margin="0 0 30 0"
+                    Command="{Binding GoBackCommand}" />
             <Button Content="保存"
                     DockPanel.Dock="Right"
                     Width="150"
                     Margin="0 0 30 0"
-                    Command="{Binding SaveCommand}"/>
+                    Command="{Binding SaveCommand}" />
         </DockPanel>
         <!--#endregion-->
     </Grid>

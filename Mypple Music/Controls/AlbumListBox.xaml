@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Mypple_Music.Controls"
              xmlns:model="clr-namespace:Mypple_Music.Models"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:extension="clr-namespace:Mypple_Music.Extensions"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -16,8 +17,7 @@
              ItemContainerStyle="{StaticResource AlbumListItemStyle}"
              SelectedIndex="{Binding SelectedIndex}"
              ScrollViewer.CanContentScroll="False"
-             VirtualizingPanel.ScrollUnit="Pixel"
-             VirtualizingPanel.VirtualizationMode="Recycling">
+             extension:ScrollAnimationBehavior.IsEnabled="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="SelectionChanged">
                 <i:InvokeCommandAction Command="{Binding ConfirmAlbumCommand}"

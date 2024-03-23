@@ -8,6 +8,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
@@ -25,6 +26,7 @@ namespace Mypple_Music.ViewModels
         #endregion
 
         #region Property
+
         private string blurBackground;
 
         public string BlurBackground
@@ -86,6 +88,7 @@ namespace Mypple_Music.ViewModels
         }
 
         public DelegateCommand ClickSentenceCommand { set; get; }
+        public DelegateCommand LocateSentenceCommand { set; get; }
         #endregion
 
         #region Ctor
@@ -94,6 +97,7 @@ namespace Mypple_Music.ViewModels
         {
             this.lyricService = lyricService;
             ClickSentenceCommand = new DelegateCommand(ClickSentence);
+            LocateSentenceCommand = new DelegateCommand(LocateSentence);
 
             //事件订阅
             eventAggregator
@@ -125,10 +129,29 @@ namespace Mypple_Music.ViewModels
             mediaElement.Position = TimeSpan.FromSeconds(clickedLyric.TimeSpan);
         }
 
+        private void LocateSentence()
+        {
+            //播放进度
+            var totalSeconds = mediaElement.Position.TotalSeconds;
+
+            //歌词滚动
+            var tempLyric = Lyrics.FirstOrDefault(t => t.TimeSpan >= totalSeconds + 1);
+            if (tempLyric != null)
+            {
+                SelectedLyricIndex = Lyrics.IndexOf(tempLyric) - 1;
+            }
+            else
+            {
+                SelectedLyricIndex = Lyrics.Count - 1;
+            }
+        }
+
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
+            
             if (IsAlive)
             {
+                LocateSentence();
                 return;
             }
             IsAlive = true;
@@ -145,19 +168,7 @@ namespace Mypple_Music.ViewModels
                 //设置滚动
                 while (await Timer.WaitForNextTickAsync())
                 {
-                    //播放进度
-                    var totalSeconds = mediaElement.Position.TotalSeconds;
-
-                    //歌词滚动
-                    var tempLyric = Lyrics.FirstOrDefault(t => t.TimeSpan >= totalSeconds + 1);
-                    if (tempLyric != null)
-                    {
-                        SelectedLyricIndex = Lyrics.IndexOf(tempLyric) - 1;
-                    }
-                    else
-                    {
-                        SelectedLyricIndex = Lyrics.Count - 1;
-                    }
+                    LocateSentence();
                 }
             }
         }
