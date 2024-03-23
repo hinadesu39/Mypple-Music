@@ -9,9 +9,10 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 using System.Windows;
-
+//模糊方法原文地址：https://www.cnblogs.com/TwilightLemon/p/17479921.html
 namespace Mypple_Music.Extensions
 {
+    
     /// <summary>
     /// 为窗口提供模糊特效。
     /// </summary>
@@ -35,6 +36,20 @@ namespace Mypple_Music.Extensions
             _window = window;
             _enableBlurin = enableBlurin;
             NoneCallback = noneCallback;
+        }
+
+        private void _window_Activated(object? sender, EventArgs e)
+        {
+            _window.Background = new SolidColorBrush(_color);
+        }
+
+        private void _window_Deactivated(object? sender, EventArgs e)
+        {
+            _window.Background = new SolidColorBrush(
+                   DarkMode ?
+                   Color.FromArgb(255, 32, 32, 23) :
+                   Color.FromArgb(255, 242, 242, 242)
+                   );
         }
 
         /// <summary>
