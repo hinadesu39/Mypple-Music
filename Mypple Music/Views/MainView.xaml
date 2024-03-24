@@ -357,13 +357,17 @@
                                 <!--歌曲图片-->
                                 <Grid>
                                     <!--默认专辑图片-->
-                                    <TextBlock FontFamily="{StaticResource IconFont}"
-                                               Text="&#xe64b;"
-                                               FontSize="40"
-                                               Foreground="#242424"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center">
-                                    </TextBlock>
+                                    <Border  Background="#22000000"
+                                             CornerRadius="4">
+                                        <TextBlock FontFamily="{StaticResource IconFont}"
+                                                   Text="&#xe64b;"
+                                                   FontSize="40"
+                                                   Foreground="#242424"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center">
+                                        </TextBlock>
+                                    </Border>
+
                                     <Image Width="52"
                                            Height="52"
                                            Source="{Binding Player.Music.LocalPicUrl}"
@@ -381,6 +385,7 @@
                                                 HorizontalAlignment="Center"
                                                 Foreground="#242424"
                                                 FontWeight="Light"
+                                                FontSize="14"
                                                 Text="{Binding Player.Music.Title}"
                                                 Margin="0,6,0,0" />
                                     <Grid Margin="0,6,0,0">
@@ -418,7 +423,7 @@
                                                    HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    
+
                                 </StackPanel>
                                 <!--歌曲进度条-->
                                 <Slider x:Name="MusicProgress"
@@ -514,8 +519,7 @@
                                           FontSize="22"
                                           FontWeight="Light"
                                           Style="{StaticResource ToggleButtonStyle}"
-                                          ToolTip="播放清单"
-                                          >
+                                          ToolTip="播放清单">
                             </ToggleButton>
 
                         </StackPanel>

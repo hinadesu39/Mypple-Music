@@ -15,11 +15,13 @@
              d:DesignWidth="600"
              Width="600"
              Height="350"
+             Background="{DynamicResource DefaultBackground}"
+             Foreground="{DynamicResource DefaultForgeground}"
              FontFamily="微软雅黑">
     <UserControl.Resources>
         <converter:ReverseVisibilityConverter x:Key="ReverseVisibility" />
     </UserControl.Resources>
-    <Grid Background="White">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition />
@@ -35,10 +37,9 @@
                Margin="30" />
         <Button Grid.Column="1"
                 FontFamily="{StaticResource IconFont}"
-                Content="&#xeca0;"
-                Foreground="#242424"
+                Content="&#xeca0;"               
                 FontSize="15"
-                FontWeight="Light"
+                Foreground="{DynamicResource DefaultForgeground}"
                 Style="{StaticResource TransParentButton}"
                 ToolTip="关闭"
                 Margin="10"

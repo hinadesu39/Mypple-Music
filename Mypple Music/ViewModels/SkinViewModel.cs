@@ -26,7 +26,7 @@ namespace Mypple_Music.ViewModels
         public DelegateCommand<object> ChangeHueCommand { set; get; }
         public IEnumerable<ISwatch> Swatches { get; } = SwatchHelper.Swatches;
 
-        private bool _isDarkTheme;
+        private bool _isDarkTheme = AppSession.IsDarkTheme;
         public bool IsDarkTheme
         {
             get => _isDarkTheme;

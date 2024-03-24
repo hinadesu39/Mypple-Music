@@ -3,5 +3,5 @@
     <SolidColorBrush x:Key="DefaultBackground"
                      Color="#f6f6f6" />
     <SolidColorBrush x:Key="DefaultForgeground"
-                     Color="Black" />
+                     Color="#242424" />
 </ResourceDictionary>

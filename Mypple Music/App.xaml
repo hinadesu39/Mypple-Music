@@ -6,6 +6,7 @@
                         xmlns:converter="clr-namespace:Mypple_Music.Extensions.Converters"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                        xmlns:control="clr-namespace:Mypple_Music.Controls"
                         xmlns:prism="http://prismlibrary.com/"
                         Exit="Application_Exit">
     <Application.Resources>
@@ -25,6 +26,445 @@
             <converter:ValueConverter x:Key="Value" />
             <converter:StatusToStringConverter x:Key="StatusToString" />
             <FontFamily x:Key="IconFont">pack://application:,,,/Resource/#iconfont</FontFamily>
+
+            <!--#region 主题切换按钮 -->
+            <Style x:Key="clipGrid"
+                   TargetType="Grid">
+                <Setter Property="Clip">
+                    <Setter.Value>
+                        <RectangleGeometry Rect="0,0,120,50"
+                                           RadiusX="25"
+                                           RadiusY="25" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="themeSwitch"
+                   TargetType="ToggleButton">
+                <Setter Property="Width"
+                        Value="120" />
+                <Setter Property="Height"
+                        Value="50" />
+                <Setter Property="Background"
+                        Value="#4583bd" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Grid Style="{StaticResource ResourceKey=clipGrid}">
+                                <Border x:Name="border"
+                                        CornerRadius="25"
+                                        Background="{TemplateBinding Background}">
+                                </Border>
+                                <Grid x:Name="cloud">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform />
+                                    </Grid.RenderTransform>
+                                    <Grid Opacity="0.5">
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="10,38,80,-18" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="99,0,-9,20" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="30,34,60,-14" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="50,28,40,-8" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="71,30,19,-10" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="90,15,0,5" />
+                                    </Grid>
+                                    <Grid Style="{StaticResource ResourceKey=clipGrid}">
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="13,45,77,-25" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="100,10,-10,10" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="30,42,60,-22" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="48,38,42,-18" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="70,40,20,-20" />
+                                        <Ellipse Width="30"
+                                                 Height="30"
+                                                 Fill="Snow"
+                                                 Margin="90,32,0,-12" />
+                                    </Grid>
+                                </Grid>
+                                <Grid x:Name="stars"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform  Y="-50" />
+                                    </Grid.RenderTransform>
+                                    <!--#region stars -->
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="19,29,97,17" />
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="13,36,103,10" />
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="30,42,86,4" />
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="45,21,71,25" />
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="49,12,67,34" />
+                                    <control:Star Width="4"
+                                                  Height="4"
+                                                  OffSetPlus="2"
+                                                  OffSetMinus="-2"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="64,27,52,19" />
+                                    <control:Star Width="6"
+                                                  Height="6"
+                                                  OffSetPlus="3"
+                                                  OffSetMinus="-3"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="57,37,58,8" />
+                                    <control:Star Width="6"
+                                                  Height="6"
+                                                  OffSetPlus="3"
+                                                  OffSetMinus="-3"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="35,25,79,19" />
+                                    <control:Star Width="6"
+                                                  Height="6"
+                                                  OffSetPlus="3"
+                                                  OffSetMinus="-3"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="15,16,99,28" />
+                                    <control:Star Width="8"
+                                                  Height="8"
+                                                  OffSetPlus="4"
+                                                  OffSetMinus="-4"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="64,14,48,28" />
+                                    <control:Star Width="8"
+                                                  Height="8"
+                                                  OffSetPlus="4"
+                                                  OffSetMinus="-4"
+                                                  Fill="{Binding ElementName=border,Path=Background}"
+                                                  CanvasMargin="28,6,84,36" />
+                                    <!--#endregion-->
+                                </Grid>
+                                <Grid x:Name="SunOrMoon">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform />
+                                    </Grid.RenderTransform>
+                                    <Border Height="160"
+                                            Width="160"
+                                            Background="#11ffffff"
+                                            CornerRadius="80"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Margin="-55 0" />
+
+                                    <Border Height="120"
+                                            Width="120"
+                                            Background="#22ffffff"
+                                            CornerRadius="60"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Margin="-35 0" />
+
+                                    <Border Height="80"
+                                            Width="80"
+                                            Background="#33ffffff"
+                                            CornerRadius="40"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Margin="-15 0" />
+                                    <Ellipse x:Name="ellipse"
+                                             Width="40"
+                                             Height="40"
+                                             HorizontalAlignment="Left"
+                                             Margin="5 0">
+                                        <Ellipse.Effect>
+                                            <DropShadowEffect Color="Gray"
+                                                              Opacity="0.5" />
+                                        </Ellipse.Effect>
+                                        <Ellipse.Fill>
+                                            <LinearGradientBrush StartPoint="0,0"
+                                                                 EndPoint="1,1">
+                                                <GradientStop Color="#ffea18"
+                                                              Offset="0.1" />
+                                                <GradientStop Color="#fcbd1c"
+                                                              Offset="0.3" />
+                                                <GradientStop Color="#9f7215"
+                                                              Offset="0.9" />
+                                            </LinearGradientBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <!--#region hole on moon -->
+                                    <Ellipse x:Name="hole1"
+                                             Width="15"
+                                             Height="15"
+                                             Stroke="#7b8394"
+                                             Fill="#95a1b5"
+                                             StrokeThickness="0.2"
+                                             Margin="10,21,95,14"
+                                             RenderTransformOrigin="0.35,0.242"
+                                             Opacity="0.0">
+                                        <Ellipse.Effect>
+                                            <DropShadowEffect ShadowDepth="0.5"
+                                                              Opacity="0.2"
+                                                              BlurRadius="0.8"
+                                                              Color="Black" />
+                                        </Ellipse.Effect>
+                                    </Ellipse>
+                                    <Ellipse  x:Name="hole2"
+                                              Width="8"
+                                              Height="8"
+                                              Stroke="#7b8394"
+                                              Fill="#95a1b5"
+                                              StrokeThickness="0.1"
+                                              Margin="25,12,87,30"
+                                              Opacity="0.0">
+                                        <Ellipse.Effect>
+                                            <DropShadowEffect ShadowDepth="0.5"
+                                                              Opacity="0.2"
+                                                              BlurRadius="0.8"
+                                                              Color="Black" />
+                                        </Ellipse.Effect>
+                                    </Ellipse>
+                                    <Ellipse  x:Name="hole3"
+                                              Width="8"
+                                              Height="8"
+                                              Stroke="#7b8394"
+                                              Fill="#95a1b5"
+                                              StrokeThickness="0.1"
+                                              Margin="29,28,83,14"
+                                              Opacity="0.0">
+                                        <Ellipse.Effect>
+                                            <DropShadowEffect ShadowDepth="0.5"
+                                                              Opacity="0.2"
+                                                              BlurRadius="0.8"
+                                                              Color="Black" />
+                                        </Ellipse.Effect>
+                                    </Ellipse>
+                                    <!--#endregion-->
+                                </Grid>
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <!--#region offset -->
+                                                <DoubleAnimation Storyboard.TargetName="SunOrMoon"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                                 To="70"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+
+                                                <DoubleAnimation Storyboard.TargetName="cloud"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                 To="50"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+
+                                                <DoubleAnimation Storyboard.TargetName="stars"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                 To="0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <!--#endregion-->
+
+                                                <!--#region holeOpacity -->
+                                                <DoubleAnimation Storyboard.TargetName="hole1"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="0.0"
+                                                                 To="1.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseIn" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetName="hole2"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="0.0"
+                                                                 To="1.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseIn" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetName="hole3"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="0.0"
+                                                                 To="1.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseIn" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <!--#endregion-->
+
+                                                <!--#region color -->
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)"
+                                                                To="#fffcce"
+                                                                Duration="0:0:0.5" />
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                                To="#c2c8d2"
+                                                                Duration="0:0:0.5" />
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)"
+                                                                To="#74787e"
+                                                                Duration="0:0:0.5" />
+
+                                                <ColorAnimation Storyboard.TargetName="border"
+                                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                                To="#171e33"
+                                                                Duration="0:0:0.5" />
+                                                <!--#endregion-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <!--#region offset -->
+                                                <DoubleAnimation Storyboard.TargetName="SunOrMoon"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                                 From="70"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+
+                                                <DoubleAnimation Storyboard.TargetName="cloud"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                 From="70"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+
+                                                <DoubleAnimation Storyboard.TargetName="stars"
+                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                                 To="-50"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <!--#endregion-->
+
+                                                <!--#region holoOpacity -->
+                                                <DoubleAnimation Storyboard.TargetName="hole1"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="1.0"
+                                                                 To="0.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetName="hole2"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="1.0"
+                                                                 To="0.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetName="hole3"
+                                                                 Storyboard.TargetProperty="Opacity"
+                                                                 From="1.0"
+                                                                 To="0.0"
+                                                                 Duration="0:0:0.5">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuinticEase EasingMode="EaseOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <!--#endregion-->
+
+                                                <!--#region color -->
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)"
+                                                                To="#ffea18"
+                                                                Duration="0:0:0.5" />
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                                To="#fcbd1c"
+                                                                Duration="0:0:0.5" />
+                                                <ColorAnimation Storyboard.TargetName="ellipse"
+                                                                Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)"
+                                                                To="#9f7215"
+                                                                Duration="0:0:0.5" />
+
+                                                <ColorAnimation Storyboard.TargetName="border"
+                                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                                To="#4583bd"
+                                                                Duration="0:0:0.5" />
+                                                <!--#endregion-->
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--#endregion-->
+
+
             <!--滚动条样式-->
             <Style x:Key="ScrollThumbStyle"
                    TargetType="Thumb">
@@ -691,22 +1131,22 @@
                    TargetType="{x:Type ToggleButton}">
                 <Setter Property="FocusVisualStyle"
                         Value="{x:Null}" />
-
+                <Setter Property="Background"
+                        Value="Transparent" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                             <Grid x:Name="grid">
                                 <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                         Margin="{TemplateBinding Padding}"
-                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                      Margin="{TemplateBinding Padding}"
-                                                      RecognizesAccessKey="True"
-                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                </Border>
-                                <Border x:Name="borderHeader" />
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                 <Button Width="30"
                                         Height="30"
                                         FontFamily="Resource/#iconfont"
@@ -727,20 +1167,17 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border"
-                                                                Margin="2,3"
-                                                                CornerRadius="5"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                SnapsToDevicePixels="True">
-                                                            <Grid>
-                                                                <TextBlock />
-                                                                <materialDesign:PackIcon Kind="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
-                                                                                         VerticalAlignment="Center"
-                                                                                         HorizontalAlignment="Center" />
-                                                            </Grid>
-
-                                                        </Border>
+                                                        <Grid>
+                                                            <Border x:Name="border"
+                                                                    Margin="2,3"
+                                                                    CornerRadius="5"
+                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    SnapsToDevicePixels="True" />
+                                                            <materialDesign:PackIcon Kind="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                                                     VerticalAlignment="Center"
+                                                                                     HorizontalAlignment="Center" />
+                                                        </Grid>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver"
                                                                      Value="True">
@@ -772,23 +1209,12 @@
                                       VerticalAlignment="Center"
                                       Margin="10,10" />
                             </Grid>
-
                             <ControlTemplate.Triggers>
-
                                 <Trigger Property="IsChecked"
                                          Value="True">
                                     <Setter Property="Data"
                                             TargetName="arrow"
                                             Value="M1,4.5L4.5,1 8,4.5" />
-                                    <Setter Property="BorderThickness"
-                                            TargetName="borderHeader"
-                                            Value="4,0,0,0" />
-                                    <Setter TargetName="border"
-                                            Property="CornerRadius"
-                                            Value="5" />
-                                    <Setter TargetName="borderHeader"
-                                            Property="CornerRadius"
-                                            Value="3" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver"
                                          Value="True">
@@ -797,12 +1223,10 @@
                                             Value="{DynamicResource PrimaryHueLightBrush}" />
                                     <Setter TargetName="border"
                                             Property="Opacity"
-                                            Value="0.5" />
+                                            Value="0.2" />
                                     <Setter TargetName="border"
                                             Property="CornerRadius"
                                             Value="5" />
-
-
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -1070,6 +1494,13 @@
                                                   HorizontalAlignment="Left"
                                                   VerticalAlignment="Center" />
                             </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource DefaultForgeground}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1677,6 +2108,8 @@
                    TargetType="Button">
                 <Setter Property="Margin"
                         Value="0,0,10,0" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource DefaultForgeground}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">

@@ -105,6 +105,7 @@
                                Text="{Binding Album.Title}"
                                FontSize="25"
                                FontWeight="Bold"
+                               TextWrapping="WrapWithOverflow"
                                VerticalAlignment="Center" />
                     <TextBlock x:Name="itemCount"
                                d:Text="38项"
