@@ -451,8 +451,8 @@
                                           Style="{StaticResource VolumeButtonStyle}" />
                             <!--音量控制条-->
                             <Popup x:Name="VolumePopupContrainer"
-                                   IsOpen="{Binding ElementName=VolumeBtn,Path=IsChecked,Mode=OneWay}"
-                                   StaysOpen="True"
+                                   IsOpen="{Binding ElementName=VolumeBtn,Path=IsChecked}"
+                                   StaysOpen="False"
                                    Placement="Bottom"
                                    AllowsTransparency="True"
                                    PlacementTarget="{Binding ElementName=VolumeBtn}">

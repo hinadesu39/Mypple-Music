@@ -111,79 +111,88 @@
                                                  Margin="90,32,0,-12" />
                                     </Grid>
                                 </Grid>
-                                <Grid x:Name="stars"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Top">
+                                <Grid x:Name="stars">
                                     <Grid.RenderTransform>
                                         <TranslateTransform  Y="-50" />
                                     </Grid.RenderTransform>
                                     <!--#region stars -->
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="19,29,97,17" />
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="13,36,103,10" />
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="30,42,86,4" />
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="45,21,71,25" />
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="49,12,67,34" />
-                                    <control:Star Width="4"
-                                                  Height="4"
-                                                  OffSetPlus="2"
-                                                  OffSetMinus="-2"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="64,27,52,19" />
-                                    <control:Star Width="6"
-                                                  Height="6"
-                                                  OffSetPlus="3"
-                                                  OffSetMinus="-3"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="57,37,58,8" />
-                                    <control:Star Width="6"
-                                                  Height="6"
-                                                  OffSetPlus="3"
-                                                  OffSetMinus="-3"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="35,25,79,19" />
-                                    <control:Star Width="6"
-                                                  Height="6"
-                                                  OffSetPlus="3"
-                                                  OffSetMinus="-3"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="15,16,99,28" />
-                                    <control:Star Width="8"
-                                                  Height="8"
-                                                  OffSetPlus="4"
-                                                  OffSetMinus="-4"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="64,14,48,28" />
-                                    <control:Star Width="8"
-                                                  Height="8"
-                                                  OffSetPlus="4"
-                                                  OffSetMinus="-4"
-                                                  Fill="{Binding ElementName=border,Path=Background}"
-                                                  CanvasMargin="28,6,84,36" />
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="19,29,97,17">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="13,36,103,10">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="30,42,86,4">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="45,21,71,25">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="49,12,67,34">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="64,27,52,19">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M2,0 C2,1.1045696 2.8954306,2 4,2 2.8954306,2 2,2.8954306 2,4 2,2.8954306 1.1045696,2 0,2 1.1045696,2 2,1.1045696 2,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="57,37,58,8">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M3,0 C3,1.6568543 4.3431459,3 6,3 4.3431459,3 3,4.3431459 3,6 3,4.3431459 1.6568543,3 0,3 1.6568543,3 3,1.6568543 3,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="35,25,79,19">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M3,0 C3,1.6568543 4.3431459,3 6,3 4.3431459,3 3,4.3431459 3,6 3,4.3431459 1.6568543,3 0,3 1.6568543,3 3,1.6568543 3,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="15,16,99,28">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M3,0 C3,1.6568543 4.3431459,3 6,3 4.3431459,3 3,4.3431459 3,6 3,4.3431459 1.6568543,3 0,3 1.6568543,3 3,1.6568543 3,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="64,14,48,28">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M4,0 C4,2.2091392 5.7908611,4.0000001 8,4.0000001 5.7908611,4.0000001 4,5.7908612 4,8.0000001 4,5.7908612 2.2091391,4.0000001 0,4.0000001 2.2091391,4.0000001 4,2.2091392 4,0 z" />
+                                        </Path.Data>
+                                    </Path>
+                                    <Path Fill="#ffff"
+                                          Stretch="Fill"
+                                          Margin="28,6,84,36">
+                                        <Path.Data>
+                                            <PathGeometry Figures="M4,0 C4,2.2091392 5.7908611,4.0000001 8,4.0000001 5.7908611,4.0000001 4,5.7908612 4,8.0000001 4,5.7908612 2.2091391,4.0000001 0,4.0000001 2.2091391,4.0000001 4,2.2091392 4,0 z" />
+                                        </Path.Data>
+                                    </Path>
                                     <!--#endregion-->
                                 </Grid>
                                 <Grid x:Name="SunOrMoon">

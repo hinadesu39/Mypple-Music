@@ -162,7 +162,7 @@
                     </Grid>
                     <!--信息弹出-->
                     <Popup x:Name="InfoPopupContrainer"
-                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked,Mode=OneWay}"
+                           IsOpen="{Binding ElementName=InfoBtn,Path=IsChecked}"
                            StaysOpen="False"
                            Placement="Bottom"
                            AllowsTransparency="True"
